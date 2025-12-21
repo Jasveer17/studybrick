@@ -189,60 +189,78 @@ const AdminDashboard = () => {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
-                    <p className="text-slate-500">Manage content and resources</p>
+                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                        Admin <span className="text-gradient">Dashboard</span>
+                    </h1>
+                    <p className="text-slate-500 mt-1">Manage content, users, and resources</p>
                 </div>
             </div>
 
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Link to="/admin/users">
-                    <Card className="p-6 bg-indigo-600 text-white hover:bg-indigo-700 transition-colors cursor-pointer group">
-                        <div className="flex justify-between items-start">
+                    <motion.div
+                        whileHover={{ y: -4, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-indigo-500 to-violet-600 p-6 text-white shadow-xl shadow-indigo-500/25 cursor-pointer group"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+                        <div className="relative flex justify-between items-start">
                             <div>
-                                <p className="text-indigo-200 font-medium mb-1">Total Users</p>
-                                <h3 className="text-3xl font-bold">{stats.users}</h3>
+                                <p className="text-indigo-200 font-medium mb-1 text-sm">Total Users</p>
+                                <h3 className="text-4xl font-extrabold tracking-tight">{stats.users}</h3>
                             </div>
-                            <div className="p-2 bg-indigo-500/50 rounded-lg group-hover:bg-indigo-400/50 transition-colors">
+                            <div className="p-3 bg-white/20 rounded-xl group-hover:bg-white/30 transition-colors backdrop-blur-sm">
                                 <Users className="w-6 h-6" />
                             </div>
                         </div>
-                        <p className="text-xs text-indigo-300 mt-2 flex items-center gap-1">
-                            Manage users <ArrowRight className="w-3 h-3" />
+                        <p className="text-xs text-indigo-200 mt-4 flex items-center gap-1 font-medium">
+                            Manage users <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                         </p>
-                    </Card>
+                    </motion.div>
                 </Link>
+
                 <Link to="/admin/questions">
-                    <Card className="p-6 hover:shadow-lg transition-all cursor-pointer group">
-                        <div className="flex justify-between items-start">
+                    <motion.div
+                        whileHover={{ y: -4, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-400 to-teal-500 p-6 text-white shadow-xl shadow-emerald-500/25 cursor-pointer group"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+                        <div className="relative flex justify-between items-start">
                             <div>
-                                <p className="text-slate-500 font-medium mb-1">Total Questions</p>
-                                <h3 className="text-3xl font-bold text-slate-900">{stats.questions}</h3>
+                                <p className="text-emerald-100 font-medium mb-1 text-sm">Total Questions</p>
+                                <h3 className="text-4xl font-extrabold tracking-tight">{stats.questions}</h3>
                             </div>
-                            <div className="p-2 bg-emerald-100 rounded-lg group-hover:bg-emerald-200 transition-colors">
-                                <Database className="w-6 h-6 text-emerald-600" />
+                            <div className="p-3 bg-white/20 rounded-xl group-hover:bg-white/30 transition-colors backdrop-blur-sm">
+                                <Database className="w-6 h-6" />
                             </div>
                         </div>
-                        <p className="text-xs text-slate-400 mt-2 flex items-center gap-1">
-                            Manage questions <ArrowRight className="w-3 h-3" />
+                        <p className="text-xs text-emerald-100 mt-4 flex items-center gap-1 font-medium">
+                            Manage questions <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                         </p>
-                    </Card>
+                    </motion.div>
                 </Link>
-                <Card className="p-6">
-                    <div className="flex justify-between items-start">
+
+                <motion.div
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 via-orange-400 to-amber-500 p-6 text-white shadow-xl shadow-amber-500/25"
+                >
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+                    <div className="relative flex justify-between items-start">
                         <div>
-                            <p className="text-slate-500 font-medium mb-1">Study Bricks</p>
-                            <h3 className="text-3xl font-bold text-slate-900">0</h3>
+                            <p className="text-amber-100 font-medium mb-1 text-sm">Study Bricks</p>
+                            <h3 className="text-4xl font-extrabold tracking-tight">—</h3>
                         </div>
-                        <div className="p-2 bg-amber-100 rounded-lg">
-                            <Book className="w-6 h-6 text-amber-600" />
+                        <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                            <Book className="w-6 h-6" />
                         </div>
                     </div>
-                    <p className="text-xs text-slate-400 mt-2">Coming soon</p>
-                </Card>
+                    <p className="text-xs text-amber-100 mt-4 font-medium">Upload in tab below</p>
+                </motion.div>
             </div>
 
             {/* Main Content Area */}

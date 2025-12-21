@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
     --font-sans: "Inter", system-ui, -apple-system, sans-serif;
 
-    /* Slate */
+    /* Premium Slate Palette */
     --color-slate-50: #f8fafc;
     --color-slate-100: #f1f5f9;
     --color-slate-200: #e2e8f0;
@@ -17,7 +17,7 @@
     --color-slate-900: #0f172a;
     --color-slate-950: #020617;
 
-    /* Indigo */
+    /* Premium Indigo */
     --color-indigo-50: #eef2ff;
     --color-indigo-100: #e0e7ff;
     --color-indigo-200: #c7d2fe;
@@ -30,31 +30,229 @@
     --color-indigo-900: #312e81;
     --color-indigo-950: #1e1b4b;
 
-    /* Green */
+    /* Accent Colors */
     --color-green-50: #f0fdf4;
     --color-green-100: #dcfce7;
+    --color-green-500: #22c55e;
     --color-green-600: #16a34a;
     --color-green-700: #15803d;
 
-    /* Emerald */
     --color-emerald-400: #34d399;
+    --color-emerald-500: #10b981;
     --color-emerald-600: #059669;
 
-    /* Amber */
     --color-amber-100: #fef3c7;
+    --color-amber-500: #f59e0b;
     --color-amber-700: #b45309;
 
-    /* Rose */
     --color-rose-100: #ffe4e6;
+    --color-rose-500: #f43f5e;
     --color-rose-700: #be123c;
 
-    /* Violet (for gradients) */
+    --color-violet-500: #8b5cf6;
     --color-violet-600: #7c3aed;
+
+    --color-cyan-400: #22d3ee;
+    --color-cyan-500: #06b6d4;
 }
 
 @layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
     body {
         @apply bg-slate-50 text-slate-900 font-sans antialiased;
         font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Premium Selection */
+    ::selection {
+        @apply bg-indigo-500 text-white;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-slate-300 rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-400;
+    }
+
+    /* Dark scrollbar for dark sections */
+    .dark-scroll::-webkit-scrollbar-thumb {
+        @apply bg-slate-700;
+    }
+
+    .dark-scroll::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-600;
+    }
+}
+
+@layer utilities {
+
+    /* Premium Glassmorphism */
+    .glass {
+        @apply bg-white/70 backdrop-blur-xl border border-white/20;
+    }
+
+    .glass-dark {
+        @apply bg-slate-900/80 backdrop-blur-xl border border-slate-700/50;
+    }
+
+    /* Premium Shadows */
+    .shadow-glow-sm {
+        box-shadow: 0 0 15px -3px rgba(99, 102, 241, 0.15);
+    }
+
+    .shadow-glow {
+        box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.2);
+    }
+
+    .shadow-glow-lg {
+        box-shadow: 0 0 40px -10px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Premium Gradients */
+    .gradient-primary {
+        @apply bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600;
+        background-size: 200% auto;
+    }
+
+    .gradient-dark {
+        @apply bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900;
+    }
+
+    /* Animated gradient background */
+    .animate-gradient {
+        animation: gradient-shift 3s ease infinite;
+    }
+
+    @keyframes gradient-shift {
+
+        0%,
+        100% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+
+    /* Smooth hover transitions */
+    .hover-lift {
+        @apply transition-all duration-300 ease-out;
+    }
+
+    .hover-lift:hover {
+        @apply -translate-y-1;
+    }
+
+    /* Premium button base */
+    .btn-premium {
+        @apply relative overflow-hidden transition-all duration-300;
+    }
+
+    .btn-premium::before {
+        content: '';
+        @apply absolute inset-0 bg-white/20 translate-y-full transition-transform duration-300;
+    }
+
+    .btn-premium:hover::before {
+        @apply translate-y-0;
+    }
+
+    /* Pulse animation for CTAs */
+    .pulse-glow {
+        animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+        }
+
+        50% {
+            box-shadow: 0 0 20px 5px rgba(99, 102, 241, 0.2);
+        }
+    }
+
+    /* Card hover effect */
+    .card-hover {
+        @apply transition-all duration-300 ease-out;
+    }
+
+    .card-hover:hover {
+        @apply -translate-y-1 shadow-xl;
+    }
+
+    /* Text gradient */
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600;
+    }
+
+    /* Shimmer loading effect */
+    .shimmer {
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(100%);
+        }
+    }
+
+    /* Fade in animation */
+    .fade-in {
+        animation: fade-in 0.5s ease-out;
+    }
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Scale in animation */
+    .scale-in {
+        animation: scale-in 0.3s ease-out;
+    }
+
+    @keyframes scale-in {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
 }
