@@ -14,6 +14,12 @@ const AdminDashboard = () => {
     const [questionContent, setQuestionContent] = useState('');
     const [brickTitle, setBrickTitle] = useState('');
     const [brickFile, setBrickFile] = useState(null);
+    const [brickDownloadUrl, setBrickDownloadUrl] = useState(''); // For external PDFs or links
+    const [brickSettings, setBrickSettings] = useState({
+        subject: 'maths',
+        description: '',
+        assignedTo: '' // Empty = all users
+    });
     const [isUploading, setIsUploading] = useState(false);
     const [allUsers, setAllUsers] = useState([]);
 
@@ -140,14 +146,46 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleBrickUpload = () => {
-        if (!brickTitle || !brickFile) {
-            toast.error('Please provide a title and select a PDF file');
+    const handleBrickUpload = async () => {
+        if (!brickTitle.trim()) {
+            toast.error('Please provide a title');
             return;
         }
-        toast.success(`Study Brick "${brickTitle}" uploaded successfully`);
-        setBrickTitle('');
-        setBrickFile(null);
+        if (!brickDownloadUrl.trim()) {
+            toast.error('Please provide a download URL for the PDF');
+            return;
+        }
+
+        setIsUploading(true);
+        try {
+            await addDoc(collection(db, 'studyBricks'), {
+                title: brickTitle.trim(),
+                downloadUrl: brickDownloadUrl.trim(),
+                subject: brickSettings.subject,
+                description: brickSettings.description.trim(),
+                assignedTo: brickSettings.assignedTo || null, // null = all users
+                size: 0, // We don't have actual size for external URLs
+                uploadedAt: serverTimestamp(),
+                createdBy: user?.uid || 'admin'
+            });
+
+            const assignedUser = allUsers.find(u => u.id === brickSettings.assignedTo);
+            if (assignedUser) {
+                toast.success(`Study material "${brickTitle}" uploaded for ${assignedUser.name}!`);
+            } else {
+                toast.success(`Study material "${brickTitle}" uploaded for all users!`);
+            }
+
+            // Reset form
+            setBrickTitle('');
+            setBrickDownloadUrl('');
+            setBrickSettings({ subject: 'maths', description: '', assignedTo: '' });
+        } catch (error) {
+            console.error('Upload error:', error);
+            toast.error(`Failed: ${error.message}`);
+        } finally {
+            setIsUploading(false);
+        }
     };
 
     return (
@@ -343,13 +381,20 @@ D) -sin(x)`}
                             <motion.div
                                 key="bricks"
                                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                                className="max-w-xl mx-auto space-y-6 pt-10"
+                                className="max-w-xl mx-auto space-y-5 pt-6"
                             >
+                                <div className="p-4 bg-amber-50 rounded-lg border border-amber-200 mb-4">
+                                    <h3 className="font-semibold text-amber-900 mb-1">Upload Study Materials</h3>
+                                    <p className="text-sm text-amber-700">
+                                        Add study materials (PDFs, documents) for your users. Paste a download link from Google Drive, Dropbox, or any file hosting service.
+                                    </p>
+                                </div>
+
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-slate-700">Resource Title</label>
+                                    <label className="text-sm font-medium text-slate-700">Resource Title *</label>
                                     <input
                                         type="text"
-                                        className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                                         placeholder="e.g. JEE Mains 2024 Physics Solutions"
                                         value={brickTitle}
                                         onChange={(e) => setBrickTitle(e.target.value)}
@@ -357,32 +402,66 @@ D) -sin(x)`}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-slate-700">Upload PDF</label>
-                                    <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 flex flex-col items-center justify-center bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer group">
-                                        <div className="p-4 bg-white rounded-full shadow-sm mb-4 group-hover:scale-110 transition-transform">
-                                            <FileText className="w-8 h-8 text-indigo-500" />
-                                        </div>
-                                        <p className="text-slate-600 font-medium">Click to browse or drag file here</p>
-                                        <p className="text-xs text-slate-400 mt-1">PDFs only (Max 10MB)</p>
-                                        <input
-                                            type="file"
-                                            className="hidden w-full h-full absolute top-0 left-0 opacity-0 cursor-pointer"
-                                            onChange={(e) => setBrickFile(e.target.files[0])}
-                                            accept=".pdf"
-                                        />
+                                    <label className="text-sm font-medium text-slate-700">Download URL *</label>
+                                    <input
+                                        type="url"
+                                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                        placeholder="https://drive.google.com/file/... or any direct download link"
+                                        value={brickDownloadUrl}
+                                        onChange={(e) => setBrickDownloadUrl(e.target.value)}
+                                    />
+                                    <p className="text-xs text-slate-400">Paste a shareable link from Google Drive, Dropbox, etc.</p>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-slate-700">Subject</label>
+                                        <select
+                                            value={brickSettings.subject}
+                                            onChange={(e) => setBrickSettings({ ...brickSettings, subject: e.target.value })}
+                                            className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg"
+                                        >
+                                            <option value="maths">Maths</option>
+                                            <option value="physics">Physics</option>
+                                            <option value="chemistry">Chemistry</option>
+                                            <option value="general">General</option>
+                                        </select>
                                     </div>
-                                    {brickFile && (
-                                        <div className="flex items-center justify-between p-3 bg-indigo-50 text-indigo-700 rounded-lg text-sm">
-                                            <span className="flex items-center gap-2"><FileText className="w-4 h-4" /> {brickFile.name}</span>
-                                            <button onClick={() => setBrickFile(null)} className="text-indigo-400 hover:text-indigo-600"><Trash2 className="w-4 h-4" /></button>
-                                        </div>
-                                    )}
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-slate-700 flex items-center gap-1">
+                                            <Users className="w-3 h-3" /> Assign To
+                                        </label>
+                                        <select
+                                            value={brickSettings.assignedTo}
+                                            onChange={(e) => setBrickSettings({ ...brickSettings, assignedTo: e.target.value })}
+                                            className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg"
+                                        >
+                                            <option value="">All Users (Global)</option>
+                                            {allUsers.map(u => (
+                                                <option key={u.id} value={u.id}>
+                                                    {u.name} {u.institute ? `(${u.institute})` : `(${u.role})`}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-slate-700">Description (Optional)</label>
+                                    <textarea
+                                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none h-20"
+                                        placeholder="Brief description of the material..."
+                                        value={brickSettings.description}
+                                        onChange={(e) => setBrickSettings({ ...brickSettings, description: e.target.value })}
+                                    />
                                 </div>
 
                                 <button
                                     onClick={handleBrickUpload}
-                                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-lg shadow-indigo-500/20 transition-all active:scale-95"
+                                    disabled={isUploading}
+                                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-lg shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
+                                    {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                                     Upload Material
                                 </button>
                             </motion.div>

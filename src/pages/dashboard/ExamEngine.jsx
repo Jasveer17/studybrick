@@ -167,8 +167,12 @@ const ExamEngine = () => {
             // Chapter matching
             const matchChapter = selectedChapters.length === 0 || selectedChapters.includes(q.chapter);
 
-            // Search matching
-            const matchSearch = !searchQuery || q.content?.toLowerCase().includes(searchQuery.toLowerCase());
+            // Search matching - check content, subject, and chapter
+            const query = searchQuery.toLowerCase();
+            const matchSearch = !searchQuery ||
+                q.content?.toLowerCase().includes(query) ||
+                q.subject?.toLowerCase().includes(query) ||
+                q.chapter?.toLowerCase().includes(query);
 
             // Filter by user assignment (null = global, or assigned to current user)
             // Check UID, Firestore document ID, and email since admin assigns using Firestore ID
