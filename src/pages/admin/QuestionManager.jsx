@@ -414,7 +414,7 @@ const QuestionManager = () => {
                                             </span>
                                         )}
                                     </div>
-                                    <div className="text-slate-800">
+                                    <div className="text-slate-800" style={{ fontFamily: '"Times New Roman", "Cambria Math", serif' }}>
                                         <MathRenderer>{q.content}</MathRenderer>
                                     </div>
                                 </div>

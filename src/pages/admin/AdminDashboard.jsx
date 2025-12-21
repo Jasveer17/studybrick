@@ -15,12 +15,11 @@ const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('questions');
     const [questionContent, setQuestionContent] = useState('');
     const [brickTitle, setBrickTitle] = useState('');
-    const [brickFile, setBrickFile] = useState(null);
-    const [brickDownloadUrl, setBrickDownloadUrl] = useState(''); // For external PDFs or links
+    const [brickDownloadUrl, setBrickDownloadUrl] = useState('');
     const [brickSettings, setBrickSettings] = useState({
         subject: 'maths',
         description: '',
-        assignedTo: '' // Empty = all users
+        assignedTo: ''
     });
     const [isUploading, setIsUploading] = useState(false);
     const [allUsers, setAllUsers] = useState([]);
@@ -154,7 +153,7 @@ const AdminDashboard = () => {
             return;
         }
         if (!brickDownloadUrl.trim()) {
-            toast.error('Please provide a download URL for the PDF');
+            toast.error('Please provide a download URL');
             return;
         }
 
@@ -165,17 +164,17 @@ const AdminDashboard = () => {
                 downloadUrl: brickDownloadUrl.trim(),
                 subject: brickSettings.subject,
                 description: brickSettings.description.trim(),
-                assignedTo: brickSettings.assignedTo || null, // null = all users
-                size: 0, // We don't have actual size for external URLs
+                assignedTo: brickSettings.assignedTo || null,
+                size: 0,
                 uploadedAt: serverTimestamp(),
                 createdBy: user?.uid || 'admin'
             });
 
             const assignedUser = allUsers.find(u => u.id === brickSettings.assignedTo);
             if (assignedUser) {
-                toast.success(`Study material "${brickTitle}" uploaded for ${assignedUser.name}!`);
+                toast.success(`Study material "${brickTitle}" added for ${assignedUser.name}!`);
             } else {
-                toast.success(`Study material "${brickTitle}" uploaded for all users!`);
+                toast.success(`Study material "${brickTitle}" added for all users!`);
             }
 
             // Reset form
@@ -189,6 +188,8 @@ const AdminDashboard = () => {
             setIsUploading(false);
         }
     };
+
+
 
     return (
         <div className="space-y-6 fade-in">
@@ -387,7 +388,7 @@ D) -sin(x)`}
                                 <div className="p-4 bg-amber-50 rounded-lg border border-amber-200 mb-4">
                                     <h3 className="font-semibold text-amber-900 mb-1">Upload Study Materials</h3>
                                     <p className="text-sm text-amber-700">
-                                        Add study materials (PDFs, documents) for your users. Paste a download link from Google Drive, Dropbox, or any file hosting service.
+                                        Add study materials (PDFs, documents) for your users. Upload a file directly or paste an external link.
                                     </p>
                                 </div>
 
@@ -411,7 +412,7 @@ D) -sin(x)`}
                                         value={brickDownloadUrl}
                                         onChange={(e) => setBrickDownloadUrl(e.target.value)}
                                     />
-                                    <p className="text-xs text-slate-400">Paste a shareable link from Google Drive, Dropbox, etc.</p>
+                                    <p className="text-xs text-slate-400">Paste a shareable link from Google Drive, Dropbox, OneDrive, etc.</p>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
@@ -463,7 +464,7 @@ D) -sin(x)`}
                                     className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-lg shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
                                     {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                                    Upload Material
+                                    {isUploading ? 'Adding...' : 'Add Material'}
                                 </button>
                             </motion.div>
                         )}
