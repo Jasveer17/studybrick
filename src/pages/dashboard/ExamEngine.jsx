@@ -148,7 +148,8 @@ const ExamEngine = () => {
             const matchChapter = selectedChapters.length === 0 || selectedChapters.includes(q.chapter);
             const matchSearch = q.content?.toLowerCase().includes(searchQuery.toLowerCase());
             // Filter by user assignment (null = global, or assigned to current user)
-            const matchUser = !q.assignedTo || q.assignedTo === user?.uid;
+            // Check both Firebase Auth UID and Firestore document ID since admin assigns using Firestore ID
+            const matchUser = !q.assignedTo || q.assignedTo === user?.uid || q.assignedTo === user?.firestoreId;
             // Respect user's chapter restrictions
             const matchAllowedChapter = userAllowedChapters.length === 0 || userAllowedChapters.includes(q.chapter);
 
