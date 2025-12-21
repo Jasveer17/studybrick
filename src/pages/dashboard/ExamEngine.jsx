@@ -48,7 +48,7 @@ const SortableItem = ({ question, onRemove }) => {
                 </button>
 
                 <div className="flex-1">
-                    <p className="text-sm text-slate-300 line-clamp-2">
+                    <p className="text-sm text-slate-300 line-clamp-2" style={{ fontFamily: '"Times New Roman", "Cambria Math", serif' }}>
                         <MathRenderer>{question.content}</MathRenderer>
                     </p>
                 </div>
@@ -585,7 +585,7 @@ const ExamEngine = () => {
                     zIndex: -1000,
                     backgroundColor: '#ffffff',
                     color: '#000000',
-                    fontFamily: 'serif',
+                    fontFamily: '"Times New Roman", "Cambria Math", "STIX Two Math", serif',
                     padding: '40px',
                     pointerEvents: 'none' // Ensure no interaction
                 }}
