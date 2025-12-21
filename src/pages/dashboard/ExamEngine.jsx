@@ -177,13 +177,24 @@ const ExamEngine = () => {
                 q.assignedTo === user?.firestoreId ||
                 q.assignedTo === user?.email;
 
-            // Respect user's chapter restrictions (empty = all allowed)
-            const matchAllowedChapter = userAllowedChapters.length === 0 || userAllowedChapters.includes(q.chapter);
+            // Respect user's chapter restrictions (empty or contains "all" = all allowed)
+            const matchAllowedChapter = userAllowedChapters.length === 0 ||
+                userAllowedChapters.includes('all') ||
+                userAllowedChapters.includes(q.chapter);
 
             return matchSubject && matchChapter && matchSearch && matchUser && matchAllowedChapter;
         });
 
-        console.log("Filtered questions:", filtered.length);
+        // Debug: Show counts at each step
+        console.log("Filter Breakdown:", {
+            total: allQuestions.length,
+            afterSubject: allQuestions.filter(q => selectedSubjects.length === 0 || selectedSubjects.map(s => s.toLowerCase()).includes(q.subject?.toLowerCase())).length,
+            afterChapter: allQuestions.filter(q => selectedChapters.length === 0 || selectedChapters.includes(q.chapter)).length,
+            afterUser: allQuestions.filter(q => !q.assignedTo || q.assignedTo === user?.uid || q.assignedTo === user?.firestoreId || q.assignedTo === user?.email).length,
+            afterAllowedChapter: allQuestions.filter(q => userAllowedChapters.length === 0 || userAllowedChapters.includes(q.chapter)).length,
+            final: filtered.length
+        });
+
         setFilteredQuestions(filtered);
     }, [selectedSubjects, selectedChapters, searchQuery, allQuestions, user]);
 
