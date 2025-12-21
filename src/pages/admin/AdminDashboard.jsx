@@ -7,9 +7,11 @@ import { db } from '../../lib/firebase';
 import { Link } from 'react-router-dom';
 import Card from '../../components/ui/Card';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const AdminDashboard = () => {
     const { user } = useAuth();
+    const { isDark } = useTheme();
     const [activeTab, setActiveTab] = useState('questions');
     const [questionContent, setQuestionContent] = useState('');
     const [brickTitle, setBrickTitle] = useState('');
@@ -193,65 +195,65 @@ const AdminDashboard = () => {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+                    <h1 className={`text-2xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
                         Admin Dashboard
                     </h1>
-                    <p className="text-slate-500 mt-1 text-sm">Manage content, users, and resources</p>
+                    <p className={`mt-1 text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Manage content, users, and resources</p>
                 </div>
             </div>
 
-            {/* Stats Overview - White cards with indigo icons */}
+            {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <Link to="/admin/users" className="block hover-lift">
-                    <div className="bg-white rounded-xl p-6 border border-slate-200 cursor-pointer">
+                    <div className={`rounded-xl p-6 border cursor-pointer transition-all ${isDark ? 'bg-slate-800 border-slate-700 hover:border-indigo-500' : 'bg-white border-slate-200 hover:border-indigo-300'}`}>
                         <div className="flex justify-between items-start">
                             <div>
-                                <p className="text-slate-500 font-medium mb-1 text-sm">Total Users</p>
-                                <h3 className="text-3xl font-bold text-slate-900">{stats.users}</h3>
+                                <p className={`font-medium mb-1 text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Total Users</p>
+                                <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{stats.users}</h3>
                             </div>
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-50 to-indigo-100 flex items-center justify-center">
-                                <Users className="w-6 h-6 text-indigo-600" />
+                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isDark ? 'bg-indigo-900/50' : 'bg-gradient-to-br from-indigo-50 to-indigo-100'}`}>
+                                <Users className={`w-6 h-6 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`} />
                             </div>
                         </div>
                     </div>
                 </Link>
 
                 <Link to="/admin/questions" className="block hover-lift">
-                    <div className="bg-white rounded-xl p-6 border border-slate-200 cursor-pointer">
+                    <div className={`rounded-xl p-6 border cursor-pointer transition-all ${isDark ? 'bg-slate-800 border-slate-700 hover:border-emerald-500' : 'bg-white border-slate-200 hover:border-emerald-300'}`}>
                         <div className="flex justify-between items-start">
                             <div>
-                                <p className="text-slate-500 font-medium mb-1 text-sm">Total Questions</p>
-                                <h3 className="text-3xl font-bold text-slate-900">{stats.questions}</h3>
+                                <p className={`font-medium mb-1 text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Total Questions</p>
+                                <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{stats.questions}</h3>
                             </div>
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center">
-                                <Database className="w-6 h-6 text-emerald-600" />
+                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isDark ? 'bg-emerald-900/50' : 'bg-gradient-to-br from-emerald-50 to-emerald-100'}`}>
+                                <Database className={`w-6 h-6 ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`} />
                             </div>
                         </div>
                     </div>
                 </Link>
 
-                <div className="bg-white rounded-xl p-6 border border-slate-200">
+                <div className={`rounded-xl p-6 border ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}>
                     <div className="flex justify-between items-start">
                         <div>
-                            <p className="text-slate-500 font-medium mb-1 text-sm">Study Bricks</p>
-                            <h3 className="text-3xl font-bold text-slate-900">—</h3>
+                            <p className={`font-medium mb-1 text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Study Bricks</p>
+                            <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>—</h3>
                         </div>
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center">
-                            <Book className="w-6 h-6 text-amber-600" />
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isDark ? 'bg-amber-900/50' : 'bg-gradient-to-br from-amber-50 to-amber-100'}`}>
+                            <Book className={`w-6 h-6 ${isDark ? 'text-amber-400' : 'text-amber-600'}`} />
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Main Content Area */}
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div className={`rounded-xl border overflow-hidden ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}>
                 {/* Tabs */}
-                <div className="flex border-b border-slate-100">
+                <div className={`flex border-b ${isDark ? 'border-slate-700' : 'border-slate-100'}`}>
                     <button
                         onClick={() => setActiveTab('questions')}
                         className={`px-6 py-4 text-sm font-medium transition-colors border-b-2 ${activeTab === 'questions'
-                            ? 'border-[#d4a574] text-[#d4a574]'
-                            : 'border-transparent text-slate-500 hover:text-slate-700'
+                            ? 'border-indigo-500 text-indigo-500'
+                            : `border-transparent ${isDark ? 'text-slate-400 hover:text-slate-200' : 'text-slate-500 hover:text-slate-700'}`
                             }`}
                     >
                         Bulk Upload Questions
@@ -259,8 +261,8 @@ const AdminDashboard = () => {
                     <button
                         onClick={() => setActiveTab('bricks')}
                         className={`px-6 py-4 text-sm font-medium transition-colors border-b-2 ${activeTab === 'bricks'
-                            ? 'border-[#d4a574] text-[#d4a574]'
-                            : 'border-transparent text-slate-500 hover:text-slate-700'
+                            ? 'border-indigo-500 text-indigo-500'
+                            : `border-transparent ${isDark ? 'text-slate-400 hover:text-slate-200' : 'text-slate-500 hover:text-slate-700'}`
                             }`}
                     >
                         Upload Study Bricks

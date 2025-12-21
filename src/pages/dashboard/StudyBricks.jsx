@@ -3,10 +3,12 @@ import { Download, FileText, Calendar, Search, Loader2, AlertCircle } from 'luci
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import Card from '../../components/ui/Card';
 
 const StudyBricks = () => {
     const { user } = useAuth();
+    const { isDark } = useTheme();
     const [resources, setResources] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -47,9 +49,9 @@ const StudyBricks = () => {
     // Get subject color
     const getSubjectStyle = (subject) => {
         const s = subject?.toLowerCase();
-        if (s === 'physics') return 'bg-violet-100 text-violet-600';
-        if (s === 'chemistry') return 'bg-rose-100 text-rose-600';
-        return 'bg-sky-100 text-sky-600';
+        if (s === 'physics') return isDark ? 'bg-violet-900/50 text-violet-300' : 'bg-violet-100 text-violet-600';
+        if (s === 'chemistry') return isDark ? 'bg-rose-900/50 text-rose-300' : 'bg-rose-100 text-rose-600';
+        return isDark ? 'bg-sky-900/50 text-sky-300' : 'bg-sky-100 text-sky-600';
     };
 
     // Format file size
@@ -64,13 +66,13 @@ const StudyBricks = () => {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                    <h1 className={`text-2xl font-bold flex items-center gap-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
                         Study Bricks
-                        <span className="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wider">
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider ${isDark ? 'bg-indigo-900/50 text-indigo-300' : 'bg-indigo-100 text-indigo-700'}`}>
                             Premium Library
                         </span>
                     </h1>
-                    <p className="text-slate-500">Curated materials for your success</p>
+                    <p className={isDark ? 'text-slate-400' : 'text-slate-500'}>Curated materials for your success</p>
                 </div>
 
                 <div className="relative">
@@ -80,47 +82,50 @@ const StudyBricks = () => {
                         placeholder="Search resources..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full md:w-64"
+                        className={`pl-10 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full md:w-64 ${isDark ? 'bg-slate-800 border-slate-700 text-white placeholder:text-slate-500' : 'bg-white border-slate-200 text-slate-900'}`}
                     />
                 </div>
             </div>
 
             {loading ? (
                 <div className="flex items-center justify-center py-20">
-                    <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
                 </div>
             ) : filteredResources.length === 0 ? (
                 <div className="col-span-full py-16 text-center">
-                    <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                    <p className="text-slate-500 text-lg">No study materials available</p>
-                    <p className="text-slate-400 text-sm mt-1">Contact your admin to get study materials assigned</p>
+                    <AlertCircle className={`w-12 h-12 mx-auto mb-4 ${isDark ? 'text-slate-600' : 'text-slate-300'}`} />
+                    <p className={`text-lg ${isDark ? 'text-slate-300' : 'text-slate-500'}`}>No study materials available</p>
+                    <p className={`text-sm mt-1 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Contact your admin to get study materials assigned</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredResources.map((resource) => (
-                        <Card key={resource.id} className="group hover:border-indigo-300 transition-all duration-300">
+                        <div
+                            key={resource.id}
+                            className={`rounded-xl border transition-all duration-300 hover:shadow-lg ${isDark ? 'bg-slate-800 border-slate-700 hover:border-indigo-500' : 'bg-white border-slate-200 hover:border-indigo-300'}`}
+                        >
                             <div className="p-6 flex flex-col h-full">
                                 <div className="flex items-start justify-between mb-4">
                                     <div className={`p-3 rounded-xl ${getSubjectStyle(resource.subject)}`}>
                                         <FileText className="w-6 h-6" />
                                     </div>
-                                    <span className="text-xs font-semibold text-slate-400 bg-slate-50 px-2 py-1 rounded">
+                                    <span className={`text-xs font-semibold px-2 py-1 rounded ${isDark ? 'text-slate-400 bg-slate-700' : 'text-slate-400 bg-slate-50'}`}>
                                         {formatSize(resource.size)}
                                     </span>
                                 </div>
 
-                                <h3 className="font-bold text-slate-800 mb-2 line-clamp-2 min-h-[3rem]">
+                                <h3 className={`font-bold mb-2 line-clamp-2 min-h-[3rem] ${isDark ? 'text-white' : 'text-slate-800'}`}>
                                     {resource.title}
                                 </h3>
 
                                 {resource.description && (
-                                    <p className="text-sm text-slate-500 mb-3 line-clamp-2">
+                                    <p className={`text-sm mb-3 line-clamp-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                                         {resource.description}
                                     </p>
                                 )}
 
-                                <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-100">
-                                    <div className="flex items-center gap-1 text-xs text-slate-400">
+                                <div className={`mt-auto pt-4 flex items-center justify-between border-t ${isDark ? 'border-slate-700' : 'border-slate-100'}`}>
+                                    <div className={`flex items-center gap-1 text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                                         <Calendar className="w-3 h-3" />
                                         {resource.uploadedAt?.toDate?.()?.toLocaleDateString() || 'N/A'}
                                     </div>
@@ -129,14 +134,14 @@ const StudyBricks = () => {
                                             href={resource.downloadUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors"
+                                            className={`p-2 rounded-full transition-colors ${isDark ? 'text-indigo-400 hover:bg-indigo-900/50' : 'text-indigo-600 hover:bg-indigo-50'}`}
                                         >
                                             <Download className="w-5 h-5" />
                                         </a>
                                     )}
                                 </div>
                             </div>
-                        </Card>
+                        </div>
                     ))}
                 </div>
             )}
