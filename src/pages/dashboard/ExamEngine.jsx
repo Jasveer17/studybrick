@@ -143,18 +143,38 @@ const ExamEngine = () => {
     useEffect(() => {
         const userAllowedChapters = user?.allowedChapters || [];
 
+        console.log("Filter Debug:", {
+            user: user?.name,
+            firestoreId: user?.firestoreId,
+            uid: user?.uid,
+            selectedSubjects,
+            userAllowedChapters,
+            totalQuestions: allQuestions.length
+        });
+
         const filtered = allQuestions.filter(q => {
-            const matchSubject = selectedSubjects.length === 0 || selectedSubjects.includes(q.subject?.toLowerCase());
+            // Subject matching - case insensitive
+            const qSubject = q.subject?.toLowerCase();
+            const matchSubject = selectedSubjects.length === 0 ||
+                selectedSubjects.map(s => s.toLowerCase()).includes(qSubject);
+
+            // Chapter matching
             const matchChapter = selectedChapters.length === 0 || selectedChapters.includes(q.chapter);
-            const matchSearch = q.content?.toLowerCase().includes(searchQuery.toLowerCase());
+
+            // Search matching
+            const matchSearch = !searchQuery || q.content?.toLowerCase().includes(searchQuery.toLowerCase());
+
             // Filter by user assignment (null = global, or assigned to current user)
             // Check both Firebase Auth UID and Firestore document ID since admin assigns using Firestore ID
             const matchUser = !q.assignedTo || q.assignedTo === user?.uid || q.assignedTo === user?.firestoreId;
-            // Respect user's chapter restrictions
+
+            // Respect user's chapter restrictions (empty = all allowed)
             const matchAllowedChapter = userAllowedChapters.length === 0 || userAllowedChapters.includes(q.chapter);
 
             return matchSubject && matchChapter && matchSearch && matchUser && matchAllowedChapter;
         });
+
+        console.log("Filtered questions:", filtered.length);
         setFilteredQuestions(filtered);
     }, [selectedSubjects, selectedChapters, searchQuery, allQuestions, user]);
 
