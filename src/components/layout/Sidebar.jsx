@@ -95,15 +95,21 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
                 {/* User Profile */}
                 <div className="p-4 border-t border-slate-800 bg-slate-900/50">
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-slate-600 transition-colors">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shadow-inner ${user?.role === 'admin' ? 'bg-indigo-600' : 'bg-emerald-600'}`}>
-                            {user?.name?.charAt(0) || 'U'}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-white truncate">{user?.name || 'User'}</p>
-                            <p className="text-xs text-slate-400 truncate capitalize">
-                                {user?.role === 'institute' ? 'Institute' : user?.role || 'Guest'}
-                            </p>
-                        </div>
+                        <Link
+                            to="/dashboard/profile"
+                            onClick={isMobile ? onClose : undefined}
+                            className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer hover:opacity-80 transition-opacity"
+                        >
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shadow-inner ${user?.role === 'admin' ? 'bg-indigo-600' : 'bg-emerald-600'}`}>
+                                {user?.name?.charAt(0) || 'U'}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-semibold text-white truncate">{user?.name || 'User'}</p>
+                                <p className="text-xs text-slate-400 truncate capitalize">
+                                    {user?.role === 'institute' ? 'Institute' : user?.role || 'Guest'}
+                                </p>
+                            </div>
+                        </Link>
                         <button
                             onClick={handleSignOut}
                             className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
