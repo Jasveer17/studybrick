@@ -10,8 +10,8 @@ const Card = ({ children, className, hover = true, ...props }) => {
     return (
         <div
             className={cn(
-                "bg-white rounded-xl border border-slate-200 shadow-sm transition-all duration-300",
-                hover && "hover:shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1",
+                "bg-white rounded-xl border border-slate-200 transition-all duration-200",
+                hover && "hover:shadow-md hover:-translate-y-0.5",
                 className
             )}
             {...props}

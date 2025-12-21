@@ -189,74 +189,68 @@ const AdminDashboard = () => {
     };
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 fade-in">
+            {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-                        Admin <span className="text-gradient">Dashboard</span>
+                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+                        Admin Dashboard
                     </h1>
-                    <p className="text-slate-500 mt-1">Manage content, users, and resources</p>
+                    <p className="text-slate-500 mt-1 text-sm">Manage content, users, and resources</p>
                 </div>
             </div>
 
-            {/* Stats Overview */}
+            {/* Stats Overview - White cards with gold icons */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <Link to="/admin/users" className="block">
-                    <div className="card-smooth relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-700 p-6 text-white cursor-pointer group">
+                <Link to="/admin/users" className="block hover-lift">
+                    <div className="bg-white rounded-xl p-6 border border-slate-200 cursor-pointer">
                         <div className="flex justify-between items-start">
                             <div>
-                                <p className="text-indigo-200 font-medium mb-1 text-sm">Total Users</p>
-                                <h3 className="text-4xl font-bold tracking-tight">{stats.users}</h3>
+                                <p className="text-slate-500 font-medium mb-1 text-sm">Total Users</p>
+                                <h3 className="text-3xl font-bold text-slate-900">{stats.users}</h3>
                             </div>
-                            <div className="p-3 bg-white/15 rounded-xl group-hover:bg-white/25 transition-colors">
-                                <Users className="w-6 h-6" />
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#fef9f0] to-[#fdf0d5] flex items-center justify-center">
+                                <Users className="w-6 h-6 text-[#c9a961]" />
                             </div>
                         </div>
-                        <p className="text-sm text-indigo-200 mt-4 flex items-center gap-1">
-                            Manage users <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </p>
                     </div>
                 </Link>
 
-                <Link to="/admin/questions" className="block">
-                    <div className="card-smooth relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 p-6 text-white cursor-pointer group">
+                <Link to="/admin/questions" className="block hover-lift">
+                    <div className="bg-white rounded-xl p-6 border border-slate-200 cursor-pointer">
                         <div className="flex justify-between items-start">
                             <div>
-                                <p className="text-emerald-100 font-medium mb-1 text-sm">Total Questions</p>
-                                <h3 className="text-4xl font-bold tracking-tight">{stats.questions}</h3>
+                                <p className="text-slate-500 font-medium mb-1 text-sm">Total Questions</p>
+                                <h3 className="text-3xl font-bold text-slate-900">{stats.questions}</h3>
                             </div>
-                            <div className="p-3 bg-white/15 rounded-xl group-hover:bg-white/25 transition-colors">
-                                <Database className="w-6 h-6" />
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#fef9f0] to-[#fdf0d5] flex items-center justify-center">
+                                <Database className="w-6 h-6 text-[#c9a961]" />
                             </div>
                         </div>
-                        <p className="text-sm text-emerald-100 mt-4 flex items-center gap-1">
-                            Manage questions <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </p>
                     </div>
                 </Link>
 
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-6 text-white">
+                <div className="bg-white rounded-xl p-6 border border-slate-200">
                     <div className="flex justify-between items-start">
                         <div>
-                            <p className="text-amber-100 font-medium mb-1 text-sm">Study Bricks</p>
-                            <h3 className="text-4xl font-bold tracking-tight">—</h3>
+                            <p className="text-slate-500 font-medium mb-1 text-sm">Study Bricks</p>
+                            <h3 className="text-3xl font-bold text-slate-900">—</h3>
                         </div>
-                        <div className="p-3 bg-white/15 rounded-xl">
-                            <Book className="w-6 h-6" />
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#fef9f0] to-[#fdf0d5] flex items-center justify-center">
+                            <Book className="w-6 h-6 text-[#c9a961]" />
                         </div>
                     </div>
-                    <p className="text-sm text-amber-100 mt-4">Upload in tab below</p>
                 </div>
             </div>
 
             {/* Main Content Area */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden min-h-[500px]">
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
                 {/* Tabs */}
-                <div className="flex border-b border-slate-200">
+                <div className="flex border-b border-slate-100">
                     <button
                         onClick={() => setActiveTab('questions')}
                         className={`px-6 py-4 text-sm font-medium transition-colors border-b-2 ${activeTab === 'questions'
-                            ? 'border-indigo-500 text-indigo-600'
+                            ? 'border-[#d4a574] text-[#d4a574]'
                             : 'border-transparent text-slate-500 hover:text-slate-700'
                             }`}
                     >
@@ -265,7 +259,7 @@ const AdminDashboard = () => {
                     <button
                         onClick={() => setActiveTab('bricks')}
                         className={`px-6 py-4 text-sm font-medium transition-colors border-b-2 ${activeTab === 'bricks'
-                            ? 'border-indigo-500 text-indigo-600'
+                            ? 'border-[#d4a574] text-[#d4a574]'
                             : 'border-transparent text-slate-500 hover:text-slate-700'
                             }`}
                     >
@@ -338,6 +332,7 @@ const AdminDashboard = () => {
                                         className="w-full p-2.5 border border-emerald-200 rounded-lg text-sm bg-white"
                                     >
                                         <option value="">All Users (Global)</option>
+                                        <option value="none">Assign to No One</option>
                                         {allUsers.map(u => (
                                             <option key={u.id} value={u.id}>
                                                 {u.name} {u.institute ? `(${u.institute})` : `(${u.role})`}
@@ -374,7 +369,7 @@ D) -sin(x)`}
                                     <button
                                         onClick={handleQuestionUpload}
                                         disabled={isUploading}
-                                        className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-lg shadow-indigo-500/20 transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50"
+                                        className="px-6 py-2.5 bg-gradient-to-r from-[#d4a574] to-[#c9a961] hover:from-[#c9a961] hover:to-[#d4a574] text-white font-semibold rounded-lg shadow-lg shadow-[#d4a574]/20 transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50"
                                     >
                                         {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
                                         Add to Bank
