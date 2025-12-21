@@ -200,67 +200,53 @@ const AdminDashboard = () => {
             </div>
 
             {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Link to="/admin/users">
-                    <motion.div
-                        whileHover={{ y: -4, scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-indigo-500 to-violet-600 p-6 text-white shadow-xl shadow-indigo-500/25 cursor-pointer group"
-                    >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
-                        <div className="relative flex justify-between items-start">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <Link to="/admin/users" className="block">
+                    <div className="card-smooth relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-700 p-6 text-white cursor-pointer group">
+                        <div className="flex justify-between items-start">
                             <div>
                                 <p className="text-indigo-200 font-medium mb-1 text-sm">Total Users</p>
-                                <h3 className="text-4xl font-extrabold tracking-tight">{stats.users}</h3>
+                                <h3 className="text-4xl font-bold tracking-tight">{stats.users}</h3>
                             </div>
-                            <div className="p-3 bg-white/20 rounded-xl group-hover:bg-white/30 transition-colors backdrop-blur-sm">
+                            <div className="p-3 bg-white/15 rounded-xl group-hover:bg-white/25 transition-colors">
                                 <Users className="w-6 h-6" />
                             </div>
                         </div>
-                        <p className="text-xs text-indigo-200 mt-4 flex items-center gap-1 font-medium">
-                            Manage users <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                        <p className="text-sm text-indigo-200 mt-4 flex items-center gap-1">
+                            Manage users <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </p>
-                    </motion.div>
+                    </div>
                 </Link>
 
-                <Link to="/admin/questions">
-                    <motion.div
-                        whileHover={{ y: -4, scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-400 to-teal-500 p-6 text-white shadow-xl shadow-emerald-500/25 cursor-pointer group"
-                    >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
-                        <div className="relative flex justify-between items-start">
+                <Link to="/admin/questions" className="block">
+                    <div className="card-smooth relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 p-6 text-white cursor-pointer group">
+                        <div className="flex justify-between items-start">
                             <div>
                                 <p className="text-emerald-100 font-medium mb-1 text-sm">Total Questions</p>
-                                <h3 className="text-4xl font-extrabold tracking-tight">{stats.questions}</h3>
+                                <h3 className="text-4xl font-bold tracking-tight">{stats.questions}</h3>
                             </div>
-                            <div className="p-3 bg-white/20 rounded-xl group-hover:bg-white/30 transition-colors backdrop-blur-sm">
+                            <div className="p-3 bg-white/15 rounded-xl group-hover:bg-white/25 transition-colors">
                                 <Database className="w-6 h-6" />
                             </div>
                         </div>
-                        <p className="text-xs text-emerald-100 mt-4 flex items-center gap-1 font-medium">
-                            Manage questions <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                        <p className="text-sm text-emerald-100 mt-4 flex items-center gap-1">
+                            Manage questions <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </p>
-                    </motion.div>
+                    </div>
                 </Link>
 
-                <motion.div
-                    whileHover={{ y: -4, scale: 1.02 }}
-                    className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 via-orange-400 to-amber-500 p-6 text-white shadow-xl shadow-amber-500/25"
-                >
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
-                    <div className="relative flex justify-between items-start">
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-6 text-white">
+                    <div className="flex justify-between items-start">
                         <div>
                             <p className="text-amber-100 font-medium mb-1 text-sm">Study Bricks</p>
-                            <h3 className="text-4xl font-extrabold tracking-tight">—</h3>
+                            <h3 className="text-4xl font-bold tracking-tight">—</h3>
                         </div>
-                        <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                        <div className="p-3 bg-white/15 rounded-xl">
                             <Book className="w-6 h-6" />
                         </div>
                     </div>
-                    <p className="text-xs text-amber-100 mt-4 font-medium">Upload in tab below</p>
-                </motion.div>
+                    <p className="text-sm text-amber-100 mt-4">Upload in tab below</p>
+                </div>
             </div>
 
             {/* Main Content Area */}
