@@ -145,11 +145,17 @@ const ExamEngine = () => {
 
         console.log("Filter Debug:", {
             user: user?.name,
+            email: user?.email,
             firestoreId: user?.firestoreId,
             uid: user?.uid,
             selectedSubjects,
             userAllowedChapters,
-            totalQuestions: allQuestions.length
+            totalQuestions: allQuestions.length,
+            sampleQuestion: allQuestions[0] ? {
+                subject: allQuestions[0].subject,
+                assignedTo: allQuestions[0].assignedTo,
+                chapter: allQuestions[0].chapter
+            } : null
         });
 
         const filtered = allQuestions.filter(q => {
@@ -165,8 +171,11 @@ const ExamEngine = () => {
             const matchSearch = !searchQuery || q.content?.toLowerCase().includes(searchQuery.toLowerCase());
 
             // Filter by user assignment (null = global, or assigned to current user)
-            // Check both Firebase Auth UID and Firestore document ID since admin assigns using Firestore ID
-            const matchUser = !q.assignedTo || q.assignedTo === user?.uid || q.assignedTo === user?.firestoreId;
+            // Check UID, Firestore document ID, and email since admin assigns using Firestore ID
+            const matchUser = !q.assignedTo ||
+                q.assignedTo === user?.uid ||
+                q.assignedTo === user?.firestoreId ||
+                q.assignedTo === user?.email;
 
             // Respect user's chapter restrictions (empty = all allowed)
             const matchAllowedChapter = userAllowedChapters.length === 0 || userAllowedChapters.includes(q.chapter);
