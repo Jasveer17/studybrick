@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { LogOut, BookMarked, X, FileText, UploadCloud, Database, Users, UserCircle, Bell } from 'lucide-react';
+import { LogOut, BookMarked, X, FileText, UploadCloud, Database, Users, UserCircle, Moon, Sun } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const Sidebar = ({ isOpen, onClose, isMobile }) => {
     const [showMobileOverlay, setShowMobileOverlay] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const { user, logout } = useAuth();
+    const { isDark } = useTheme();
 
     useEffect(() => {
         if (isMobile) {
@@ -50,7 +52,7 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
                 {/* Brand */}
                 <div className="p-5 flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#d4a574] to-[#c9a961] flex items-center justify-content-center p-1.5">
+                        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center p-1.5">
                             <img src="/logo.png" className="w-full h-full object-contain" alt="Logo" />
                         </div>
                         <span className="text-lg font-bold text-white tracking-tight">StudyBrick</span>
@@ -74,7 +76,7 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
                                 to={item.path}
                                 onClick={isMobile ? onClose : undefined}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${isActive
-                                    ? 'bg-[#d4a574] text-white'
+                                    ? 'bg-indigo-600 text-white'
                                     : 'text-slate-300 hover:bg-white/5 hover:text-white'
                                     }`}
                             >
@@ -93,7 +95,7 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
                             onClick={isMobile ? onClose : undefined}
                             className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer hover:opacity-80 transition-opacity"
                         >
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#d4a574] to-[#c9a961] flex items-center justify-center text-white font-semibold text-sm">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center text-white font-semibold text-sm">
                                 {user?.name?.charAt(0) || 'U'}
                             </div>
                             <div className="flex-1 min-w-0">

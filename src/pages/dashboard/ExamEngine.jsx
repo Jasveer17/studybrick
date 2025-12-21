@@ -17,7 +17,7 @@ import { useAuth } from '../../context/AuthContext';
 import MathRenderer from '../../components/ui/MathRenderer';
 import Card from '../../components/ui/Card';
 
-// Sortable Item Component
+// Sortable Item Component - Clean White Design
 const SortableItem = ({ question, onRemove }) => {
     const {
         attributes,
@@ -30,32 +30,36 @@ const SortableItem = ({ question, onRemove }) => {
 
     const style = {
         transform: CSS.Transform.toString(transform),
-        transition,
+        transition: transition || 'transform 0.2s ease',
         zIndex: isDragging ? 50 : 'auto',
-        opacity: isDragging ? 0.5 : 1,
+        opacity: isDragging ? 0.8 : 1,
     };
 
     return (
-        <div ref={setNodeRef} style={style} className="bg-slate-800/60 p-3 rounded-lg border border-slate-700 group hover:border-slate-500 transition-colors mb-2 relative print-item">
+        <div
+            ref={setNodeRef}
+            style={style}
+            className={`bg-white p-3 rounded-lg border ${isDragging ? 'border-indigo-300 shadow-lg' : 'border-slate-200'} group hover:border-indigo-200 transition-all duration-200 mb-2`}
+        >
             <div className="flex items-start gap-3">
                 {/* Drag Handle */}
                 <button
-                    className="mt-1 text-slate-600 hover:text-slate-400 cursor-grab active:cursor-grabbing"
+                    className="mt-1 text-slate-300 hover:text-slate-500 cursor-grab active:cursor-grabbing transition-colors"
                     {...attributes}
                     {...listeners}
                 >
                     <GripVertical className="w-4 h-4" />
                 </button>
 
-                <div className="flex-1">
-                    <p className="text-sm text-slate-300 line-clamp-2" style={{ fontFamily: '"Times New Roman", "Cambria Math", serif' }}>
+                <div className="flex-1 min-w-0">
+                    <p className="text-sm text-slate-700 line-clamp-2" style={{ fontFamily: '"Times New Roman", "Cambria Math", serif' }}>
                         <MathRenderer>{question.content}</MathRenderer>
                     </p>
                 </div>
 
                 <button
                     onClick={() => onRemove(question.id)}
-                    className="text-slate-500 hover:text-red-400 transition-colors p-1"
+                    className="text-slate-300 hover:text-red-500 transition-colors p-1 opacity-0 group-hover:opacity-100"
                 >
                     <Trash2 className="w-4 h-4" />
                 </button>
@@ -70,8 +74,17 @@ const ExamEngine = () => {
     const [selectedSubjects, setSelectedSubjects] = useState([]); // Will be initialized by useEffect
     const [selectedChapters, setSelectedChapters] = useState([]); // Empty = all chapters
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedQuestions, setSelectedQuestions] = useState([]);
+    const [selectedQuestions, setSelectedQuestions] = useState(() => {
+        // Load from localStorage on initial render
+        const saved = localStorage.getItem('paperBuilderQuestions');
+        return saved ? JSON.parse(saved) : [];
+    });
     const [isExporting, setIsExporting] = useState(false);
+
+    // Save selected questions to localStorage whenever they change
+    useEffect(() => {
+        localStorage.setItem('paperBuilderQuestions', JSON.stringify(selectedQuestions));
+    }, [selectedQuestions]);
 
     // Real Data State
     const [filteredQuestions, setFilteredQuestions] = useState([]);
@@ -472,88 +485,87 @@ const ExamEngine = () => {
             </div>
 
             {/*
-        RIGHT PANEL: Paper Builder (Sortable)
+        RIGHT PANEL: Paper Builder - Premium White Design
       */}
-            <div className="hidden md:flex w-[30%] bg-slate-900 text-slate-200 flex-col border-l border-slate-800 shadow-2xl z-20 relative">
-                <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900 to-slate-900" />
-
-                <div className="p-6 border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm z-10">
-                    <div className="flex items-center gap-3 mb-1">
-                        <div className="p-2.5 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-xl shadow-lg shadow-indigo-900/40">
+            <div className="hidden md:flex w-[30%] bg-white flex-col border-l border-slate-200 shadow-lg z-20">
+                {/* Header */}
+                <div className="p-5 border-b border-slate-100">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2.5 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl shadow-lg shadow-indigo-500/20">
                             <FileText className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-white text-lg tracking-tight">Paper Builder</h3>
-                            <p className="text-xs text-slate-400 font-medium">Drag to reorder</p>
+                            <h3 className="font-bold text-slate-900 text-lg">Paper Builder</h3>
+                            <p className="text-xs text-slate-400">Drag to reorder questions</p>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 mt-6">
-                        <div className="bg-slate-800/50 p-2 rounded-lg border border-slate-700/50 text-center">
-                            <span className="text-xs text-slate-500 uppercase tracking-widest font-semibold block mb-1">Questions</span>
-                            <span className="text-xl font-bold text-white font-mono">{selectedQuestions.length}</span>
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                            <span className="text-xs text-slate-400 uppercase tracking-wide font-medium block mb-1">Questions</span>
+                            <span className="text-2xl font-bold text-slate-900">{selectedQuestions.length}</span>
                         </div>
-                        <div className="bg-slate-800/50 p-2 rounded-lg border border-slate-700/50 text-center">
-                            <span className="text-xs text-slate-500 uppercase tracking-widest font-semibold block mb-1">Est. Time</span>
-                            <span className="text-xl font-bold text-emerald-400 font-mono">{selectedQuestions.length * 3} <span className="text-xs text-emerald-600">min</span></span>
+                        <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                            <span className="text-xs text-slate-400 uppercase tracking-wide font-medium block mb-1">Est. Time</span>
+                            <span className="text-2xl font-bold text-indigo-600">{selectedQuestions.length * 3}<span className="text-sm ml-1">min</span></span>
                         </div>
                     </div>
                 </div>
 
-                {/* Capture Area for PDF */}
-                <div className="flex-1 overflow-y-auto p-4 z-10 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-                    <div className="pb-20"> {/* Wrapper for DND */}
-                        <DndContext
-                            sensors={sensors}
-                            collisionDetection={closestCenter}
-                            onDragEnd={handleDragEnd}
+                {/* Questions List */}
+                <div className="flex-1 overflow-y-auto p-4 bg-slate-50/50">
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                    >
+                        <SortableContext
+                            items={selectedQuestions.map(q => q.id)}
+                            strategy={verticalListSortingStrategy}
                         >
-                            <SortableContext
-                                items={selectedQuestions.map(q => q.id)}
-                                strategy={verticalListSortingStrategy}
-                            >
-                                <div className="space-y-3">
-                                    <AnimatePresence>
-                                        {selectedQuestions.length === 0 && (
-                                            <motion.div
-                                                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                                                className="text-center py-12 px-4 border-2 border-dashed border-slate-800 rounded-xl"
-                                            >
-                                                <p className="text-slate-500 text-sm">Your paper is empty.</p>
-                                                <p className="text-slate-600 text-xs mt-2">Questions added will appear here.</p>
-                                            </motion.div>
-                                        )}
-                                        {selectedQuestions.map((q) => (
-                                            <SortableItem key={q.id} question={q} onRemove={handleRemoveQuestion} />
-                                        ))}
-                                    </AnimatePresence>
-                                </div>
-                            </SortableContext>
-                        </DndContext>
-                    </div>
+                            <div className="space-y-2">
+                                <AnimatePresence>
+                                    {selectedQuestions.length === 0 && (
+                                        <motion.div
+                                            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                                            className="text-center py-16 px-6"
+                                        >
+                                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center">
+                                                <FileText className="w-8 h-8 text-slate-300" />
+                                            </div>
+                                            <p className="text-slate-500 font-medium">Your paper is empty</p>
+                                            <p className="text-slate-400 text-sm mt-1">Add questions from the left panel</p>
+                                        </motion.div>
+                                    )}
+                                    {selectedQuestions.map((q) => (
+                                        <SortableItem key={q.id} question={q} onRemove={handleRemoveQuestion} />
+                                    ))}
+                                </AnimatePresence>
+                            </div>
+                        </SortableContext>
+                    </DndContext>
                 </div>
 
-                <div className="p-6 border-t border-slate-800 bg-slate-900/95 backdrop-blur z-20 space-y-4">
-
-                    {/* PDF Settings */}
-                    <div className="space-y-3 bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
+                {/* Footer with PDF Settings */}
+                <div className="p-5 border-t border-slate-100 bg-white space-y-4">
+                    <div className="space-y-3">
                         <div>
-                            <label className="text-xs text-slate-400 font-medium ml-1">Institute Name</label>
+                            <label className="text-xs text-slate-500 font-medium mb-1 block">Institute Name</label>
                             <input
                                 type="text"
                                 value={pdfSettings.instituteName}
                                 onChange={(e) => setPdfSettings({ ...pdfSettings, instituteName: e.target.value })}
-                                className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-sm text-slate-200 focus:border-indigo-500 focus:outline-none placeholder:text-slate-600"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-all"
                                 placeholder="Enter Institute Name"
                             />
                         </div>
                         <div>
-                            <label className="text-xs text-slate-400 font-medium ml-1">Exam Title</label>
+                            <label className="text-xs text-slate-500 font-medium mb-1 block">Exam Title</label>
                             <input
                                 type="text"
                                 value={pdfSettings.examTitle}
                                 onChange={(e) => setPdfSettings({ ...pdfSettings, examTitle: e.target.value })}
-                                className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-sm text-slate-200 focus:border-indigo-500 focus:outline-none placeholder:text-slate-600"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-all"
                                 placeholder="e.g. JEE Mains Mock 1"
                             />
                         </div>
@@ -561,11 +573,11 @@ const ExamEngine = () => {
 
                     <button
                         onClick={handleExportPDF}
-                        disabled={isExporting}
-                        className="w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg shadow-lg shadow-indigo-900/50 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isExporting || selectedQuestions.length === 0}
+                        className="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
                     >
-                        {isExporting ? <Loader2 className="w-5 h-4 animate-spin" /> : <Download className="w-5 h-5" />}
-                        {isExporting ? 'Generating PDF...' : 'Export Paper PDF'}
+                        {isExporting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
+                        {isExporting ? 'Generating...' : 'Export Paper PDF'}
                     </button>
                 </div>
             </div>

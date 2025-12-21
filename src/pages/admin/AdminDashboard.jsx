@@ -200,7 +200,7 @@ const AdminDashboard = () => {
                 </div>
             </div>
 
-            {/* Stats Overview - White cards with gold icons */}
+            {/* Stats Overview - White cards with indigo icons */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <Link to="/admin/users" className="block hover-lift">
                     <div className="bg-white rounded-xl p-6 border border-slate-200 cursor-pointer">
@@ -209,8 +209,8 @@ const AdminDashboard = () => {
                                 <p className="text-slate-500 font-medium mb-1 text-sm">Total Users</p>
                                 <h3 className="text-3xl font-bold text-slate-900">{stats.users}</h3>
                             </div>
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#fef9f0] to-[#fdf0d5] flex items-center justify-center">
-                                <Users className="w-6 h-6 text-[#c9a961]" />
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-50 to-indigo-100 flex items-center justify-center">
+                                <Users className="w-6 h-6 text-indigo-600" />
                             </div>
                         </div>
                     </div>
@@ -223,8 +223,8 @@ const AdminDashboard = () => {
                                 <p className="text-slate-500 font-medium mb-1 text-sm">Total Questions</p>
                                 <h3 className="text-3xl font-bold text-slate-900">{stats.questions}</h3>
                             </div>
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#fef9f0] to-[#fdf0d5] flex items-center justify-center">
-                                <Database className="w-6 h-6 text-[#c9a961]" />
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center">
+                                <Database className="w-6 h-6 text-emerald-600" />
                             </div>
                         </div>
                     </div>
@@ -236,8 +236,8 @@ const AdminDashboard = () => {
                             <p className="text-slate-500 font-medium mb-1 text-sm">Study Bricks</p>
                             <h3 className="text-3xl font-bold text-slate-900">—</h3>
                         </div>
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#fef9f0] to-[#fdf0d5] flex items-center justify-center">
-                            <Book className="w-6 h-6 text-[#c9a961]" />
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center">
+                            <Book className="w-6 h-6 text-amber-600" />
                         </div>
                     </div>
                 </div>

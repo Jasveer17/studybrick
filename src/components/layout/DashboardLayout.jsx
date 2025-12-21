@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, ArrowLeft, Bell } from 'lucide-react';
+import { Menu, ArrowLeft, Bell, Moon, Sun } from 'lucide-react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import Sidebar from './Sidebar';
 
 const DashboardLayout = ({ children }) => {
@@ -10,6 +11,7 @@ const DashboardLayout = ({ children }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { user } = useAuth();
+    const { isDark, toggleTheme } = useTheme();
 
     const canGoBack = location.pathname !== '/dashboard/exam-engine' &&
         location.pathname !== '/admin/dashboard';
@@ -28,7 +30,7 @@ const DashboardLayout = ({ children }) => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-slate-50 flex font-sans">
+        <div className={`min-h-screen flex font-sans transition-colors duration-200 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
             <Sidebar
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
@@ -38,47 +40,54 @@ const DashboardLayout = ({ children }) => {
             <div className={`flex-1 flex flex-col min-h-screen transition-[margin] duration-200 ${!isMobile ? 'ml-64' : ''}`}>
 
                 {/* Header */}
-                <header className="bg-white border-b border-slate-100 sticky top-0 z-30">
+                <header className={`sticky top-0 z-30 border-b transition-colors duration-200 ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
                     <div className="h-14 flex items-center justify-between px-4 lg:px-6">
                         <div className="flex items-center gap-3">
-                            {/* Mobile menu button */}
                             {isMobile && (
                                 <button
                                     onClick={() => setIsSidebarOpen(true)}
-                                    className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg"
+                                    className={`p-2 rounded-lg transition-colors ${isDark ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-slate-100'}`}
                                 >
                                     <Menu className="w-5 h-5" />
                                 </button>
                             )}
 
-                            {/* Back button */}
                             {canGoBack && (
                                 <button
                                     onClick={() => navigate(-1)}
-                                    className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg"
+                                    className={`p-2 rounded-lg transition-colors ${isDark ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-slate-100'}`}
                                 >
                                     <ArrowLeft className="w-5 h-5" />
                                 </button>
                             )}
 
-                            {/* Mobile logo */}
                             {isMobile && (
                                 <div className="flex items-center gap-2">
-                                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#d4a574] to-[#c9a961] p-1">
+                                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 p-1">
                                         <img src="/logo.png" className="w-full h-full" alt="Logo" />
                                     </div>
-                                    <span className="font-bold text-slate-900">StudyBrick</span>
+                                    <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>StudyBrick</span>
                                 </div>
                             )}
                         </div>
 
-                        {/* Right side - Notifications & Avatar */}
-                        <div className="flex items-center gap-3">
-                            <button className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg relative">
-                                <Bell className="w-5 h-5" />
-                                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#d4a574] rounded-full"></span>
+                        {/* Right side - Theme Toggle, Notifications & Avatar */}
+                        <div className="flex items-center gap-2">
+                            {/* Theme Toggle */}
+                            <button
+                                onClick={toggleTheme}
+                                className={`p-2 rounded-lg transition-all duration-200 ${isDark ? 'text-amber-400 hover:bg-slate-700' : 'text-slate-500 hover:bg-slate-100'}`}
+                                title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                            >
+                                {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                             </button>
-                            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#d4a574] to-[#c9a961] flex items-center justify-center text-white font-semibold text-sm cursor-pointer">
+
+                            <button className={`p-2 rounded-lg relative transition-colors ${isDark ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-500 hover:bg-slate-100'}`}>
+                                <Bell className="w-5 h-5" />
+                                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full"></span>
+                            </button>
+
+                            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center text-white font-semibold text-sm cursor-pointer">
                                 {user?.name?.charAt(0) || 'U'}
                             </div>
                         </div>

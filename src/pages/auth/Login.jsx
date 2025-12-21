@@ -40,17 +40,17 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#1a2234] flex items-center justify-center relative overflow-hidden p-4">
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 flex items-center justify-center relative overflow-hidden p-4">
             {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-20 left-20 w-64 h-64 bg-[#d4a574] rounded-full blur-3xl" />
-                <div className="absolute bottom-20 right-20 w-96 h-96 bg-[#c9a961] rounded-full blur-3xl" />
+            <div className="absolute inset-0 opacity-20">
+                <div className="absolute top-20 left-20 w-64 h-64 bg-indigo-500 rounded-full blur-3xl" />
+                <div className="absolute bottom-20 right-20 w-96 h-96 bg-violet-500 rounded-full blur-3xl" />
             </div>
 
             <div className="w-full max-w-md bg-white rounded-2xl p-8 shadow-2xl relative z-10 fade-in">
                 {/* Logo & Header */}
                 <div className="flex flex-col items-center mb-8">
-                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#d4a574] to-[#c9a961] flex items-center justify-center mb-4">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mb-4 shadow-lg shadow-indigo-500/30">
                         <img src="/logo.png" alt="StudyBrick Logo" className="w-10 h-10" />
                     </div>
                     <h1 className="text-2xl font-bold text-slate-900">Welcome Back</h1>
@@ -65,7 +65,7 @@ const Login = () => {
                             <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                             <input
                                 type="text"
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#d4a574] focus:ring-2 focus:ring-[#d4a574]/20 transition-all"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                                 placeholder="Enter your ID"
                                 value={formData.id}
                                 onChange={(e) => setFormData({ ...formData, id: e.target.value })}
@@ -80,7 +80,7 @@ const Login = () => {
                             <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                             <input
                                 type="password"
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#d4a574] focus:ring-2 focus:ring-[#d4a574]/20 transition-all"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                                 placeholder="••••••••"
                                 value={formData.password}
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -100,7 +100,7 @@ const Login = () => {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-gradient-to-r from-[#d4a574] to-[#c9a961] hover:from-[#c9a961] hover:to-[#d4a574] text-white font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#d4a574]/25"
+                        className="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/25"
                     >
                         {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Sign In <ArrowRight className="w-5 h-5" /></>}
                     </button>
