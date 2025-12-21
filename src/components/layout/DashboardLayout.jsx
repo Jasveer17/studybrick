@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Menu } from 'lucide-react';
-import { Outlet } from 'react-router-dom';
+import { Menu, ArrowLeft } from 'lucide-react';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 
 const DashboardLayout = ({ children }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Check if we can go back (not on the main dashboard pages)
+    const canGoBack = location.pathname !== '/dashboard/exam-engine' &&
+        location.pathname !== '/admin/dashboard';
 
     // Handle Resize for responsive check
     useEffect(() => {
@@ -42,8 +48,30 @@ const DashboardLayout = ({ children }) => {
                     >
                         <Menu className="w-6 h-6" />
                     </button>
+                    {canGoBack && (
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg ml-1"
+                            title="Go Back"
+                        >
+                            <ArrowLeft className="w-5 h-5" />
+                        </button>
+                    )}
                     <span className="ml-4 font-bold text-gray-900 text-lg">StudyBrick</span>
                 </header>
+
+                {/* Desktop Back Button */}
+                {!isMobile && canGoBack && (
+                    <div className="bg-white border-b border-gray-100 px-6 py-2">
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="flex items-center gap-2 text-sm text-slate-600 hover:text-indigo-600 transition-colors"
+                        >
+                            <ArrowLeft className="w-4 h-4" />
+                            Back
+                        </button>
+                    </div>
+                )}
 
                 <main className="flex-1 p-4 lg:p-8 overflow-y-auto">
                     {children || <Outlet />}

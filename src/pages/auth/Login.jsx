@@ -2,19 +2,22 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { motion } from 'framer-motion';
-import { User, Lock, Loader2, ArrowRight } from 'lucide-react';
-import { toast } from 'sonner';
+import { User, Lock, Loader2, ArrowRight, AlertCircle } from 'lucide-react';
+import { toast, Toaster } from 'sonner';
 
 const Login = () => {
     const [formData, setFormData] = useState({ id: '', password: '' });
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(''); // Clear previous error
+
         if (!formData.id || !formData.password) {
-            toast.error('Please fill in all fields');
+            setError('Please fill in all fields');
             return;
         }
 
@@ -34,6 +37,8 @@ const Login = () => {
                 navigate('/dashboard/exam-engine');
             }
         } catch (error) {
+            console.error("Login error:", error);
+            setError('Invalid ID or Password. Please try again.');
             toast.error('Invalid ID or Password');
         } finally {
             setIsLoading(false);
@@ -92,6 +97,18 @@ const Login = () => {
                         </div>
                     </div>
 
+                    {/* Error Message */}
+                    {error && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex items-center gap-2 p-3 bg-red-500/20 border border-red-500/30 rounded-xl text-red-400 text-sm"
+                        >
+                            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                            <span>{error}</span>
+                        </motion.div>
+                    )}
+
                     <button
                         type="submit"
                         disabled={isLoading}
@@ -101,6 +118,7 @@ const Login = () => {
                     </button>
                 </form>
             </motion.div>
+            <Toaster position="top-center" richColors />
         </div>
     );
 };
