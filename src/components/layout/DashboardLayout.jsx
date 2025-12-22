@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, ArrowLeft, Bell, Moon, Sun } from 'lucide-react';
+import { Menu, ArrowLeft, Moon, Sun } from 'lucide-react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import Sidebar from './Sidebar';
+import NoticesWidget from '../ui/NoticesWidget';
 
 const DashboardLayout = ({ children }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -82,10 +83,8 @@ const DashboardLayout = ({ children }) => {
                                 {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                             </button>
 
-                            <button className={`p-2 rounded-lg relative transition-colors ${isDark ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-500 hover:bg-slate-100'}`}>
-                                <Bell className="w-5 h-5" />
-                                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full"></span>
-                            </button>
+                            {/* Real-time Notices Widget */}
+                            <NoticesWidget />
 
                             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center text-white font-semibold text-sm cursor-pointer">
                                 {user?.name?.charAt(0) || 'U'}

@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import DashboardLayout from './components/layout/DashboardLayout';
 import ExamEngine from './pages/dashboard/ExamEngine';
 import ProfilePage from './pages/dashboard/ProfilePage';
+import Leaderboard from './pages/dashboard/Leaderboard';
 import Login from './pages/auth/Login';
 import SeedDatabase from './pages/admin/SeedDatabase';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -51,6 +52,7 @@ function App() {
               {/* Student/User Routes */}
               <Route path="dashboard/exam-engine" element={<ExamEngine />} />
               <Route path="dashboard/study-bricks" element={<StudyBricks />} />
+              <Route path="dashboard/leaderboard" element={<Leaderboard />} />
               <Route path="dashboard/profile" element={<ProfilePage />} />
             </Route>
           </Routes>

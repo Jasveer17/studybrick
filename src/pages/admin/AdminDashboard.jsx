@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, FileText, Check, Plus, Book, Trash2, Users, Database, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
+import { Upload, FileText, Check, Plus, Book, Trash2, Users, Database, ArrowRight, Loader2, AlertCircle, Bell, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { collection, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -30,11 +30,17 @@ const AdminDashboard = () => {
         chapter: '',
         difficulty: 'Medium',
         type: 'MCQ',
-        assignedTo: '' // Empty = all users
+        assignedTo: ''
     });
 
     // Real stats from Firestore
     const [stats, setStats] = useState({ users: 0, questions: 0 });
+
+    // Notice posting state
+    const [noticeTitle, setNoticeTitle] = useState('');
+    const [noticeMessage, setNoticeMessage] = useState('');
+    const [noticeType, setNoticeType] = useState('normal');
+    const [isPostingNotice, setIsPostingNotice] = useState(false);
 
     useEffect(() => {
         const unsubUsers = onSnapshot(collection(db, 'users'), (snapshot) => {
@@ -189,6 +195,38 @@ const AdminDashboard = () => {
         }
     };
 
+    // Post Notice to all users
+    const handlePostNotice = async () => {
+        if (!noticeTitle.trim()) {
+            toast.error('Please provide a notice title');
+            return;
+        }
+        if (!noticeMessage.trim()) {
+            toast.error('Please provide a notice message');
+            return;
+        }
+
+        setIsPostingNotice(true);
+        try {
+            await addDoc(collection(db, 'notices'), {
+                title: noticeTitle.trim(),
+                message: noticeMessage.trim(),
+                type: noticeType,
+                createdAt: serverTimestamp(),
+                createdBy: user?.uid || 'admin'
+            });
+
+            toast.success('Notice posted successfully!');
+            setNoticeTitle('');
+            setNoticeMessage('');
+            setNoticeType('normal');
+        } catch (error) {
+            console.error('Notice post error:', error);
+            toast.error(`Failed: ${error.message}`);
+        } finally {
+            setIsPostingNotice(false);
+        }
+    };
 
 
     return (
@@ -267,6 +305,16 @@ const AdminDashboard = () => {
                             }`}
                     >
                         Upload Study Bricks
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('notices')}
+                        className={`px-6 py-4 text-sm font-medium transition-colors border-b-2 flex items-center gap-2 ${activeTab === 'notices'
+                            ? 'border-indigo-500 text-indigo-500'
+                            : `border-transparent ${isDark ? 'text-slate-400 hover:text-slate-200' : 'text-slate-500 hover:text-slate-700'}`
+                            }`}
+                    >
+                        <Bell className="w-4 h-4" />
+                        Post Notice
                     </button>
                 </div>
 
@@ -467,7 +515,80 @@ D) -sin(x)`}
                                     {isUploading ? 'Adding...' : 'Add Material'}
                                 </button>
                             </motion.div>
-                        )}
+                        ) : activeTab === 'notices' ? (
+                        <motion.div
+                            key="notices"
+                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                            className="max-w-xl mx-auto space-y-5 pt-6"
+                        >
+                            <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200 mb-4">
+                                <h3 className="font-semibold text-indigo-900 mb-1 flex items-center gap-2">
+                                    <Bell className="w-4 h-4" />
+                                    Broadcast Notice
+                                </h3>
+                                <p className="text-sm text-indigo-700">
+                                    Post a notice that all students will see instantly in real-time.
+                                </p>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-700">Notice Title *</label>
+                                <input
+                                    type="text"
+                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                    placeholder="e.g. Important: Exam Schedule Change"
+                                    value={noticeTitle}
+                                    onChange={(e) => setNoticeTitle(e.target.value)}
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-700">Message *</label>
+                                <textarea
+                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none h-28"
+                                    placeholder="Enter the notice message..."
+                                    value={noticeMessage}
+                                    onChange={(e) => setNoticeMessage(e.target.value)}
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-700">Notice Type</label>
+                                <div className="flex gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setNoticeType('normal')}
+                                        className={`flex-1 py-2.5 px-4 rounded-lg border-2 font-medium transition-all ${noticeType === 'normal'
+                                            ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                                            : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                                            }`}
+                                    >
+                                        Normal
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setNoticeType('urgent')}
+                                        className={`flex-1 py-2.5 px-4 rounded-lg border-2 font-medium transition-all flex items-center justify-center gap-2 ${noticeType === 'urgent'
+                                            ? 'border-amber-500 bg-amber-50 text-amber-700'
+                                            : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                                            }`}
+                                    >
+                                        <AlertCircle className="w-4 h-4" />
+                                        Urgent
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={handlePostNotice}
+                                disabled={isPostingNotice}
+                                className="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold rounded-lg shadow-lg shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                            >
+                                {isPostingNotice ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                                {isPostingNotice ? 'Posting...' : 'Post Notice'}
+                            </button>
+                        </motion.div>
+                        ) : null}
                     </AnimatePresence>
                 </div>
             </div>

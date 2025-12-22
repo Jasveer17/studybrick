@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { LogOut, BookMarked, X, FileText, UploadCloud, Database, Users, UserCircle, Moon, Sun } from 'lucide-react';
+import { LogOut, BookMarked, X, FileText, UploadCloud, Database, Users, UserCircle, Trophy, Download } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 
 const Sidebar = ({ isOpen, onClose, isMobile }) => {
     const [showMobileOverlay, setShowMobileOverlay] = useState(false);
+    const [deferredPrompt, setDeferredPrompt] = useState(null);
+    const [showInstallButton, setShowInstallButton] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const { user, logout } = useAuth();
@@ -18,6 +20,36 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
         }
     }, [isOpen, isMobile]);
 
+    // PWA Install Prompt Handler
+    useEffect(() => {
+        const handleBeforeInstallPrompt = (e) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+            setShowInstallButton(true);
+        };
+
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+        // Check if already installed
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            setShowInstallButton(false);
+        }
+
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        };
+    }, []);
+
+    const handleInstallClick = async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            setShowInstallButton(false);
+        }
+        setDeferredPrompt(null);
+    };
+
     // Define Menu Items based on Role
     const menuItems = user?.role === 'admin' ? [
         { icon: UploadCloud, label: 'Dashboard', path: '/admin/dashboard' },
@@ -26,6 +58,7 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
     ] : [
         { icon: FileText, label: 'Exam Engine', path: '/dashboard/exam-engine' },
         { icon: BookMarked, label: 'Study Bricks', path: '/dashboard/study-bricks' },
+        { icon: Trophy, label: 'Leaderboard', path: '/dashboard/leaderboard' },
         { icon: UserCircle, label: 'My Profile', path: '/dashboard/profile' },
     ];
 
@@ -86,6 +119,19 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
                         );
                     })}
                 </nav>
+
+                {/* PWA Install Button - Mobile Only */}
+                {showInstallButton && isMobile && (
+                    <div className="px-3 pb-2">
+                        <button
+                            onClick={handleInstallClick}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold rounded-lg shadow-lg shadow-emerald-500/20 hover:from-emerald-600 hover:to-emerald-700 transition-all"
+                        >
+                            <Download className="w-5 h-5" />
+                            Install App
+                        </button>
+                    </div>
+                )}
 
                 {/* User Profile Section */}
                 <div className="p-4 border-t border-white/10">
