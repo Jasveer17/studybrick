@@ -427,7 +427,7 @@ D) -sin(x)`}
                                     </button>
                                 </div>
                             </motion.div>
-                        ) : (
+                        ) : activeTab === 'bricks' ? (
                             <motion.div
                                 key="bricks"
                                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
@@ -516,78 +516,78 @@ D) -sin(x)`}
                                 </button>
                             </motion.div>
                         ) : activeTab === 'notices' ? (
-                        <motion.div
-                            key="notices"
-                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                            className="max-w-xl mx-auto space-y-5 pt-6"
-                        >
-                            <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200 mb-4">
-                                <h3 className="font-semibold text-indigo-900 mb-1 flex items-center gap-2">
-                                    <Bell className="w-4 h-4" />
-                                    Broadcast Notice
-                                </h3>
-                                <p className="text-sm text-indigo-700">
-                                    Post a notice that all students will see instantly in real-time.
-                                </p>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-slate-700">Notice Title *</label>
-                                <input
-                                    type="text"
-                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                                    placeholder="e.g. Important: Exam Schedule Change"
-                                    value={noticeTitle}
-                                    onChange={(e) => setNoticeTitle(e.target.value)}
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-slate-700">Message *</label>
-                                <textarea
-                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none h-28"
-                                    placeholder="Enter the notice message..."
-                                    value={noticeMessage}
-                                    onChange={(e) => setNoticeMessage(e.target.value)}
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-slate-700">Notice Type</label>
-                                <div className="flex gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => setNoticeType('normal')}
-                                        className={`flex-1 py-2.5 px-4 rounded-lg border-2 font-medium transition-all ${noticeType === 'normal'
-                                            ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                                            : 'border-slate-200 text-slate-600 hover:border-slate-300'
-                                            }`}
-                                    >
-                                        Normal
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setNoticeType('urgent')}
-                                        className={`flex-1 py-2.5 px-4 rounded-lg border-2 font-medium transition-all flex items-center justify-center gap-2 ${noticeType === 'urgent'
-                                            ? 'border-amber-500 bg-amber-50 text-amber-700'
-                                            : 'border-slate-200 text-slate-600 hover:border-slate-300'
-                                            }`}
-                                    >
-                                        <AlertCircle className="w-4 h-4" />
-                                        Urgent
-                                    </button>
-                                </div>
-                            </div>
-
-                            <button
-                                onClick={handlePostNotice}
-                                disabled={isPostingNotice}
-                                className="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold rounded-lg shadow-lg shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                            <motion.div
+                                key="notices"
+                                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                                className="max-w-xl mx-auto space-y-5 pt-6"
                             >
-                                {isPostingNotice ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                                {isPostingNotice ? 'Posting...' : 'Post Notice'}
-                            </button>
-                        </motion.div>
+                                <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200 mb-4">
+                                    <h3 className="font-semibold text-indigo-900 mb-1 flex items-center gap-2">
+                                        <Bell className="w-4 h-4" />
+                                        Broadcast Notice
+                                    </h3>
+                                    <p className="text-sm text-indigo-700">
+                                        Post a notice that all students will see instantly in real-time.
+                                    </p>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-slate-700">Notice Title *</label>
+                                    <input
+                                        type="text"
+                                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                        placeholder="e.g. Important: Exam Schedule Change"
+                                        value={noticeTitle}
+                                        onChange={(e) => setNoticeTitle(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-slate-700">Message *</label>
+                                    <textarea
+                                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none h-28"
+                                        placeholder="Enter the notice message..."
+                                        value={noticeMessage}
+                                        onChange={(e) => setNoticeMessage(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-slate-700">Notice Type</label>
+                                    <div className="flex gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => setNoticeType('normal')}
+                                            className={`flex-1 py-2.5 px-4 rounded-lg border-2 font-medium transition-all ${noticeType === 'normal'
+                                                ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                                                : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                                                }`}
+                                        >
+                                            Normal
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setNoticeType('urgent')}
+                                            className={`flex-1 py-2.5 px-4 rounded-lg border-2 font-medium transition-all flex items-center justify-center gap-2 ${noticeType === 'urgent'
+                                                ? 'border-amber-500 bg-amber-50 text-amber-700'
+                                                : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                                                }`}
+                                        >
+                                            <AlertCircle className="w-4 h-4" />
+                                            Urgent
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={handlePostNotice}
+                                    disabled={isPostingNotice}
+                                    className="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold rounded-lg shadow-lg shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                                >
+                                    {isPostingNotice ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                                    {isPostingNotice ? 'Posting...' : 'Post Notice'}
+                                </button>
+                            </motion.div>
                         ) : null}
                     </AnimatePresence>
                 </div>
