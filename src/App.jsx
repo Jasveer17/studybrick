@@ -7,6 +7,7 @@ import ExamEngine from './pages/dashboard/ExamEngine';
 import ProfilePage from './pages/dashboard/ProfilePage';
 import Leaderboard from './pages/dashboard/Leaderboard';
 import Login from './pages/auth/Login';
+import Onboarding from './pages/auth/Onboarding';
 import SeedDatabase from './pages/admin/SeedDatabase';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import QuestionManager from './pages/admin/QuestionManager';
@@ -15,7 +16,7 @@ import StudyBricks from './pages/dashboard/StudyBricks';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-slate-900">
@@ -24,6 +25,24 @@ const ProtectedRoute = ({ children }) => {
     );
   }
   if (!isAuthenticated) return <Navigate to="/login" replace />;
+  // Redirect to onboarding if profile not complete
+  if (user?.profileComplete === false) return <Navigate to="/onboarding" replace />;
+  return children;
+};
+
+// Onboarding Route - only for users who need to complete profile
+const OnboardingRoute = ({ children }) => {
+  const { user, isAuthenticated, isLoading } = useAuth();
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-slate-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-600 border-t-transparent"></div>
+      </div>
+    );
+  }
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  // If profile is already complete, redirect to dashboard
+  if (user?.profileComplete !== false) return <Navigate to="/dashboard/exam-engine" replace />;
   return children;
 };
 
@@ -34,6 +53,11 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/onboarding" element={
+              <OnboardingRoute>
+                <Onboarding />
+              </OnboardingRoute>
+            } />
             <Route path="/seed" element={<SeedDatabase />} />
 
             <Route path="/" element={<Navigate to="/login" replace />} />

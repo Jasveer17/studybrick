@@ -61,9 +61,12 @@ const Login = () => {
         setIsGoogleLoading(true);
         try {
             const user = await loginWithGoogle();
-            toast.success(`Welcome, ${user.name || user.displayName || 'User'}!`);
+            toast.success(`Welcome, ${user.name || 'there'}!`);
 
-            if (user.role === 'admin') {
+            // Check if new user needs onboarding
+            if (user.isNewUser || user.profileComplete === false) {
+                navigate('/onboarding');
+            } else if (user.role === 'admin') {
                 navigate('/admin/dashboard');
             } else {
                 navigate('/dashboard/exam-engine');

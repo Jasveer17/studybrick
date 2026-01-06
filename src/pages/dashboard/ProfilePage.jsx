@@ -48,12 +48,17 @@ const ProfilePage = () => {
     const { isDark } = useTheme();
     const [animatedStreak, setAnimatedStreak] = useState(0);
 
-    // Simulate streak animation
-    const streak = user?.streak || 7;
+    // Real streak from Firestore (defaults to 0)
+    const streak = user?.streak || 0;
     useEffect(() => {
         let count = 0;
+        const target = Math.min(streak, 30); // Cap animation at 30 for performance
+        if (target === 0) {
+            setAnimatedStreak(0);
+            return;
+        }
         const interval = setInterval(() => {
-            if (count < streak) {
+            if (count < target) {
                 count++;
                 setAnimatedStreak(count);
             } else {
@@ -86,10 +91,10 @@ const ProfilePage = () => {
         });
     };
 
-    // Simulated progress stats
-    const questionsCompleted = user?.totalScore || 45;
-    const totalQuestions = 100;
-    const progressPercent = Math.round((questionsCompleted / totalQuestions) * 100);
+    // Real stats from Firestore
+    const questionsAttempted = user?.questionsAttempted || 0;
+    const totalScore = user?.totalScore || 0;
+    const progressPercent = questionsAttempted > 0 ? Math.min(Math.round((totalScore / questionsAttempted) * 100), 100) : 0;
 
     const cardClass = `rounded-2xl border transition-all duration-300 hover:shadow-lg ${isDark ? 'bg-slate-800/80 border-slate-700 hover:border-slate-600' : 'bg-white border-slate-200 hover:border-indigo-200 hover:shadow-indigo-100/50'}`;
 
@@ -198,8 +203,8 @@ const ProfilePage = () => {
                 {/* Progress Ring */}
                 <motion.div variants={itemVariants} className={`${cardClass} p-6 flex flex-col items-center justify-center`}>
                     <ProgressRing progress={progressPercent} color={isDark ? '#818cf8' : '#6366f1'} />
-                    <p className={`mt-4 font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>Overall Progress</p>
-                    <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{questionsCompleted} of {totalQuestions} questions</p>
+                    <p className={`mt-4 font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>Accuracy Rate</p>
+                    <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{questionsAttempted} questions attempted</p>
                 </motion.div>
 
                 {/* Quick Stats */}
@@ -210,8 +215,8 @@ const ProfilePage = () => {
                                 <Target className={`w-5 h-5 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`} />
                             </div>
                             <div>
-                                <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{questionsCompleted}</p>
-                                <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Questions Solved</p>
+                                <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{questionsAttempted}</p>
+                                <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Questions Attempted</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">

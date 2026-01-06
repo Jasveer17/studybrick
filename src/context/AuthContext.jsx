@@ -165,10 +165,14 @@ export const AuthProvider = ({ children }) => {
                 // Create new user profile for Google sign-in users
                 const newUserData = {
                     email: firebaseUser.email,
-                    name: firebaseUser.displayName || 'User',
+                    name: firebaseUser.displayName || '',
                     role: 'student',
                     status: 'active',
                     photoURL: firebaseUser.photoURL || null,
+                    profileComplete: false, // Needs onboarding
+                    totalScore: 0,
+                    streak: 0,
+                    questionsAttempted: 0,
                     createdAt: serverTimestamp(),
                     updatedAt: serverTimestamp(),
                     authProvider: 'google'
@@ -180,7 +184,8 @@ export const AuthProvider = ({ children }) => {
                 userData = {
                     uid: firebaseUser.uid,
                     firestoreId: userDocRef.id,
-                    ...newUserData
+                    ...newUserData,
+                    isNewUser: true // Flag for redirect logic
                 };
             }
 
