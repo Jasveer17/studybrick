@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { auth, db } from '../lib/firebase';
+import { auth, db, googleProvider } from '../lib/firebase';
 import {
     signInWithEmailAndPassword,
+    signInWithPopup,
     signOut,
     onAuthStateChanged
 } from 'firebase/auth';
-import { collection, query, where, onSnapshot, getDocs, doc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, getDocs, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 const AuthContext = createContext(null);
 
@@ -137,6 +138,60 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const loginWithGoogle = async () => {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const firebaseUser = result.user;
+            console.log("Google Sign-In successful:", firebaseUser.email);
+
+            // Check if user exists in Firestore
+            const usersQuery = query(
+                collection(db, 'users'),
+                where('email', '==', firebaseUser.email)
+            );
+            const snapshot = await getDocs(usersQuery);
+
+            let userData;
+            if (!snapshot.empty) {
+                // User exists, get their data
+                const userDoc = snapshot.docs[0];
+                userData = {
+                    uid: firebaseUser.uid,
+                    firestoreId: userDoc.id,
+                    email: firebaseUser.email,
+                    ...userDoc.data()
+                };
+            } else {
+                // Create new user profile for Google sign-in users
+                const newUserData = {
+                    email: firebaseUser.email,
+                    name: firebaseUser.displayName || 'User',
+                    role: 'student',
+                    status: 'active',
+                    photoURL: firebaseUser.photoURL || null,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                    authProvider: 'google'
+                };
+
+                const userDocRef = doc(collection(db, 'users'));
+                await setDoc(userDocRef, newUserData);
+
+                userData = {
+                    uid: firebaseUser.uid,
+                    firestoreId: userDocRef.id,
+                    ...newUserData
+                };
+            }
+
+            setUser(userData);
+            return userData;
+        } catch (error) {
+            console.error("Google Sign-In error:", error);
+            throw error;
+        }
+    };
+
     const logout = async () => {
         try {
             await signOut(auth);
@@ -147,7 +202,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, isLoading: isLoading, isAuthenticated: !!user }}>
+        <AuthContext.Provider value={{ user, login, loginWithGoogle, logout, isLoading: isLoading, isAuthenticated: !!user }}>
             {!isLoading && children}
         </AuthContext.Provider>
     );

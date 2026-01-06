@@ -421,6 +421,75 @@
         }
     }
 
+    /* Smooth floating animations - GPU accelerated */
+    .animate-float-slow {
+        animation: floatSlow 8s ease-in-out infinite;
+    }
+
+    .animate-float-medium {
+        animation: floatMedium 10s ease-in-out infinite;
+    }
+
+    .animate-float-fast {
+        animation: floatFast 7s ease-in-out infinite;
+    }
+
+    .animate-pulse-slow {
+        animation: pulseSlow 3s ease-in-out infinite;
+    }
+
+    @keyframes floatSlow {
+
+        0%,
+        100% {
+            transform: translateY(0) scale(1) translateZ(0);
+        }
+
+        50% {
+            transform: translateY(-30px) scale(1.05) translateZ(0);
+        }
+    }
+
+    @keyframes floatMedium {
+
+        0%,
+        100% {
+            transform: translateY(0) scale(1) translateZ(0);
+        }
+
+        50% {
+            transform: translateY(40px) scale(1.08) translateZ(0);
+        }
+    }
+
+    @keyframes floatFast {
+
+        0%,
+        100% {
+            transform: translate(0, 0) translateZ(0);
+        }
+
+        33% {
+            transform: translate(15px, -10px) translateZ(0);
+        }
+
+        66% {
+            transform: translate(-10px, 10px) translateZ(0);
+        }
+    }
+
+    @keyframes pulseSlow {
+
+        0%,
+        100% {
+            opacity: 0.3;
+        }
+
+        50% {
+            opacity: 0.4;
+        }
+    }
+
     /* Hover lift */
     .hover-lift {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
