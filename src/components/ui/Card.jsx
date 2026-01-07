@@ -10,8 +10,8 @@ const Card = ({ children, className, hover = true, ...props }) => {
     return (
         <div
             className={cn(
-                "bg-white rounded-xl border border-slate-200 transition-all duration-200",
-                hover && "hover:shadow-md hover:-translate-y-0.5",
+                "bg-white rounded-xl border border-slate-200 transition-[box-shadow,border-color] duration-150 ease-out",
+                hover && "hover:shadow-md hover:border-indigo-200",
                 className
             )}
             {...props}
@@ -22,3 +22,4 @@ const Card = ({ children, className, hover = true, ...props }) => {
 };
 
 export default Card;
+

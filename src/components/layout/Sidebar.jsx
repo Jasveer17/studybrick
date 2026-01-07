@@ -3,7 +3,6 @@ import { LogOut, BookMarked, X, FileText, UploadCloud, Database, Users, UserCirc
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const Sidebar = ({ isOpen, onClose, isMobile }) => {
     const [showMobileOverlay, setShowMobileOverlay] = useState(false);
@@ -17,7 +16,7 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
     useEffect(() => {
         if (isMobile) {
             if (isOpen) setShowMobileOverlay(true);
-            else setTimeout(() => setShowMobileOverlay(false), 300);
+            else setTimeout(() => setShowMobileOverlay(false), 150);
         }
     }, [isOpen, isMobile]);
 
@@ -73,19 +72,14 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
     return (
         <>
             {/* Mobile Backdrop */}
-            <AnimatePresence>
-                {showMobileOverlay && (
-                    <motion.div
-                        className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
-                        onClick={onClose}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    />
-                )}
-            </AnimatePresence>
+            {showMobileOverlay && (
+                <div
+                    className={`fixed inset-0 bg-black/50 z-40 backdrop-blur-sm transition-opacity duration-150 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+                    onClick={onClose}
+                />
+            )}
 
-            <div className={`fixed left-0 top-0 h-screen w-64 flex flex-col z-50 transition-transform duration-300 ${mobileClasses}`}>
+            <div className={`fixed left-0 top-0 h-screen w-64 flex flex-col z-50 transition-transform duration-150 ease-out ${mobileClasses}`}>
                 {/* Gradient Background */}
                 <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-800 to-indigo-950" />
 
@@ -97,97 +91,55 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
                 <div className="relative flex flex-col h-full">
                     {/* Brand */}
                     <div className="p-5 flex justify-between items-center">
-                        <motion.div
-                            className="flex items-center gap-3"
-                            whileHover={{ scale: 1.02 }}
-                        >
-                            <motion.div
-                                className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center p-1.5 shadow-lg shadow-indigo-500/40"
-                                animate={{
-                                    boxShadow: [
-                                        '0 10px 15px -3px rgba(99, 102, 241, 0.4)',
-                                        '0 10px 15px -3px rgba(168, 85, 247, 0.4)',
-                                        '0 10px 15px -3px rgba(99, 102, 241, 0.4)',
-                                    ]
-                                }}
-                                transition={{ duration: 3, repeat: Infinity }}
-                            >
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center p-1.5 shadow-lg shadow-indigo-500/40">
                                 <img src="/logo.png" className="w-full h-full object-contain" alt="Logo" />
-                            </motion.div>
+                            </div>
                             <div>
                                 <span className="text-lg font-bold text-white tracking-tight flex items-center gap-1">
                                     StudyBrick
                                     <Sparkles className="w-4 h-4 text-amber-400" />
                                 </span>
                             </div>
-                        </motion.div>
+                        </div>
                         {isMobile && (
-                            <motion.button
+                            <button
                                 onClick={onClose}
-                                className="text-slate-400 hover:text-white p-2 hover:bg-white/10 rounded-lg transition-all"
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
+                                className="text-slate-400 hover:text-white p-2 hover:bg-white/10 rounded-lg transition-colors duration-150"
                             >
                                 <X className="w-5 h-5" />
-                            </motion.button>
+                            </button>
                         )}
                     </div>
 
                     {/* Navigation */}
                     <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
-                        {menuItems.map((item, index) => {
+                        {menuItems.map((item) => {
                             const Icon = item.icon;
                             const isActive = location.pathname === item.path;
 
                             return (
-                                <motion.div
+                                <Link
                                     key={item.path}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: index * 0.05 }}
+                                    to={item.path}
+                                    onClick={isMobile ? onClose : undefined}
+                                    className="relative block"
                                 >
-                                    <Link
-                                        to={item.path}
-                                        onClick={isMobile ? onClose : undefined}
-                                        className="relative block"
+                                    <div
+                                        className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-150 ${isActive
+                                            ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg shadow-indigo-500/30'
+                                            : 'text-slate-300 hover:text-white hover:bg-white/5'
+                                            }`}
                                     >
-                                        <motion.div
-                                            className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 ${isActive
-                                                ? 'text-white'
-                                                : 'text-slate-300 hover:text-white'
-                                                }`}
-                                            whileHover={{ x: 4 }}
-                                            whileTap={{ scale: 0.98 }}
-                                        >
-                                            {/* Active Background */}
-                                            {isActive && (
-                                                <motion.div
-                                                    className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg shadow-indigo-500/30"
-                                                    layoutId="activeNav"
-                                                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                                                />
-                                            )}
+                                        <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                                        <span className="font-medium">{item.label}</span>
 
-                                            {/* Hover Background */}
-                                            {!isActive && (
-                                                <div className="absolute inset-0 bg-white/0 hover:bg-white/5 rounded-xl transition-all" />
-                                            )}
-
-                                            <Icon className={`relative w-5 h-5 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'}`} />
-                                            <span className="relative font-medium">{item.label}</span>
-
-                                            {/* Active Indicator Dot */}
-                                            {isActive && (
-                                                <motion.div
-                                                    className="absolute right-3 w-2 h-2 bg-white rounded-full"
-                                                    initial={{ scale: 0 }}
-                                                    animate={{ scale: 1 }}
-                                                    transition={{ delay: 0.1 }}
-                                                />
-                                            )}
-                                        </motion.div>
-                                    </Link>
-                                </motion.div>
+                                        {/* Active Indicator Dot */}
+                                        {isActive && (
+                                            <div className="absolute right-3 w-2 h-2 bg-white rounded-full" />
+                                        )}
+                                    </div>
+                                </Link>
                             );
                         })}
                     </nav>
@@ -195,35 +147,27 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
                     {/* PWA Install Button - Mobile Only */}
                     {showInstallButton && isMobile && (
                         <div className="px-3 pb-2">
-                            <motion.button
+                            <button
                                 onClick={handleInstallClick}
-                                className="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-xl shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-all"
-                                whileHover={{ scale: 1.02, y: -2 }}
-                                whileTap={{ scale: 0.98 }}
+                                className="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-xl shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-shadow duration-150"
                             >
                                 <Download className="w-5 h-5" />
                                 Install App
-                            </motion.button>
+                            </button>
                         </div>
                     )}
 
                     {/* User Profile Section */}
                     <div className="p-4 border-t border-white/10">
-                        <motion.div
-                            className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-all"
-                            whileHover={{ x: 2 }}
-                        >
+                        <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors duration-150">
                             <Link
                                 to="/dashboard/profile"
                                 onClick={isMobile ? onClose : undefined}
                                 className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
                             >
-                                <motion.div
-                                    className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-indigo-500/30"
-                                    whileHover={{ scale: 1.05 }}
-                                >
+                                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-indigo-500/30">
                                     {user?.name?.charAt(0) || 'U'}
-                                </motion.div>
+                                </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-semibold text-white truncate">{user?.name || 'User'}</p>
                                     <p className="text-xs text-slate-400 truncate capitalize">
@@ -231,16 +175,14 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
                                     </p>
                                 </div>
                             </Link>
-                            <motion.button
+                            <button
                                 onClick={handleSignOut}
-                                className="p-2.5 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all"
+                                className="p-2.5 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-colors duration-150"
                                 title="Sign Out"
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
                             >
                                 <LogOut className="w-5 h-5" />
-                            </motion.button>
-                        </motion.div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -249,3 +191,4 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
 };
 
 export default Sidebar;
+

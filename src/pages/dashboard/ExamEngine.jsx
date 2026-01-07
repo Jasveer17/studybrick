@@ -3,7 +3,7 @@ import {
     Search, Filter, Plus, Check, Trash2,
     FileText, Download, GripVertical, AlertCircle, X, Loader2
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+// Animation imports removed for instant UI
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -32,7 +32,7 @@ const SortableItem = ({ question, onRemove }) => {
 
     const style = {
         transform: CSS.Transform.toString(transform),
-        transition: transition || 'transform 0.2s ease',
+        transition: transition || 'transform 0.15s ease-out',
         zIndex: isDragging ? 50 : 'auto',
         opacity: isDragging ? 0.8 : 1,
     };
@@ -41,11 +41,11 @@ const SortableItem = ({ question, onRemove }) => {
         <div
             ref={setNodeRef}
             style={style}
-            className={`p-3 rounded-lg border group transition-all duration-200 mb-2 ${isDragging
-                    ? 'border-indigo-400 shadow-lg'
-                    : isDark
-                        ? 'bg-slate-700 border-slate-600 hover:border-indigo-500'
-                        : 'bg-white border-slate-200 hover:border-indigo-200'
+            className={`p-3 rounded-lg border group transition-[border-color,box-shadow] duration-150 mb-2 ${isDragging
+                ? 'border-indigo-400 shadow-lg'
+                : isDark
+                    ? 'bg-slate-700 border-slate-600 hover:border-indigo-500'
+                    : 'bg-white border-slate-200 hover:border-indigo-200'
                 }`}
         >
             <div className="flex items-start gap-3">
@@ -405,94 +405,77 @@ const ExamEngine = () => {
 
                 {/* List */}
                 <div className="flex-1 overflow-y-auto p-6 space-y-4 scroll-smooth">
-                    <AnimatePresence>
-                        {filteredQuestions.length === 0 ? (
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                                className={`flex flex-col items-center justify-center h-64 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}
-                            >
-                                <AlertCircle className={`w-10 h-10 mb-2 opacity-50 ${isDark ? 'text-slate-600' : 'text-indigo-200'}`} />
-                                <p>No questions found.</p>
-                            </motion.div>
-                        ) : (
-                            filteredQuestions.map((q, idx) => {
-                                const isSelected = selectedQuestions.some(sq => sq.id === q.id);
-                                return (
-                                    <motion.div
-                                        key={q.id}
-                                        layout
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, scale: 0.95 }}
-                                        transition={{ delay: idx * 0.05 }}
-                                    >
-                                        <div className={`p-5 rounded-xl border transition-all ${isSelected
-                                            ? isDark ? 'border-indigo-500 bg-indigo-900/20' : 'border-indigo-200 bg-indigo-50/30'
-                                            : isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}>
-                                            <div className="flex justify-between items-start gap-4">
-                                                <div className="flex-1">
-                                                    <div className="flex items-center gap-2 mb-3">
-                                                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${q.difficulty === 'Easy'
-                                                            ? isDark ? 'bg-green-900/50 text-green-400' : 'bg-green-100 text-green-700'
-                                                            : q.difficulty === 'Medium'
-                                                                ? isDark ? 'bg-amber-900/50 text-amber-400' : 'bg-amber-100 text-amber-700'
-                                                                : isDark ? 'bg-rose-900/50 text-rose-400' : 'bg-rose-100 text-rose-700'
-                                                            }`}>
-                                                            {q.difficulty}
-                                                        </span>
-                                                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-semibold ${isDark ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600'}`}>
-                                                            {q.type}
-                                                        </span>
-                                                        <span className={`text-xs font-medium ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
-                                                            {q.chapter}
-                                                        </span>
-                                                    </div>
+                    {filteredQuestions.length === 0 ? (
+                        <div className={`flex flex-col items-center justify-center h-64 fade-in ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                            <AlertCircle className={`w-10 h-10 mb-2 opacity-50 ${isDark ? 'text-slate-600' : 'text-indigo-200'}`} />
+                            <p>No questions found.</p>
+                        </div>
+                    ) : (
+                        filteredQuestions.map((q) => {
+                            const isSelected = selectedQuestions.some(sq => sq.id === q.id);
+                            return (
+                                <div
+                                    key={q.id}
+                                    className={`p-5 rounded-xl border transition-[border-color,background-color] duration-150 ${isSelected
+                                        ? isDark ? 'border-indigo-500 bg-indigo-900/20' : 'border-indigo-200 bg-indigo-50/30'
+                                        : isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}
+                                >
+                                    <div className="flex justify-between items-start gap-4">
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2 mb-3">
+                                                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${q.difficulty === 'Easy'
+                                                    ? isDark ? 'bg-green-900/50 text-green-400' : 'bg-green-100 text-green-700'
+                                                    : q.difficulty === 'Medium'
+                                                        ? isDark ? 'bg-amber-900/50 text-amber-400' : 'bg-amber-100 text-amber-700'
+                                                        : isDark ? 'bg-rose-900/50 text-rose-400' : 'bg-rose-100 text-rose-700'
+                                                    }`}>
+                                                    {q.difficulty}
+                                                </span>
+                                                <span className={`px-2.5 py-1 rounded-full text-[10px] font-semibold ${isDark ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600'}`}>
+                                                    {q.type}
+                                                </span>
+                                                <span className={`text-xs font-medium ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                                                    {q.chapter}
+                                                </span>
+                                            </div>
 
-                                                    <div className={`text-base leading-relaxed font-serif ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
-                                                        {/* Render Main Content */}
-                                                        <MathRenderer>{q.content}</MathRenderer>
+                                            <div className={`text-base leading-relaxed font-serif ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                                                {/* Render Main Content */}
+                                                <MathRenderer>{q.content}</MathRenderer>
 
-                                                        {/* Render Options if MCQ */}
-                                                        {q.options && (
-                                                            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2">
-                                                                {q.options.map((opt, i) => (
-                                                                    <div key={i} className={`flex items-center gap-2 text-sm p-2 rounded border ${isDark ? 'bg-slate-700/50 border-slate-600 text-slate-300' : 'bg-slate-50 border-slate-100 text-slate-600'}`}>
-                                                                        <span className={`font-bold w-4 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{String.fromCharCode(65 + i)}.</span>
-                                                                        <MathRenderer>{opt}</MathRenderer>
-                                                                    </div>
-                                                                ))}
+                                                {/* Render Options if MCQ */}
+                                                {q.options && (
+                                                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                                        {q.options.map((opt, i) => (
+                                                            <div key={i} className={`flex items-center gap-2 text-sm p-2 rounded border ${isDark ? 'bg-slate-700/50 border-slate-600 text-slate-300' : 'bg-slate-50 border-slate-100 text-slate-600'}`}>
+                                                                <span className={`font-bold w-4 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{String.fromCharCode(65 + i)}.</span>
+                                                                <MathRenderer>{opt}</MathRenderer>
                                                             </div>
-                                                        )}
+                                                        ))}
                                                     </div>
-                                                </div>
-
-                                                <button
-                                                    onClick={() => !isSelected && handleAddQuestion(q)}
-                                                    disabled={isSelected}
-                                                    className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${isSelected
-                                                        ? 'bg-green-100 text-green-600 scale-90'
-                                                        : 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 hover:scale-110 active:scale-95'
-                                                        }`}
-                                                >
-                                                    <AnimatePresence mode='wait'>
-                                                        {isSelected ? (
-                                                            <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }}>
-                                                                <Check className="w-6 h-6" />
-                                                            </motion.div>
-                                                        ) : (
-                                                            <motion.div key="plus" initial={{ scale: 0 }} animate={{ scale: 1 }}>
-                                                                <Plus className="w-6 h-6" />
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
-                                                </button>
+                                                )}
                                             </div>
                                         </div>
-                                    </motion.div>
-                                );
-                            })
-                        )}
-                    </AnimatePresence>
+
+                                        <button
+                                            onClick={() => !isSelected && handleAddQuestion(q)}
+                                            disabled={isSelected}
+                                            className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-150 ${isSelected
+                                                ? 'bg-green-100 text-green-600'
+                                                : 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 hover:scale-102 active:scale-99'
+                                                }`}
+                                        >
+                                            {isSelected ? (
+                                                <Check className="w-6 h-6" />
+                                            ) : (
+                                                <Plus className="w-6 h-6" />
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                            );
+                        })
+                    )}
                 </div>
             </div>
 
@@ -536,23 +519,18 @@ const ExamEngine = () => {
                             strategy={verticalListSortingStrategy}
                         >
                             <div className="space-y-2">
-                                <AnimatePresence>
-                                    {selectedQuestions.length === 0 && (
-                                        <motion.div
-                                            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                                            className="text-center py-16 px-6"
-                                        >
-                                            <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${isDark ? 'bg-slate-700' : 'bg-slate-100'}`}>
-                                                <FileText className={`w-8 h-8 ${isDark ? 'text-slate-500' : 'text-slate-300'}`} />
-                                            </div>
-                                            <p className={`font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Your paper is empty</p>
-                                            <p className={`text-sm mt-1 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Add questions from the left panel</p>
-                                        </motion.div>
-                                    )}
-                                    {selectedQuestions.map((q) => (
-                                        <SortableItem key={q.id} question={q} onRemove={handleRemoveQuestion} />
-                                    ))}
-                                </AnimatePresence>
+                                {selectedQuestions.length === 0 && (
+                                    <div className="text-center py-16 px-6">
+                                        <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${isDark ? 'bg-slate-700' : 'bg-slate-100'}`}>
+                                            <FileText className={`w-8 h-8 ${isDark ? 'text-slate-500' : 'text-slate-300'}`} />
+                                        </div>
+                                        <p className={`font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Your paper is empty</p>
+                                        <p className={`text-sm mt-1 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Add questions from the left panel</p>
+                                    </div>
+                                )}
+                                {selectedQuestions.map((q) => (
+                                    <SortableItem key={q.id} question={q} onRemove={handleRemoveQuestion} />
+                                ))}
                             </div>
                         </SortableContext>
                     </DndContext>

@@ -99,6 +99,25 @@
 @layer utilities {
 
     /* ========================================
+       ANIMATION TIMING SYSTEM (Fast & Minimal)
+       - Default: 120ms
+       - Normal: 150ms
+       - Max (rare): 180ms
+       ======================================== */
+    :root {
+        --animation-fast: 120ms;
+        --animation-normal: 150ms;
+        --animation-max: 180ms;
+        --ease-out-fast: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* GPU Acceleration Utility */
+    .gpu-accelerated {
+        transform: translateZ(0);
+        will-change: transform, opacity;
+    }
+
+    /* ========================================
        GLASSMORPHISM UTILITIES
        ======================================== */
     .glass-card {
@@ -151,19 +170,20 @@
     }
 
     /* ========================================
-       PREMIUM CARDS
+       PREMIUM CARDS (Fast, minimal hover)
        ======================================== */
     .card {
         background: white;
         border-radius: 16px;
         border: 1px solid #e2e8f0;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: box-shadow var(--animation-normal) var(--ease-out-fast),
+            border-color var(--animation-normal) var(--ease-out-fast);
     }
 
     .card:hover {
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border-color: #c7d2fe;
     }
 
     .dark .card {
@@ -172,11 +192,12 @@
     }
 
     .dark .card:hover {
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        border-color: #475569;
     }
 
     /* ========================================
-       BUTTON STYLES
+       BUTTON STYLES (Fast feedback)
        ======================================== */
     .btn-glow {
         position: relative;
@@ -185,17 +206,18 @@
         font-weight: 600;
         padding: 12px 24px;
         border-radius: 12px;
-        transition: all 0.3s ease;
+        transition: transform var(--animation-fast) var(--ease-out-fast),
+            box-shadow var(--animation-fast) var(--ease-out-fast);
         box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
     }
 
     .btn-glow:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
     }
 
     .btn-glow:active {
-        transform: translateY(0);
+        transform: scale(0.99);
         box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
     }
 
@@ -205,12 +227,13 @@
         font-weight: 600;
         padding: 10px 20px;
         border-radius: 10px;
-        transition: all 0.2s ease;
+        transition: transform var(--animation-fast) var(--ease-out-fast),
+            box-shadow var(--animation-fast) var(--ease-out-fast);
         box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
     }
 
     .btn-gold:hover {
-        transform: translateY(-1px);
+        transform: scale(1.02);
         box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
     }
 
@@ -220,7 +243,7 @@
         font-weight: 600;
         padding: 10px 20px;
         border-radius: 10px;
-        transition: all 0.2s ease;
+        transition: background var(--animation-fast) var(--ease-out-fast);
     }
 
     .btn-navy:hover {
@@ -264,7 +287,7 @@
         border-radius: 8px;
         font-size: 11px;
         font-weight: 600;
-        transition: all 0.2s ease;
+        transition: background-color var(--animation-fast) var(--ease-out-fast);
     }
 
     .tag:hover {
@@ -280,7 +303,8 @@
         border: 2px solid #e2e8f0;
         border-radius: 12px;
         font-size: 14px;
-        transition: all 0.2s ease;
+        transition: border-color var(--animation-normal) var(--ease-out-fast),
+            box-shadow var(--animation-normal) var(--ease-out-fast);
         background: white;
     }
 
@@ -331,209 +355,67 @@
     }
 
     /* ========================================
-       ANIMATIONS
+       ANIMATIONS (Fast, GPU-accelerated)
        ======================================== */
     .fade-in {
-        animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: fadeIn var(--animation-fast) var(--ease-out-fast);
     }
 
     @keyframes fadeIn {
         from {
             opacity: 0;
-            transform: translateY(10px);
         }
 
         to {
             opacity: 1;
-            transform: translateY(0);
         }
     }
 
+    /* Subtle slide-up for modals/drawers only */
     .slide-up {
-        animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideUp var(--animation-normal) var(--ease-out-fast);
     }
 
     @keyframes slideUp {
         from {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(8px) translateZ(0);
         }
 
         to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) translateZ(0);
         }
     }
 
-    .bounce-in {
-        animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    /* Modal/Drawer scale entrance */
+    .scale-in {
+        animation: scaleIn var(--animation-normal) var(--ease-out-fast);
     }
 
-    @keyframes bounceIn {
-        0% {
+    @keyframes scaleIn {
+        from {
             opacity: 0;
-            transform: scale(0.3);
+            transform: scale(0.98) translateZ(0);
         }
 
-        50% {
-            transform: scale(1.05);
-        }
-
-        70% {
-            transform: scale(0.9);
-        }
-
-        100% {
+        to {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1) translateZ(0);
         }
     }
 
-    .pulse-glow {
-        animation: pulseGlow 2s ease-in-out infinite;
+    /* Hover shadow only (no translate) */
+    .hover-shadow {
+        transition: box-shadow var(--animation-normal) var(--ease-out-fast);
     }
 
-    @keyframes pulseGlow {
-
-        0%,
-        100% {
-            box-shadow: 0 0 5px rgba(99, 102, 241, 0.5);
-        }
-
-        50% {
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.8), 0 0 30px rgba(99, 102, 241, 0.4);
-        }
+    .hover-shadow:hover {
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     }
 
-    .float {
-        animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-
-        0%,
-        100% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-10px);
-        }
-    }
-
-    /* Smooth floating animations - GPU accelerated */
-    .animate-float-slow {
-        animation: floatSlow 8s ease-in-out infinite;
-    }
-
-    .animate-float-medium {
-        animation: floatMedium 10s ease-in-out infinite;
-    }
-
-    .animate-float-fast {
-        animation: floatFast 7s ease-in-out infinite;
-    }
-
-    .animate-pulse-slow {
-        animation: pulseSlow 3s ease-in-out infinite;
-    }
-
-    @keyframes floatSlow {
-
-        0%,
-        100% {
-            transform: translateY(0) scale(1) translateZ(0);
-        }
-
-        50% {
-            transform: translateY(-30px) scale(1.05) translateZ(0);
-        }
-    }
-
-    @keyframes floatMedium {
-
-        0%,
-        100% {
-            transform: translateY(0) scale(1) translateZ(0);
-        }
-
-        50% {
-            transform: translateY(40px) scale(1.08) translateZ(0);
-        }
-    }
-
-    @keyframes floatFast {
-
-        0%,
-        100% {
-            transform: translate(0, 0) translateZ(0);
-        }
-
-        33% {
-            transform: translate(15px, -10px) translateZ(0);
-        }
-
-        66% {
-            transform: translate(-10px, 10px) translateZ(0);
-        }
-    }
-
-    @keyframes pulseSlow {
-
-        0%,
-        100% {
-            opacity: 0.3;
-        }
-
-        50% {
-            opacity: 0.4;
-        }
-    }
-
-    /* Hover lift */
-    .hover-lift {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .hover-lift:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-    }
-
-    .dark .hover-lift:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Animated border gradient */
-    .border-gradient {
-        position: relative;
-        background: white;
-        border-radius: 16px;
-    }
-
-    .border-gradient::before {
-        content: '';
-        position: absolute;
-        inset: -2px;
-        border-radius: 18px;
-        background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7, #6366f1);
-        background-size: 300% 300%;
-        animation: gradientBorder 4s ease infinite;
-        z-index: -1;
-    }
-
-    @keyframes gradientBorder {
-        0% {
-            background-position: 0% 50%;
-        }
-
-        50% {
-            background-position: 100% 50%;
-        }
-
-        100% {
-            background-position: 0% 50%;
-        }
+    .dark .hover-shadow:hover {
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
     }
 
     /* ========================================
@@ -544,12 +426,13 @@
         border-radius: 16px;
         padding: 24px;
         border: 1px solid #e2e8f0;
-        transition: all 0.3s ease;
+        transition: border-color var(--animation-normal) var(--ease-out-fast),
+            box-shadow var(--animation-normal) var(--ease-out-fast);
     }
 
     .stat-card:hover {
         border-color: #c7d2fe;
-        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.1);
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.08);
     }
 
     .stat-card .icon {
@@ -566,7 +449,7 @@
        ======================================== */
     .table-row {
         border-bottom: 1px solid #f1f5f9;
-        transition: all 0.2s ease;
+        transition: background-color var(--animation-fast) var(--ease-out-fast);
     }
 
     .table-row:hover {
@@ -602,9 +485,9 @@
        SECTION HEADER
        ======================================== */
     .section-header {
-        font-size: 22px;
-        font-weight: 800;
-        color: #0f172a;
+        font-size: 20px;
+        font-weight: 700;
+        color: #111827;
         letter-spacing: -0.02em;
     }
 
