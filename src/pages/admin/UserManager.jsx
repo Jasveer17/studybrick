@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
+import { useTheme } from '../../context/ThemeContext';
 import Card from '../../components/ui/Card';
 
 const SUBJECTS = ['maths', 'physics', 'chemistry'];
@@ -31,6 +32,7 @@ const generatePassword = () => {
 };
 
 const UserManager = () => {
+    const { isDark } = useTheme();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isAdding, setIsAdding] = useState(false);
@@ -299,13 +301,13 @@ const UserManager = () => {
                 <div className="flex items-center gap-4">
                     <button
                         onClick={() => setSelectedUser(null)}
-                        className="p-2 hover:bg-slate-100 rounded-lg"
+                        className={`p-2 rounded-lg ${isDark ? 'hover:bg-slate-700' : 'hover:bg-slate-100'}`}
                     >
                         <ArrowLeft className="w-5 h-5" />
                     </button>
                     <div>
-                        <h1 className="text-2xl font-bold text-slate-900">{selectedUser.name}</h1>
-                        <p className="text-slate-500">{selectedUser.email}</p>
+                        <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{selectedUser.name}</h1>
+                        <p className={isDark ? 'text-slate-400' : 'text-slate-500'}>{selectedUser.email}</p>
                     </div>
                 </div>
 
@@ -553,14 +555,14 @@ const UserManager = () => {
                             initial={{ scale: 0.95, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.95, opacity: 0 }}
-                            className="bg-white rounded-2xl p-6 max-w-xl w-full my-8"
+                            className={`rounded-2xl p-6 max-w-xl w-full my-8 ${isDark ? 'bg-slate-900 border border-slate-700' : 'bg-white'}`}
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-xl font-bold text-slate-900">
+                                <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
                                     {editingId ? 'Edit User' : 'Create New User'}
                                 </h2>
-                                <button onClick={resetForm} className="p-2 hover:bg-slate-100 rounded-lg">
+                                <button onClick={resetForm} className={`p-2 rounded-lg ${isDark ? 'hover:bg-slate-800 text-slate-400' : 'hover:bg-slate-100'}`}>
                                     <X className="w-5 h-5" />
                                 </button>
                             </div>
@@ -568,24 +570,24 @@ const UserManager = () => {
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 {/* Auto-generated Credentials */}
                                 {!editingId && (
-                                    <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-                                        <h3 className="font-semibold text-emerald-800 mb-3 flex items-center gap-2">
+                                    <div className={`p-4 rounded-lg border ${isDark ? 'bg-emerald-900/20 border-emerald-800' : 'bg-emerald-50 border-emerald-200'}`}>
+                                        <h3 className={`font-semibold mb-3 flex items-center gap-2 ${isDark ? 'text-emerald-400' : 'text-emerald-800'}`}>
                                             <Key className="w-4 h-4" /> Login Credentials (Auto-Generated)
                                         </h3>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
-                                                <label className="text-xs text-emerald-700">Login ID</label>
+                                                <label className={`text-xs ${isDark ? 'text-emerald-500' : 'text-emerald-700'}`}>Login ID</label>
                                                 <div className="flex items-center gap-2">
                                                     <input
                                                         type="text"
                                                         value={formData.loginId}
                                                         onChange={(e) => setFormData({ ...formData, loginId: e.target.value })}
-                                                        className="w-full p-2 bg-white border border-emerald-200 rounded-lg font-mono text-sm"
+                                                        className={`w-full p-2 border rounded-lg font-mono text-sm ${isDark ? 'bg-slate-800 border-emerald-800 text-white' : 'bg-white border-emerald-200 text-slate-900'}`}
                                                     />
                                                     <button
                                                         type="button"
                                                         onClick={() => setFormData({ ...formData, loginId: generateUserId() })}
-                                                        className="p-2 bg-emerald-100 hover:bg-emerald-200 rounded-lg"
+                                                        className={`p-2 rounded-lg ${isDark ? 'bg-emerald-900/30 hover:bg-emerald-800 text-emerald-400' : 'bg-emerald-100 hover:bg-emerald-200'}`}
                                                         title="Regenerate"
                                                     >
                                                         🔄
@@ -593,18 +595,18 @@ const UserManager = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <label className="text-xs text-emerald-700">Password</label>
+                                                <label className={`text-xs ${isDark ? 'text-emerald-500' : 'text-emerald-700'}`}>Password</label>
                                                 <div className="flex items-center gap-2">
                                                     <input
                                                         type="text"
                                                         value={formData.password}
                                                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                                        className="w-full p-2 bg-white border border-emerald-200 rounded-lg font-mono text-sm"
+                                                        className={`w-full p-2 border rounded-lg font-mono text-sm ${isDark ? 'bg-slate-800 border-emerald-800 text-white' : 'bg-white border-emerald-200 text-slate-900'}`}
                                                     />
                                                     <button
                                                         type="button"
                                                         onClick={() => setFormData({ ...formData, password: generatePassword() })}
-                                                        className="p-2 bg-emerald-100 hover:bg-emerald-200 rounded-lg"
+                                                        className={`p-2 rounded-lg ${isDark ? 'bg-emerald-900/30 hover:bg-emerald-800 text-emerald-400' : 'bg-emerald-100 hover:bg-emerald-200'}`}
                                                         title="Regenerate"
                                                     >
                                                         🔄
@@ -620,22 +622,22 @@ const UserManager = () => {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="text-sm font-medium text-slate-700">Name *</label>
+                                        <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Name *</label>
                                         <input
                                             type="text"
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            className="mt-1 w-full p-2.5 border border-slate-200 rounded-lg"
+                                            className={`mt-1 w-full p-2.5 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                                             placeholder="Institute/User Name"
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-sm font-medium text-slate-700">Email</label>
+                                        <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Email</label>
                                         <input
                                             type="email"
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            className="mt-1 w-full p-2.5 border border-slate-200 rounded-lg"
+                                            className={`mt-1 w-full p-2.5 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-500' : 'bg-white border-slate-200 text-slate-900'}`}
                                             placeholder="optional@email.com"
                                         />
                                     </div>
@@ -643,12 +645,12 @@ const UserManager = () => {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="text-sm font-medium text-slate-700">Institute</label>
+                                        <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Institute</label>
                                         <input
                                             type="text"
                                             value={formData.institute}
                                             onChange={(e) => setFormData({ ...formData, institute: e.target.value })}
-                                            className="mt-1 w-full p-2.5 border border-slate-200 rounded-lg"
+                                            className={`mt-1 w-full p-2.5 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                             placeholder="e.g. Delhi Public School"
                                         />
                                     </div>
@@ -657,7 +659,7 @@ const UserManager = () => {
                                         <select
                                             value={formData.role}
                                             onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                                            className="mt-1 w-full p-2.5 border border-slate-200 rounded-lg"
+                                            className={`mt-1 w-full p-2.5 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                         >
                                             {ROLES.map(role => (
                                                 <option key={role} value={role} className="capitalize">
@@ -674,7 +676,7 @@ const UserManager = () => {
                                         <select
                                             value={formData.plan}
                                             onChange={(e) => setFormData({ ...formData, plan: e.target.value })}
-                                            className="mt-1 w-full p-2.5 border border-slate-200 rounded-lg"
+                                            className={`mt-1 w-full p-2.5 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                         >
                                             {PLANS.map(plan => (
                                                 <option key={plan} value={plan} className="capitalize">
@@ -684,12 +686,12 @@ const UserManager = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="text-sm font-medium text-slate-700">Plan Expiry</label>
+                                        <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Plan Expiry</label>
                                         <input
                                             type="date"
                                             value={formData.planExpiry}
                                             onChange={(e) => setFormData({ ...formData, planExpiry: e.target.value })}
-                                            className="mt-1 w-full p-2.5 border border-slate-200 rounded-lg"
+                                            className={`mt-1 w-full p-2.5 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                         />
                                     </div>
                                 </div>
@@ -704,7 +706,7 @@ const UserManager = () => {
                                                 onClick={() => handleSubjectToggle(subject)}
                                                 className={`px-4 py-2 rounded-lg text-sm font-medium capitalize transition-all ${formData.allowedSubjects.includes(subject)
                                                     ? 'bg-indigo-600 text-white'
-                                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                                    : isDark ? 'bg-slate-800 text-slate-400 hover:bg-slate-700' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                                     }`}
                                             >
                                                 {subject}
@@ -715,7 +717,7 @@ const UserManager = () => {
 
                                 {/* Allowed Chapters - Custom Input */}
                                 <div>
-                                    <label className="text-sm font-medium text-slate-700 flex items-center gap-2">
+                                    <label className={`text-sm font-medium flex items-center gap-2 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
                                         Allowed Chapters
                                         <span className="text-xs text-slate-400 font-normal">
                                             (Add custom chapter names - Empty = all chapters)
@@ -728,7 +730,7 @@ const UserManager = () => {
                                             type="text"
                                             id="newChapterInput"
                                             placeholder="Type chapter name and press Enter"
-                                            className="flex-1 p-2 border border-slate-200 rounded-lg text-sm"
+                                            className={`flex-1 p-2 border rounded-lg text-sm ${isDark ? 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-500' : 'bg-white border-slate-200 text-slate-900'}`}
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter') {
                                                     e.preventDefault();
@@ -768,7 +770,7 @@ const UserManager = () => {
                                             {formData.allowedChapters.map(chapter => (
                                                 <span
                                                     key={chapter}
-                                                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium"
+                                                    className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium ${isDark ? 'bg-emerald-900/30 text-emerald-400' : 'bg-emerald-100 text-emerald-700'}`}
                                                 >
                                                     {chapter}
                                                     <button
@@ -792,7 +794,7 @@ const UserManager = () => {
                                             </button>
                                         </div>
                                     ) : (
-                                        <p className="mt-2 text-xs text-slate-500 italic">
+                                        <p className={`mt-2 text-xs italic ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
                                             No specific chapters set - user can access all chapters
                                         </p>
                                     )}
@@ -800,7 +802,7 @@ const UserManager = () => {
                                     {/* Quick Add from Existing */}
                                     {availableChaptersForForm.length > 0 && (
                                         <div className="mt-3">
-                                            <p className="text-xs text-slate-500 mb-1">Quick add from existing:</p>
+                                            <p className={`text-xs mb-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Quick add from existing:</p>
                                             <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
                                                 {availableChaptersForForm
                                                     .filter(ch => !formData.allowedChapters.includes(ch))
@@ -812,7 +814,7 @@ const UserManager = () => {
                                                                 ...formData,
                                                                 allowedChapters: [...formData.allowedChapters, chapter]
                                                             })}
-                                                            className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs hover:bg-slate-200 transition-colors"
+                                                            className={`px-2 py-0.5 rounded text-xs transition-colors ${isDark ? 'bg-slate-800 text-slate-400 hover:bg-slate-700' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
                                                         >
                                                             + {chapter}
                                                         </button>
@@ -833,7 +835,7 @@ const UserManager = () => {
                                                 onChange={() => setFormData({ ...formData, status: 'active' })}
                                                 className="w-4 h-4 text-indigo-600"
                                             />
-                                            <span className="text-sm text-slate-700">Active</span>
+                                            <span className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Active</span>
                                         </label>
                                         <label className="flex items-center gap-2 cursor-pointer">
                                             <input
@@ -843,7 +845,7 @@ const UserManager = () => {
                                                 onChange={() => setFormData({ ...formData, status: 'disabled' })}
                                                 className="w-4 h-4 text-indigo-600"
                                             />
-                                            <span className="text-sm text-slate-700">Disabled</span>
+                                            <span className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Disabled</span>
                                         </label>
                                     </div>
                                 </div>
@@ -852,7 +854,7 @@ const UserManager = () => {
                                     <button
                                         type="button"
                                         onClick={resetForm}
-                                        className="flex-1 py-2.5 border border-slate-200 text-slate-600 font-medium rounded-lg hover:bg-slate-50"
+                                        className={`flex-1 py-2.5 border font-medium rounded-lg ${isDark ? 'border-slate-600 text-slate-300 hover:bg-slate-800' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
                                     >
                                         Cancel
                                     </button>
@@ -884,40 +886,40 @@ const UserManager = () => {
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-slate-50 border-b border-slate-200">
+                            <thead className={`border-b ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
                                 <tr>
-                                    <th className="text-left p-4 text-sm font-semibold text-slate-600">User</th>
-                                    <th className="text-left p-4 text-sm font-semibold text-slate-600">Login ID</th>
-                                    <th className="text-left p-4 text-sm font-semibold text-slate-600">Institute</th>
-                                    <th className="text-left p-4 text-sm font-semibold text-slate-600">Plan</th>
-                                    <th className="text-left p-4 text-sm font-semibold text-slate-600">Status</th>
-                                    <th className="text-right p-4 text-sm font-semibold text-slate-600">Actions</th>
+                                    <th className={`text-left p-4 text-sm font-semibold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>User</th>
+                                    <th className={`text-left p-4 text-sm font-semibold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Login ID</th>
+                                    <th className={`text-left p-4 text-sm font-semibold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Institute</th>
+                                    <th className={`text-left p-4 text-sm font-semibold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Plan</th>
+                                    <th className={`text-left p-4 text-sm font-semibold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Status</th>
+                                    <th className={`text-right p-4 text-sm font-semibold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100">
+                            <tbody className={`divide-y ${isDark ? 'divide-slate-700' : 'divide-slate-100'}`}>
                                 {users.map((user) => (
-                                    <tr key={user.id} className="hover:bg-slate-50 transition-colors">
+                                    <tr key={user.id} className={`transition-colors ${isDark ? 'hover:bg-slate-800/50' : 'hover:bg-slate-50'}`}>
                                         <td className="p-4">
                                             <div>
-                                                <p className="font-medium text-slate-900">{user.name || 'Unnamed'}</p>
-                                                <p className="text-sm text-slate-500 flex items-center gap-1">
+                                                <p className={`font-medium ${isDark ? 'text-white' : 'text-slate-900'}`}>{user.name || 'Unnamed'}</p>
+                                                <p className={`text-sm flex items-center gap-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                                                     <Mail className="w-3 h-3" /> {user.email}
                                                 </p>
                                             </div>
                                         </td>
                                         <td className="p-4">
-                                            <span className="font-mono text-sm bg-slate-100 px-2 py-1 rounded">
+                                            <span className={`font-mono text-sm px-2 py-1 rounded ${isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-700'}`}>
                                                 {user.loginId || '-'}
                                             </span>
                                         </td>
                                         <td className="p-4">
-                                            <span className="text-sm text-slate-600">{user.institute || '-'}</span>
+                                            <span className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{user.institute || '-'}</span>
                                         </td>
                                         <td className="p-4">
                                             <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${user.plan === 'enterprise' ? 'bg-purple-100 text-purple-700' :
                                                 user.plan === 'pro' ? 'bg-blue-100 text-blue-700' :
                                                     user.plan === 'basic' ? 'bg-emerald-100 text-emerald-700' :
-                                                        'bg-slate-100 text-slate-700'
+                                                        isDark ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-700'
                                                 }`}>
                                                 {user.plan || 'free'}
                                             </span>

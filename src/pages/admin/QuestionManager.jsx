@@ -5,11 +5,13 @@ import { toast } from 'sonner';
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import Card from '../../components/ui/Card';
 import MathRenderer from '../../components/ui/MathRenderer';
 
 const QuestionManager = () => {
     const { user } = useAuth();
+    const { isDark } = useTheme();
     const [questions, setQuestions] = useState([]);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -143,8 +145,8 @@ const QuestionManager = () => {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Question Bank</h1>
-                    <p className="text-slate-500">Add and manage questions for the exam engine</p>
+                    <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Question Bank</h1>
+                    <p className={isDark ? 'text-slate-400' : 'text-slate-500'}>Add and manage questions for the exam engine</p>
                 </div>
                 <button
                     onClick={() => setIsAdding(true)}
@@ -156,14 +158,14 @@ const QuestionManager = () => {
 
             {/* Filters */}
             <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex gap-2 p-1 bg-slate-100 rounded-lg">
+                <div className={`flex gap-2 p-1 rounded-lg ${isDark ? 'bg-slate-800' : 'bg-slate-100'}`}>
                     {['all', 'maths', 'physics', 'chemistry'].map(sub => (
                         <button
                             key={sub}
                             onClick={() => setFilterSubject(sub)}
                             className={`px-4 py-1.5 text-sm font-medium rounded-md capitalize transition-all ${filterSubject === sub
-                                ? 'bg-white text-indigo-600 shadow-sm'
-                                : 'text-slate-500 hover:text-slate-700'
+                                ? isDark ? 'bg-slate-700 text-indigo-400 shadow-sm' : 'bg-white text-indigo-600 shadow-sm'
+                                : isDark ? 'text-slate-400 hover:text-slate-200' : 'text-slate-500 hover:text-slate-700'
                                 }`}
                         >
                             {sub}
@@ -175,7 +177,7 @@ const QuestionManager = () => {
                 <select
                     value={filterUser}
                     onChange={(e) => setFilterUser(e.target.value)}
-                    className="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white"
+                    className={`px-3 py-2 border rounded-lg text-sm ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                 >
                     <option value="all">All Users</option>
                     <option value="none">Unassigned (Global)</option>
@@ -189,7 +191,7 @@ const QuestionManager = () => {
                     <input
                         type="text"
                         placeholder="Search questions..."
-                        className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm"
+                        className={`w-full pl-10 pr-4 py-2 border rounded-lg text-sm ${isDark ? 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-500' : 'bg-white border-slate-200 text-slate-900'}`}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -247,11 +249,11 @@ const QuestionManager = () => {
 
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     <div>
-                                        <label className="text-sm font-medium text-slate-700">Subject</label>
+                                        <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Subject</label>
                                         <select
                                             value={formData.subject}
                                             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                                            className="mt-1 w-full p-2 border border-slate-200 rounded-lg"
+                                            className={`mt-1 w-full p-2 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                         >
                                             <option value="maths">Maths</option>
                                             <option value="physics">Physics</option>
@@ -259,22 +261,22 @@ const QuestionManager = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="text-sm font-medium text-slate-700">Type</label>
+                                        <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Type</label>
                                         <select
                                             value={formData.type}
                                             onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                                            className="mt-1 w-full p-2 border border-slate-200 rounded-lg"
+                                            className={`mt-1 w-full p-2 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                         >
                                             <option value="MCQ">MCQ</option>
                                             <option value="Integer">Integer</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="text-sm font-medium text-slate-700">Difficulty</label>
+                                        <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Difficulty</label>
                                         <select
                                             value={formData.difficulty}
                                             onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
-                                            className="mt-1 w-full p-2 border border-slate-200 rounded-lg"
+                                            className={`mt-1 w-full p-2 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                         >
                                             <option value="Easy">Easy</option>
                                             <option value="Medium">Medium</option>
@@ -282,28 +284,28 @@ const QuestionManager = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="text-sm font-medium text-slate-700">Chapter</label>
+                                        <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Chapter</label>
                                         <input
                                             type="text"
                                             value={formData.chapter}
                                             onChange={(e) => setFormData({ ...formData, chapter: e.target.value })}
-                                            className="mt-1 w-full p-2 border border-slate-200 rounded-lg"
+                                            className={`mt-1 w-full p-2 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                             placeholder="e.g. Calculus"
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="text-sm font-medium text-slate-700">Question Content</label>
+                                    <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Question Content</label>
                                     <textarea
                                         value={formData.content}
                                         onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                                        className="mt-1 w-full p-3 border border-slate-200 rounded-lg h-32 font-mono text-sm"
+                                        className={`mt-1 w-full p-3 border rounded-lg h-32 font-mono text-sm ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                         placeholder="Enter question text. Use $...$ for LaTeX math."
                                     />
                                     {formData.content && (
-                                        <div className="mt-2 p-3 bg-slate-50 rounded-lg border">
-                                            <p className="text-xs text-slate-500 mb-1">Preview:</p>
+                                        <div className={`mt-2 p-3 rounded-lg border ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border'}`}>
+                                            <p className={`text-xs mb-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Preview:</p>
                                             <MathRenderer>{formData.content}</MathRenderer>
                                         </div>
                                     )}
@@ -333,7 +335,7 @@ const QuestionManager = () => {
                                                             newOpts[i] = e.target.value;
                                                             setFormData({ ...formData, options: newOpts });
                                                         }}
-                                                        className="flex-1 p-2 border border-slate-200 rounded-lg text-sm"
+                                                        className={`flex-1 p-2 border rounded-lg text-sm ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                                         placeholder={`Option ${String.fromCharCode(65 + i)}`}
                                                     />
                                                 </div>
@@ -350,7 +352,7 @@ const QuestionManager = () => {
                                             type="text"
                                             value={formData.correct}
                                             onChange={(e) => setFormData({ ...formData, correct: e.target.value })}
-                                            className="mt-1 w-full p-2 border border-slate-200 rounded-lg"
+                                            className={`mt-1 w-full p-2 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                             placeholder="Enter correct answer"
                                         />
                                     </div>
@@ -360,7 +362,7 @@ const QuestionManager = () => {
                                     <button
                                         type="button"
                                         onClick={resetForm}
-                                        className="flex-1 py-2.5 border border-slate-200 text-slate-600 font-medium rounded-lg hover:bg-slate-50"
+                                        className={`flex-1 py-2.5 border font-medium rounded-lg ${isDark ? 'border-slate-600 text-slate-300 hover:bg-slate-800' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
                                     >
                                         Cancel
                                     </button>
@@ -414,20 +416,20 @@ const QuestionManager = () => {
                                             </span>
                                         )}
                                     </div>
-                                    <div className="text-slate-800" style={{ fontFamily: '"Times New Roman", "Cambria Math", serif' }}>
+                                    <div className={isDark ? 'text-slate-200' : 'text-slate-800'} style={{ fontFamily: '"Times New Roman", "Cambria Math", serif' }}>
                                         <MathRenderer>{q.content}</MathRenderer>
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => handleEdit(q)}
-                                        className="p-2 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-indigo-600"
+                                        className={`p-2 rounded-lg ${isDark ? 'hover:bg-slate-700 text-slate-400 hover:text-indigo-400' : 'hover:bg-slate-100 text-slate-500 hover:text-indigo-600'}`}
                                     >
                                         <Edit2 className="w-4 h-4" />
                                     </button>
                                     <button
                                         onClick={() => handleDelete(q.id)}
-                                        className="p-2 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-red-600"
+                                        className={`p-2 rounded-lg ${isDark ? 'hover:bg-slate-700 text-slate-400 hover:text-red-400' : 'hover:bg-slate-100 text-slate-500 hover:text-red-600'}`}
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </button>
@@ -438,7 +440,7 @@ const QuestionManager = () => {
                 )}
             </div>
 
-            <p className="text-sm text-slate-500 text-center">
+            <p className={`text-sm text-center ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                 Total: {filteredQuestions.length} questions
             </p>
         </div>
