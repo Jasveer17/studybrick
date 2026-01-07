@@ -99,17 +99,20 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
                     {/* Brand Header */}
                     <div className="p-5 flex justify-between items-center">
                         <div className="flex items-center gap-3">
-                            <div className="relative group">
-                                {/* Logo with subtle shadow */}
-                                <div className="relative w-12 h-12 flex items-center justify-center">
-                                    <img src="/logo.png" className="w-full h-full object-contain drop-shadow-lg" alt="Logo" />
-                                </div>
+                            {/* Logo container with background for visibility */}
+                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${isDark ? 'bg-white/10' : 'bg-indigo-50'
+                                }`}>
+                                <img
+                                    src="/logo.png"
+                                    className="w-12 h-12 object-contain"
+                                    alt="StudyBrick Logo"
+                                />
                             </div>
                             <div>
-                                <span className={`text-[17px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-neutral-900'}`}>
+                                <span className={`text-lg font-bold tracking-tight ${isDark ? 'text-white' : 'text-neutral-900'}`}>
                                     StudyBrick
                                 </span>
-                                <span className={`block text-[11px] font-medium uppercase tracking-wider ${isDark ? 'text-neutral-500' : 'text-neutral-400'}`}>
+                                <span className={`block text-[11px] font-semibold uppercase tracking-wider ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}>
                                     Premium
                                 </span>
                             </div>
