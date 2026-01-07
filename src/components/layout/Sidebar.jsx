@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LogOut, BookMarked, X, FileText, UploadCloud, Database, Users, UserCircle, Trophy, Download, Sparkles } from 'lucide-react';
+import { LogOut, BookMarked, X, FileText, UploadCloud, Database, Users, UserCircle, Trophy, Download, Sparkles, ChevronRight } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -66,7 +66,7 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
     };
 
     const mobileClasses = isMobile
-        ? `${isOpen ? 'translate-x-0' : '-translate-x-full'} shadow-2xl`
+        ? `${isOpen ? 'translate-x-0' : '-translate-x-full'}`
         : 'translate-x-0';
 
     return (
@@ -74,46 +74,69 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
             {/* Mobile Backdrop */}
             {showMobileOverlay && (
                 <div
-                    className={`fixed inset-0 bg-black/50 z-40 backdrop-blur-sm transition-opacity duration-150 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+                    className={`fixed inset-0 bg-black/60 z-40 backdrop-blur-sm transition-opacity duration-200 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
                     onClick={onClose}
                 />
             )}
 
-            <div className={`fixed left-0 top-0 h-screen w-64 flex flex-col z-50 transition-transform duration-150 ease-out ${mobileClasses}`}>
-                {/* Gradient Background */}
-                <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-800 to-indigo-950" />
+            <div className={`fixed left-0 top-0 h-screen w-[280px] flex flex-col z-50 transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileClasses}`}>
+                {/* Background - Theme Aware */}
+                <div className={`absolute inset-0 ${isDark
+                    ? 'bg-gradient-to-b from-[#0f1419] via-[#0d1117] to-[#0a0d12]'
+                    : 'bg-gradient-to-b from-white via-neutral-50 to-white border-r border-neutral-200'
+                    }`} />
 
-                {/* Decorative Glow */}
-                <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-indigo-500/10 to-transparent" />
-                <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-purple-500/10 to-transparent" />
+                {/* Decorative Gradient Orbs - Only in dark mode */}
+                {isDark && (
+                    <>
+                        <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-indigo-600/8 to-transparent pointer-events-none" />
+                        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-purple-600/5 to-transparent pointer-events-none" />
+                    </>
+                )}
 
                 {/* Content */}
                 <div className="relative flex flex-col h-full">
-                    {/* Brand */}
+                    {/* Brand Header */}
                     <div className="p-5 flex justify-between items-center">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center p-1.5 shadow-lg shadow-indigo-500/40">
-                                <img src="/logo.png" className="w-full h-full object-contain" alt="Logo" />
+                            <div className="relative group">
+                                {/* Logo with subtle shadow */}
+                                <div className="relative w-12 h-12 flex items-center justify-center">
+                                    <img src="/logo.png" className="w-full h-full object-contain drop-shadow-lg" alt="Logo" />
+                                </div>
                             </div>
                             <div>
-                                <span className="text-lg font-bold text-white tracking-tight flex items-center gap-1">
+                                <span className={`text-[17px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-neutral-900'}`}>
                                     StudyBrick
-                                    <Sparkles className="w-4 h-4 text-amber-400" />
+                                </span>
+                                <span className={`block text-[11px] font-medium uppercase tracking-wider ${isDark ? 'text-neutral-500' : 'text-neutral-400'}`}>
+                                    Premium
                                 </span>
                             </div>
                         </div>
                         {isMobile && (
                             <button
                                 onClick={onClose}
-                                className="text-slate-400 hover:text-white p-2 hover:bg-white/10 rounded-lg transition-colors duration-150"
+                                className={`p-2.5 rounded-xl transition-all duration-150 ${isDark
+                                    ? 'text-neutral-400 hover:text-white hover:bg-white/5'
+                                    : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100'
+                                    }`}
                             >
                                 <X className="w-5 h-5" />
                             </button>
                         )}
                     </div>
 
+                    {/* Divider */}
+                    <div className={`mx-5 h-px ${isDark ? 'bg-gradient-to-r from-transparent via-white/10 to-transparent' : 'bg-neutral-200'}`} />
+
                     {/* Navigation */}
-                    <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
+                    <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
+                        <div className="px-3 mb-3">
+                            <span className={`text-[11px] font-semibold uppercase tracking-wider ${isDark ? 'text-neutral-500' : 'text-neutral-400'}`}>
+                                Menu
+                            </span>
+                        </div>
                         {menuItems.map((item) => {
                             const Icon = item.icon;
                             const isActive = location.pathname === item.path;
@@ -123,21 +146,48 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
                                     key={item.path}
                                     to={item.path}
                                     onClick={isMobile ? onClose : undefined}
-                                    className="relative block"
+                                    className="relative block group"
                                 >
                                     <div
-                                        className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-150 ${isActive
-                                            ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg shadow-indigo-500/30'
-                                            : 'text-slate-300 hover:text-white hover:bg-white/5'
+                                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150 ${isActive
+                                            ? isDark
+                                                ? 'bg-gradient-to-r from-indigo-600/20 to-purple-600/10 text-white'
+                                                : 'bg-gradient-to-r from-indigo-100 to-purple-50 text-indigo-700'
+                                            : isDark
+                                                ? 'text-neutral-400 hover:text-white hover:bg-white/[0.04]'
+                                                : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100'
                                             }`}
                                     >
-                                        <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-400'}`} />
-                                        <span className="font-medium">{item.label}</span>
-
-                                        {/* Active Indicator Dot */}
+                                        {/* Active indicator bar */}
                                         {isActive && (
-                                            <div className="absolute right-3 w-2 h-2 bg-white rounded-full" />
+                                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-indigo-400 to-purple-500 rounded-r-full" />
                                         )}
+
+                                        <div className={`p-2 rounded-lg transition-colors duration-150 ${isActive
+                                            ? isDark
+                                                ? 'bg-gradient-to-br from-indigo-500/20 to-purple-500/20'
+                                                : 'bg-indigo-200/50'
+                                            : isDark
+                                                ? 'bg-white/[0.03] group-hover:bg-white/[0.06]'
+                                                : 'bg-neutral-100 group-hover:bg-neutral-200'
+                                            }`}>
+                                            <Icon className={`w-[18px] h-[18px] ${isActive
+                                                ? isDark ? 'text-indigo-400' : 'text-indigo-600'
+                                                : isDark
+                                                    ? 'text-neutral-500 group-hover:text-neutral-300'
+                                                    : 'text-neutral-500 group-hover:text-neutral-700'
+                                                }`} />
+                                        </div>
+
+                                        <span className={`font-medium text-[14px] ${isActive ? (isDark ? 'text-white' : 'text-indigo-700') : ''}`}>
+                                            {item.label}
+                                        </span>
+
+                                        {/* Hover arrow */}
+                                        <ChevronRight className={`w-4 h-4 ml-auto transition-all duration-150 ${isActive
+                                            ? 'opacity-50 translate-x-0'
+                                            : 'opacity-0 -translate-x-2 group-hover:opacity-50 group-hover:translate-x-0'
+                                            } ${isDark ? '' : 'text-neutral-400'}`} />
                                     </div>
                                 </Link>
                             );
@@ -146,10 +196,10 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
 
                     {/* PWA Install Button - Mobile Only */}
                     {showInstallButton && isMobile && (
-                        <div className="px-3 pb-2">
+                        <div className="px-4 pb-3">
                             <button
                                 onClick={handleInstallClick}
-                                className="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-xl shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-shadow duration-150"
+                                className="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/35 transition-all duration-150 hover:-translate-y-0.5"
                             >
                                 <Download className="w-5 h-5" />
                                 Install App
@@ -158,29 +208,45 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
                     )}
 
                     {/* User Profile Section */}
-                    <div className="p-4 border-t border-white/10">
-                        <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors duration-150">
+                    <div className={`p-4 border-t ${isDark ? 'border-white/[0.06]' : 'border-neutral-200'}`}>
+                        <div className={`flex items-center gap-3 p-2.5 rounded-xl transition-colors duration-150 group ${isDark ? 'hover:bg-white/[0.04]' : 'hover:bg-neutral-100'
+                            }`}>
                             <Link
                                 to="/dashboard/profile"
                                 onClick={isMobile ? onClose : undefined}
                                 className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
                             >
-                                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-indigo-500/30">
-                                    {user?.name?.charAt(0) || 'U'}
+                                {/* Premium Avatar with Ring */}
+                                <div className="relative">
+                                    <div className="absolute -inset-0.5 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl opacity-75 blur-[2px]" />
+                                    <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
+                                        {user?.name?.charAt(0) || 'U'}
+                                    </div>
+                                    {/* Online indicator */}
+                                    <div className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 ${isDark ? 'border-[#0d1117]' : 'border-white'
+                                        }`} />
                                 </div>
+
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold text-white truncate">{user?.name || 'User'}</p>
-                                    <p className="text-xs text-slate-400 truncate capitalize">
+                                    <p className={`text-[14px] font-semibold truncate ${isDark ? 'text-white' : 'text-neutral-900'}`}>
+                                        {user?.name || 'User'}
+                                    </p>
+                                    <p className={`text-[12px] truncate capitalize ${isDark ? 'text-neutral-500' : 'text-neutral-500'}`}>
                                         {user?.role === 'institute' ? 'Institute' : user?.role || 'Guest'}
                                     </p>
                                 </div>
                             </Link>
+
+                            {/* Sign Out Button */}
                             <button
                                 onClick={handleSignOut}
-                                className="p-2.5 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-colors duration-150"
+                                className={`p-2.5 rounded-xl transition-all duration-150 ${isDark
+                                    ? 'text-neutral-500 hover:text-red-400 hover:bg-red-400/10'
+                                    : 'text-neutral-400 hover:text-red-500 hover:bg-red-50'
+                                    }`}
                                 title="Sign Out"
                             >
-                                <LogOut className="w-5 h-5" />
+                                <LogOut className="w-[18px] h-[18px]" />
                             </button>
                         </div>
                     </div>
@@ -191,4 +257,3 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
 };
 
 export default Sidebar;
-

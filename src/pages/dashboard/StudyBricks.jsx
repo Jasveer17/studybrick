@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Download, FileText, Calendar, Search, Loader2, AlertCircle } from 'lucide-react';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { Download, FileText, Calendar, Search, Loader2, AlertCircle, BookOpen, Sparkles } from 'lucide-react';
+import { collection, query, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import Card from '../../components/ui/Card';
 
 const StudyBricks = () => {
     const { user } = useAuth();
@@ -13,7 +12,6 @@ const StudyBricks = () => {
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
 
-    // Fetch study materials assigned to this user from Firestore
     useEffect(() => {
         if (!user) return;
 
@@ -22,7 +20,6 @@ const StudyBricks = () => {
             const materials = [];
             snapshot.forEach((doc) => {
                 const data = doc.data();
-                // Only show materials assigned to this user (by firestoreId or email) or global (no assignedTo)
                 if (!data.assignedTo ||
                     data.assignedTo === user.firestoreId ||
                     data.assignedTo === user.email ||
@@ -37,7 +34,6 @@ const StudyBricks = () => {
         return () => unsubscribe();
     }, [user]);
 
-    // Filter by search
     const filteredResources = resources.filter(resource => {
         const query = searchQuery.toLowerCase();
         return !searchQuery ||
@@ -46,15 +42,25 @@ const StudyBricks = () => {
             resource.description?.toLowerCase().includes(query);
     });
 
-    // Get subject color
     const getSubjectStyle = (subject) => {
         const s = subject?.toLowerCase();
-        if (s === 'physics') return isDark ? 'bg-violet-900/50 text-violet-300' : 'bg-violet-100 text-violet-600';
-        if (s === 'chemistry') return isDark ? 'bg-rose-900/50 text-rose-300' : 'bg-rose-100 text-rose-600';
-        return isDark ? 'bg-sky-900/50 text-sky-300' : 'bg-sky-100 text-sky-600';
+        if (s === 'physics') return {
+            bg: isDark ? 'bg-violet-500/20' : 'bg-violet-100',
+            text: isDark ? 'text-violet-400' : 'text-violet-600',
+            gradient: 'from-violet-500 to-purple-600'
+        };
+        if (s === 'chemistry') return {
+            bg: isDark ? 'bg-rose-500/20' : 'bg-rose-100',
+            text: isDark ? 'text-rose-400' : 'text-rose-600',
+            gradient: 'from-rose-500 to-pink-600'
+        };
+        return {
+            bg: isDark ? 'bg-sky-500/20' : 'bg-sky-100',
+            text: isDark ? 'text-sky-400' : 'text-sky-600',
+            gradient: 'from-sky-500 to-blue-600'
+        };
     };
 
-    // Format file size
     const formatSize = (bytes) => {
         if (!bytes) return 'N/A';
         if (bytes < 1024) return bytes + ' B';
@@ -63,86 +69,121 @@ const StudyBricks = () => {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+        <div className="space-y-6 max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row justify-between md:items-end gap-4">
                 <div>
-                    <h1 className={`text-2xl font-bold flex items-center gap-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className={`p-2 rounded-xl ${isDark ? 'bg-indigo-500/20' : 'bg-indigo-100'}`}>
+                            <BookOpen className={`w-5 h-5 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`} />
+                        </div>
+                        <span className={`text-sm font-semibold ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}>
+                            Resources
+                        </span>
+                    </div>
+                    <h1 className={`text-3xl font-bold tracking-tight flex items-center gap-3 ${isDark ? 'text-white' : 'text-neutral-900'}`}>
                         Study Bricks
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider ${isDark ? 'bg-indigo-900/50 text-indigo-300' : 'bg-indigo-100 text-indigo-700'}`}>
-                            Premium Library
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${isDark ? 'bg-amber-500/20 text-amber-400' : 'bg-amber-100 text-amber-700'}`}>
+                            <Sparkles className="w-3 h-3 inline mr-1" />
+                            Premium
                         </span>
                     </h1>
-                    <p className={isDark ? 'text-slate-400' : 'text-slate-500'}>Curated materials for your success</p>
+                    <p className={`mt-1 ${isDark ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                        Curated materials for your success
+                    </p>
                 </div>
 
+                {/* Search */}
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 ${isDark ? 'text-neutral-500' : 'text-neutral-400'}`} />
                     <input
                         type="text"
                         placeholder="Search resources..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className={`pl-10 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full md:w-64 ${isDark ? 'bg-slate-800 border-slate-700 text-white placeholder:text-slate-500' : 'bg-white border-slate-200 text-slate-900'}`}
+                        className={`pl-11 pr-4 py-3 rounded-xl text-sm font-medium w-full md:w-72 transition-all duration-150 ${isDark
+                                ? 'bg-[#151b27] border border-white/[0.06] text-white placeholder:text-neutral-500 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20'
+                                : 'bg-white border border-neutral-200 text-neutral-900 placeholder:text-neutral-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10'
+                            } focus:outline-none`}
                     />
                 </div>
             </div>
 
+            {/* Content */}
             {loading ? (
                 <div className="flex items-center justify-center py-20">
                     <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
                 </div>
             ) : filteredResources.length === 0 ? (
-                <div className="col-span-full py-16 text-center">
-                    <AlertCircle className={`w-12 h-12 mx-auto mb-4 ${isDark ? 'text-slate-600' : 'text-slate-300'}`} />
-                    <p className={`text-lg ${isDark ? 'text-slate-300' : 'text-slate-500'}`}>No study materials available</p>
-                    <p className={`text-sm mt-1 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Contact your admin to get study materials assigned</p>
+                <div className={`py-20 text-center rounded-2xl ${isDark ? 'bg-[#151b27] border border-white/[0.06]' : 'bg-white border border-neutral-200/50'}`}>
+                    <AlertCircle className={`w-14 h-14 mx-auto mb-4 ${isDark ? 'text-neutral-700' : 'text-neutral-200'}`} />
+                    <p className={`text-lg font-semibold ${isDark ? 'text-neutral-300' : 'text-neutral-600'}`}>
+                        No study materials available
+                    </p>
+                    <p className={`text-sm mt-1 ${isDark ? 'text-neutral-500' : 'text-neutral-400'}`}>
+                        Contact your admin to get study materials assigned
+                    </p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredResources.map((resource) => (
-                        <div
-                            key={resource.id}
-                            className={`rounded-xl border transition-all duration-300 hover:shadow-lg ${isDark ? 'bg-slate-800 border-slate-700 hover:border-indigo-500' : 'bg-white border-slate-200 hover:border-indigo-300'}`}
-                        >
-                            <div className="p-6 flex flex-col h-full">
-                                <div className="flex items-start justify-between mb-4">
-                                    <div className={`p-3 rounded-xl ${getSubjectStyle(resource.subject)}`}>
-                                        <FileText className="w-6 h-6" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {filteredResources.map((resource) => {
+                        const subjectStyle = getSubjectStyle(resource.subject);
+
+                        return (
+                            <div
+                                key={resource.id}
+                                className={`group relative overflow-hidden rounded-2xl transition-all duration-200 hover:-translate-y-1 ${isDark
+                                        ? 'bg-[#151b27] border border-white/[0.06] hover:border-white/[0.1]'
+                                        : 'bg-white border border-neutral-200/50 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-50'
+                                    }`}
+                            >
+                                {/* Top gradient bar on hover */}
+                                <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${subjectStyle.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-200`} />
+
+                                <div className="p-6 flex flex-col h-full">
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className={`p-3 rounded-xl ${subjectStyle.bg} transition-transform duration-200 group-hover:scale-110`}>
+                                            <FileText className={`w-6 h-6 ${subjectStyle.text}`} />
+                                        </div>
+                                        <span className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${isDark ? 'text-neutral-400 bg-white/[0.04]' : 'text-neutral-500 bg-neutral-100'
+                                            }`}>
+                                            {formatSize(resource.size)}
+                                        </span>
                                     </div>
-                                    <span className={`text-xs font-semibold px-2 py-1 rounded ${isDark ? 'text-slate-400 bg-slate-700' : 'text-slate-400 bg-slate-50'}`}>
-                                        {formatSize(resource.size)}
-                                    </span>
-                                </div>
 
-                                <h3 className={`font-bold mb-2 line-clamp-2 min-h-[3rem] ${isDark ? 'text-white' : 'text-slate-800'}`}>
-                                    {resource.title}
-                                </h3>
+                                    <h3 className={`font-bold text-lg mb-2 line-clamp-2 min-h-[3.5rem] ${isDark ? 'text-white' : 'text-neutral-900'}`}>
+                                        {resource.title}
+                                    </h3>
 
-                                {resource.description && (
-                                    <p className={`text-sm mb-3 line-clamp-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                                        {resource.description}
-                                    </p>
-                                )}
-
-                                <div className={`mt-auto pt-4 flex items-center justify-between border-t ${isDark ? 'border-slate-700' : 'border-slate-100'}`}>
-                                    <div className={`flex items-center gap-1 text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
-                                        <Calendar className="w-3 h-3" />
-                                        {resource.uploadedAt?.toDate?.()?.toLocaleDateString() || 'N/A'}
-                                    </div>
-                                    {resource.downloadUrl && (
-                                        <a
-                                            href={resource.downloadUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className={`p-2 rounded-full transition-colors ${isDark ? 'text-indigo-400 hover:bg-indigo-900/50' : 'text-indigo-600 hover:bg-indigo-50'}`}
-                                        >
-                                            <Download className="w-5 h-5" />
-                                        </a>
+                                    {resource.description && (
+                                        <p className={`text-sm mb-4 line-clamp-2 ${isDark ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                                            {resource.description}
+                                        </p>
                                     )}
+
+                                    <div className={`mt-auto pt-4 flex items-center justify-between border-t ${isDark ? 'border-white/[0.06]' : 'border-neutral-100'}`}>
+                                        <div className={`flex items-center gap-1.5 text-xs font-medium ${isDark ? 'text-neutral-500' : 'text-neutral-400'}`}>
+                                            <Calendar className="w-3.5 h-3.5" />
+                                            {resource.uploadedAt?.toDate?.()?.toLocaleDateString() || 'N/A'}
+                                        </div>
+                                        {resource.downloadUrl && (
+                                            <a
+                                                href={resource.downloadUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={`p-2.5 rounded-xl transition-all duration-150 ${isDark
+                                                        ? 'text-indigo-400 hover:bg-indigo-500/15'
+                                                        : 'text-indigo-600 hover:bg-indigo-50'
+                                                    }`}
+                                            >
+                                                <Download className="w-5 h-5" />
+                                            </a>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
         </div>
