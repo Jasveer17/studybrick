@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, ArrowLeft, Moon, Sun, Sparkles } from 'lucide-react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import Sidebar from './Sidebar';
@@ -147,6 +147,23 @@ const DashboardLayout = ({ children }) => {
                         {children || <Outlet />}
                     </div>
                 </main>
+
+                {/* Footer */}
+                <footer className={`px-4 lg:px-6 py-3 border-t ${isDark ? 'border-white/[0.04] bg-[#0a0f1a]/50' : 'border-neutral-100 bg-neutral-50/50'}`}>
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <p className={isDark ? 'text-neutral-600' : 'text-neutral-400'}>
+                            © {new Date().getFullYear()} StudyBrick
+                        </p>
+                        <div className="flex gap-4">
+                            <Link to="/privacy-policy" className={`transition-colors ${isDark ? 'text-neutral-600 hover:text-neutral-400' : 'text-neutral-400 hover:text-neutral-600'}`}>
+                                Privacy Policy
+                            </Link>
+                            <Link to="/terms-of-service" className={`transition-colors ${isDark ? 'text-neutral-600 hover:text-neutral-400' : 'text-neutral-400 hover:text-neutral-600'}`}>
+                                Terms of Service
+                            </Link>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </div>
     );

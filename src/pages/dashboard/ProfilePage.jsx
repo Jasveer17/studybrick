@@ -187,7 +187,7 @@ const ProfilePage = () => {
                                     <img
                                         src={user.profilePicture}
                                         alt="Profile"
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-cover object-top"
                                     />
                                 ) : (
                                     user?.name?.charAt(0) || user?.email?.charAt(0) || 'U'

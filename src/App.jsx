@@ -13,6 +13,8 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import QuestionManager from './pages/admin/QuestionManager';
 import UserManager from './pages/admin/UserManager';
 import StudyBricks from './pages/dashboard/StudyBricks';
+import PrivacyPolicy from './pages/legal/PrivacyPolicy';
+import TermsOfService from './pages/legal/TermsOfService';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -52,7 +54,10 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            {/* Public Routes */}
             <Route path="/login" element={<Login />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/onboarding" element={
               <OnboardingRoute>
                 <Onboarding />
@@ -87,3 +92,4 @@ function App() {
 }
 
 export default App;
+

@@ -168,7 +168,7 @@ export const AuthProvider = ({ children }) => {
                     name: firebaseUser.displayName || '',
                     role: 'student',
                     status: 'active',
-                    photoURL: firebaseUser.photoURL || null,
+                    profilePicture: firebaseUser.photoURL || null, // Auto-capture Google profile pic
                     profileComplete: false, // Needs onboarding
                     totalScore: 0,
                     streak: 0,

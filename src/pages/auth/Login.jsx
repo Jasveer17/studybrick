@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { auth } from '../../lib/firebase';
 import { sendPasswordResetEmail } from 'firebase/auth';
@@ -358,6 +358,16 @@ const Login = () => {
                     </div>
                 </div>
             )}
+
+            {/* Footer Links */}
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-6 text-sm z-10">
+                <Link to="/privacy-policy" className="text-neutral-500 hover:text-neutral-300 transition-colors">
+                    Privacy Policy
+                </Link>
+                <Link to="/terms-of-service" className="text-neutral-500 hover:text-neutral-300 transition-colors">
+                    Terms of Service
+                </Link>
+            </div>
 
             <Toaster position="top-center" richColors theme="dark" />
 
