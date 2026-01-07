@@ -85,13 +85,39 @@ const ExamEngine = () => {
     const [selectedQuestions, setSelectedQuestions] = useState(() => {
         // Load from localStorage on initial render
         const saved = localStorage.getItem('paperBuilderQuestions');
-        return saved ? JSON.parse(saved) : [];
+        try {
+            const parsed = saved ? JSON.parse(saved) : [];
+            // Limit to max 100 questions on load
+            return Array.isArray(parsed) ? parsed.slice(0, 100) : [];
+        } catch {
+            return [];
+        }
     });
     const [isExporting, setIsExporting] = useState(false);
 
-    // Save selected questions to localStorage whenever they change
+    // Rate limiting for PDF exports (max 5 per hour)
+    const MAX_EXPORTS_PER_HOUR = 5;
+    const MAX_QUESTIONS_PER_PAPER = 100;
+
+    const canExportPDF = () => {
+        const exportHistory = JSON.parse(localStorage.getItem('pdfExportHistory') || '[]');
+        const oneHourAgo = Date.now() - (60 * 60 * 1000);
+        const recentExports = exportHistory.filter(timestamp => timestamp > oneHourAgo);
+        return recentExports.length < MAX_EXPORTS_PER_HOUR;
+    };
+
+    const recordExport = () => {
+        const exportHistory = JSON.parse(localStorage.getItem('pdfExportHistory') || '[]');
+        const oneHourAgo = Date.now() - (60 * 60 * 1000);
+        const recentExports = exportHistory.filter(timestamp => timestamp > oneHourAgo);
+        recentExports.push(Date.now());
+        localStorage.setItem('pdfExportHistory', JSON.stringify(recentExports));
+    };
+
+    // Save selected questions to localStorage whenever they change (with limit)
     useEffect(() => {
-        localStorage.setItem('paperBuilderQuestions', JSON.stringify(selectedQuestions));
+        const limitedQuestions = selectedQuestions.slice(0, MAX_QUESTIONS_PER_PAPER);
+        localStorage.setItem('paperBuilderQuestions', JSON.stringify(limitedQuestions));
     }, [selectedQuestions]);
 
     // Real Data State
@@ -164,21 +190,6 @@ const ExamEngine = () => {
     useEffect(() => {
         const userAllowedChapters = user?.allowedChapters || [];
 
-        console.log("Filter Debug:", {
-            user: user?.name,
-            email: user?.email,
-            firestoreId: user?.firestoreId,
-            uid: user?.uid,
-            selectedSubjects,
-            userAllowedChapters,
-            totalQuestions: allQuestions.length,
-            sampleQuestion: allQuestions[0] ? {
-                subject: allQuestions[0].subject,
-                assignedTo: allQuestions[0].assignedTo,
-                chapter: allQuestions[0].chapter
-            } : null
-        });
-
         const filtered = allQuestions.filter(q => {
             // Subject matching - case insensitive
             const qSubject = q.subject?.toLowerCase();
@@ -210,21 +221,19 @@ const ExamEngine = () => {
             return matchSubject && matchChapter && matchSearch && matchUser && matchAllowedChapter;
         });
 
-        // Debug: Show counts at each step
-        console.log("Filter Breakdown:", {
-            total: allQuestions.length,
-            afterSubject: allQuestions.filter(q => selectedSubjects.length === 0 || selectedSubjects.map(s => s.toLowerCase()).includes(q.subject?.toLowerCase())).length,
-            afterChapter: allQuestions.filter(q => selectedChapters.length === 0 || selectedChapters.includes(q.chapter)).length,
-            afterUser: allQuestions.filter(q => !q.assignedTo || q.assignedTo === user?.uid || q.assignedTo === user?.firestoreId || q.assignedTo === user?.email).length,
-            afterAllowedChapter: allQuestions.filter(q => userAllowedChapters.length === 0 || userAllowedChapters.includes(q.chapter)).length,
-            final: filtered.length
-        });
-
         setFilteredQuestions(filtered);
     }, [selectedSubjects, selectedChapters, searchQuery, allQuestions, user]);
 
     // Handlers
     const handleAddQuestion = (question) => {
+        // Enforce question limit
+        if (selectedQuestions.length >= MAX_QUESTIONS_PER_PAPER) {
+            toast.error(`Maximum ${MAX_QUESTIONS_PER_PAPER} questions allowed per paper`, {
+                position: 'bottom-right',
+                duration: 3000
+            });
+            return;
+        }
         if (!selectedQuestions.find(q => q.id === question.id)) {
             setSelectedQuestions([...selectedQuestions, question]);
             toast.success('Question added to paper', {
@@ -257,17 +266,25 @@ const ExamEngine = () => {
             return;
         }
 
+        // Rate limiting check
+        if (!canExportPDF()) {
+            toast.error('Export limit reached. Please try again later.', {
+                description: `Maximum ${MAX_EXPORTS_PER_HOUR} exports per hour allowed.`,
+                duration: 5000
+            });
+            return;
+        }
+
         setIsExporting(true);
         toast.info('Generating PDF...', { duration: 2000 });
 
         try {
             if (printRef.current) {
                 // Use html-to-image which supports modern CSS better
-                // We must ensure fonts are loaded.
                 const dataUrl = await toPng(printRef.current, {
                     backgroundColor: '#ffffff',
-                    pixelRatio: 2, // Higher quality
-                    width: 794, // Force A4 width in pixels
+                    pixelRatio: 2,
+                    width: 794,
                 });
 
                 const pdf = new jsPDF('p', 'mm', 'a4');
@@ -278,11 +295,12 @@ const ExamEngine = () => {
                 pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
                 pdf.save('studybrick-paper.pdf');
 
+                // Record successful export for rate limiting
+                recordExport();
                 toast.success('PDF Downloaded successfully!');
             }
         } catch (error) {
-            console.error(error);
-            toast.error(`Failed to export PDF: ${error.message}`);
+            toast.error('Failed to export PDF. Please try again.');
         } finally {
             setIsExporting(false);
         }

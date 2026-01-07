@@ -326,22 +326,22 @@ const AdminDashboard = () => {
                                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                                 className="space-y-4"
                             >
-                                <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-100 mb-4">
-                                    <h3 className="font-semibold text-indigo-900 mb-2">Bulk Upload Instructions</h3>
-                                    <p className="text-sm text-indigo-700">
+                                <div className={`p-4 rounded-lg border mb-4 ${isDark ? 'bg-indigo-900/30 border-indigo-800' : 'bg-indigo-50 border-indigo-100'}`}>
+                                    <h3 className={`font-semibold mb-2 ${isDark ? 'text-indigo-300' : 'text-indigo-900'}`}>Bulk Upload Instructions</h3>
+                                    <p className={`text-sm ${isDark ? 'text-indigo-400' : 'text-indigo-700'}`}>
                                         Paste numbered questions (1. Question...). Options should be on separate lines as A) B) C) D).
                                         All questions will use the settings below.
                                     </p>
                                 </div>
 
                                 {/* Bulk Settings */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-slate-50 rounded-lg">
+                                <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-lg ${isDark ? 'bg-slate-700/50' : 'bg-slate-50'}`}>
                                     <div>
-                                        <label className="text-xs font-medium text-slate-500 block mb-1">Subject</label>
+                                        <label className={`text-xs font-medium block mb-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Subject</label>
                                         <select
                                             value={bulkSettings.subject}
                                             onChange={(e) => setBulkSettings({ ...bulkSettings, subject: e.target.value })}
-                                            className="w-full p-2 border border-slate-200 rounded-lg text-sm"
+                                            className={`w-full p-2 border rounded-lg text-sm ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                         >
                                             <option value="maths">Maths</option>
                                             <option value="physics">Physics</option>
@@ -349,21 +349,21 @@ const AdminDashboard = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-slate-500 block mb-1">Chapter *</label>
+                                        <label className={`text-xs font-medium block mb-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Chapter *</label>
                                         <input
                                             type="text"
                                             value={bulkSettings.chapter}
                                             onChange={(e) => setBulkSettings({ ...bulkSettings, chapter: e.target.value })}
-                                            className="w-full p-2 border border-slate-200 rounded-lg text-sm"
+                                            className={`w-full p-2 border rounded-lg text-sm ${isDark ? 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-500' : 'bg-white border-slate-200 text-slate-900'}`}
                                             placeholder="e.g. Calculus"
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-medium text-slate-500 block mb-1">Difficulty</label>
+                                        <label className={`text-xs font-medium block mb-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Difficulty</label>
                                         <select
                                             value={bulkSettings.difficulty}
                                             onChange={(e) => setBulkSettings({ ...bulkSettings, difficulty: e.target.value })}
-                                            className="w-full p-2 border border-slate-200 rounded-lg text-sm"
+                                            className={`w-full p-2 border rounded-lg text-sm ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
                                         >
                                             <option value="Easy">Easy</option>
                                             <option value="Medium">Medium</option>
@@ -373,14 +373,14 @@ const AdminDashboard = () => {
                                 </div>
 
                                 {/* Assign to User */}
-                                <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-                                    <label className="text-xs font-medium text-emerald-700 block mb-1 flex items-center gap-1">
+                                <div className={`p-4 rounded-lg border ${isDark ? 'bg-emerald-900/30 border-emerald-800' : 'bg-emerald-50 border-emerald-200'}`}>
+                                    <label className={`text-xs font-medium block mb-1 flex items-center gap-1 ${isDark ? 'text-emerald-400' : 'text-emerald-700'}`}>
                                         <Users className="w-3 h-3" /> Assign to User/Institute
                                     </label>
                                     <select
                                         value={bulkSettings.assignedTo}
                                         onChange={(e) => setBulkSettings({ ...bulkSettings, assignedTo: e.target.value })}
-                                        className="w-full p-2.5 border border-emerald-200 rounded-lg text-sm bg-white"
+                                        className={`w-full p-2.5 border rounded-lg text-sm ${isDark ? 'bg-slate-800 border-emerald-700 text-white' : 'bg-white border-emerald-200 text-slate-900'}`}
                                     >
                                         <option value="">All Users (Global)</option>
                                         <option value="none">Assign to No One</option>
@@ -390,11 +390,11 @@ const AdminDashboard = () => {
                                             </option>
                                         ))}
                                     </select>
-                                    <p className="text-xs text-emerald-600 mt-1">Select a user to assign these questions only to them</p>
+                                    <p className={`text-xs mt-1 ${isDark ? 'text-emerald-500' : 'text-emerald-600'}`}>Select a user to assign these questions only to them</p>
                                 </div>
 
                                 <textarea
-                                    className="w-full h-64 p-4 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono text-sm resize-none"
+                                    className={`w-full h-64 p-4 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono text-sm resize-none ${isDark ? 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                                     placeholder={`Paste questions here...
 
 Example format:
@@ -414,7 +414,7 @@ D) -sin(x)`}
                                 />
 
                                 <div className="flex justify-between items-center">
-                                    <p className="text-sm text-slate-500">
+                                    <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                                         {questionContent ? `~${parseQuestions(questionContent).length} questions detected` : ''}
                                     </p>
                                     <button
@@ -433,18 +433,18 @@ D) -sin(x)`}
                                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                                 className="max-w-xl mx-auto space-y-5 pt-6"
                             >
-                                <div className="p-4 bg-amber-50 rounded-lg border border-amber-200 mb-4">
-                                    <h3 className="font-semibold text-amber-900 mb-1">Upload Study Materials</h3>
-                                    <p className="text-sm text-amber-700">
+                                <div className={`p-4 rounded-lg border mb-4 ${isDark ? 'bg-amber-900/30 border-amber-800' : 'bg-amber-50 border-amber-200'}`}>
+                                    <h3 className={`font-semibold mb-1 ${isDark ? 'text-amber-300' : 'text-amber-900'}`}>Upload Study Materials</h3>
+                                    <p className={`text-sm ${isDark ? 'text-amber-400' : 'text-amber-700'}`}>
                                         Add study materials (PDFs, documents) for your users. Upload a file directly or paste an external link.
                                     </p>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-slate-700">Resource Title *</label>
+                                    <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Resource Title *</label>
                                     <input
                                         type="text"
-                                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                        className={`w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${isDark ? 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                                         placeholder="e.g. JEE Mains 2024 Physics Solutions"
                                         value={brickTitle}
                                         onChange={(e) => setBrickTitle(e.target.value)}
@@ -452,24 +452,24 @@ D) -sin(x)`}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-slate-700">Download URL *</label>
+                                    <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Download URL *</label>
                                     <input
                                         type="url"
-                                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                        className={`w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${isDark ? 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                                         placeholder="https://drive.google.com/file/... or any direct download link"
                                         value={brickDownloadUrl}
                                         onChange={(e) => setBrickDownloadUrl(e.target.value)}
                                     />
-                                    <p className="text-xs text-slate-400">Paste a shareable link from Google Drive, Dropbox, OneDrive, etc.</p>
+                                    <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Paste a shareable link from Google Drive, Dropbox, OneDrive, etc.</p>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-700">Subject</label>
+                                        <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Subject</label>
                                         <select
                                             value={brickSettings.subject}
                                             onChange={(e) => setBrickSettings({ ...brickSettings, subject: e.target.value })}
-                                            className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg"
+                                            className={`w-full p-2.5 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                                         >
                                             <option value="maths">Maths</option>
                                             <option value="physics">Physics</option>
@@ -478,13 +478,13 @@ D) -sin(x)`}
                                         </select>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-700 flex items-center gap-1">
+                                        <label className={`text-sm font-medium flex items-center gap-1 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
                                             <Users className="w-3 h-3" /> Assign To
                                         </label>
                                         <select
                                             value={brickSettings.assignedTo}
                                             onChange={(e) => setBrickSettings({ ...brickSettings, assignedTo: e.target.value })}
-                                            className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg"
+                                            className={`w-full p-2.5 border rounded-lg ${isDark ? 'bg-slate-800 border-slate-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                                         >
                                             <option value="">All Users (Global)</option>
                                             {allUsers.map(u => (
@@ -497,9 +497,9 @@ D) -sin(x)`}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-slate-700">Description (Optional)</label>
+                                    <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Description (Optional)</label>
                                     <textarea
-                                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none h-20"
+                                        className={`w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none h-20 ${isDark ? 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                                         placeholder="Brief description of the material..."
                                         value={brickSettings.description}
                                         onChange={(e) => setBrickSettings({ ...brickSettings, description: e.target.value })}
@@ -521,21 +521,21 @@ D) -sin(x)`}
                                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                                 className="max-w-xl mx-auto space-y-5 pt-6"
                             >
-                                <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200 mb-4">
-                                    <h3 className="font-semibold text-indigo-900 mb-1 flex items-center gap-2">
+                                <div className={`p-4 rounded-lg border mb-4 ${isDark ? 'bg-indigo-900/30 border-indigo-800' : 'bg-indigo-50 border-indigo-200'}`}>
+                                    <h3 className={`font-semibold mb-1 flex items-center gap-2 ${isDark ? 'text-indigo-300' : 'text-indigo-900'}`}>
                                         <Bell className="w-4 h-4" />
                                         Broadcast Notice
                                     </h3>
-                                    <p className="text-sm text-indigo-700">
+                                    <p className={`text-sm ${isDark ? 'text-indigo-400' : 'text-indigo-700'}`}>
                                         Post a notice that all students will see instantly in real-time.
                                     </p>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-slate-700">Notice Title *</label>
+                                    <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Notice Title *</label>
                                     <input
                                         type="text"
-                                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                        className={`w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${isDark ? 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                                         placeholder="e.g. Important: Exam Schedule Change"
                                         value={noticeTitle}
                                         onChange={(e) => setNoticeTitle(e.target.value)}
@@ -543,9 +543,9 @@ D) -sin(x)`}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-slate-700">Message *</label>
+                                    <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Message *</label>
                                     <textarea
-                                        className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none h-28"
+                                        className={`w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none h-28 ${isDark ? 'bg-slate-800 border-slate-600 text-white placeholder:text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-900'}`}
                                         placeholder="Enter the notice message..."
                                         value={noticeMessage}
                                         onChange={(e) => setNoticeMessage(e.target.value)}
@@ -553,14 +553,14 @@ D) -sin(x)`}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-slate-700">Notice Type</label>
+                                    <label className={`text-sm font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Notice Type</label>
                                     <div className="flex gap-3">
                                         <button
                                             type="button"
                                             onClick={() => setNoticeType('normal')}
                                             className={`flex-1 py-2.5 px-4 rounded-lg border-2 font-medium transition-all ${noticeType === 'normal'
                                                 ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                                                : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                                                : isDark ? 'border-slate-600 text-slate-400 hover:border-slate-500' : 'border-slate-200 text-slate-600 hover:border-slate-300'
                                                 }`}
                                         >
                                             Normal
@@ -570,7 +570,7 @@ D) -sin(x)`}
                                             onClick={() => setNoticeType('urgent')}
                                             className={`flex-1 py-2.5 px-4 rounded-lg border-2 font-medium transition-all flex items-center justify-center gap-2 ${noticeType === 'urgent'
                                                 ? 'border-amber-500 bg-amber-50 text-amber-700'
-                                                : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                                                : isDark ? 'border-slate-600 text-slate-400 hover:border-slate-500' : 'border-slate-200 text-slate-600 hover:border-slate-300'
                                                 }`}
                                         >
                                             <AlertCircle className="w-4 h-4" />

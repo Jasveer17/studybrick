@@ -26,6 +26,11 @@ const Onboarding = () => {
             toast.error('Please enter your name');
             return;
         }
+        // Input length validation
+        if (formData.name.trim().length > 100) {
+            toast.error('Name is too long (max 100 characters)');
+            return;
+        }
         if (!formData.role) {
             toast.error('Please select your role');
             return;
@@ -40,6 +45,10 @@ const Onboarding = () => {
         }
         if (!formData.institute.trim()) {
             toast.error('Please enter your institute name');
+            return;
+        }
+        if (formData.institute.trim().length > 200) {
+            toast.error('Institute name is too long (max 200 characters)');
             return;
         }
 

@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }) => {
         let isMounted = true;
         let unsubscribeProfile = null;
         let loadingResolved = false;
-        console.log("AuthContext: Mounting...");
 
         // Helper to set loading false safely
         const resolveLoading = () => {
@@ -31,13 +30,11 @@ export const AuthProvider = ({ children }) => {
         // Safety timeout in case Firebase hangs
         const timeout = setTimeout(() => {
             if (isMounted && !loadingResolved) {
-                console.warn("AuthContext: Firebase init timed out. Forcing load completion.");
                 resolveLoading();
             }
         }, 3000);
 
         const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-            console.log("AuthContext: Auth State Changed", firebaseUser?.email);
             if (!isMounted) return;
 
             // Clean up previous profile listener
@@ -59,7 +56,6 @@ export const AuthProvider = ({ children }) => {
 
                         if (!snapshot.empty) {
                             const userDoc = snapshot.docs[0];
-                            console.log("AuthContext: User profile found and updated from Firestore", userDoc.data());
                             setUser({
                                 uid: firebaseUser.uid,
                                 firestoreId: userDoc.id,
@@ -104,7 +100,6 @@ export const AuthProvider = ({ children }) => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const firebaseUser = userCredential.user;
-            console.log("Firebase Auth UID:", firebaseUser.uid);
 
             // Query user profile from Firestore by email (since admin creates users with auto-generated IDs)
             const usersQuery = query(
@@ -112,12 +107,10 @@ export const AuthProvider = ({ children }) => {
                 where('email', '==', firebaseUser.email)
             );
             const snapshot = await getDocs(usersQuery);
-            console.log("Firestore query results:", snapshot.size);
 
             if (!snapshot.empty) {
                 const userDoc = snapshot.docs[0];
                 const firestoreData = userDoc.data();
-                console.log("Firestore user data:", firestoreData);
                 const userData = {
                     uid: firebaseUser.uid,
                     firestoreId: userDoc.id,
@@ -127,7 +120,6 @@ export const AuthProvider = ({ children }) => {
                 setUser(userData);
                 return userData;
             } else {
-                console.log("No Firestore document found for this user. Using Firebase Auth data only.");
                 // Fallback: no profile in Firestore
                 const userData = { uid: firebaseUser.uid, email: firebaseUser.email, role: 'student' };
                 setUser(userData);
@@ -142,7 +134,6 @@ export const AuthProvider = ({ children }) => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const firebaseUser = result.user;
-            console.log("Google Sign-In successful:", firebaseUser.email);
 
             // Check if user exists in Firestore
             const usersQuery = query(

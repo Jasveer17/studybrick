@@ -14,8 +14,6 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-console.log("Initializing Firebase with project:", firebaseConfig.projectId); // Debug Log
-
 // Validation to prevent silent failures
 if (!firebaseConfig.apiKey) {
     console.error("Firebase Config Missing! Check your .env file.");
