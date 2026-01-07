@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LogOut, BookMarked, X, FileText, UploadCloud, Database, Users, UserCircle, Trophy, Download, Sparkles, ChevronRight } from 'lucide-react';
+import { LogOut, BookMarked, X, FileText, UploadCloud, Database, Users, UserCircle, Download, ChevronRight } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -54,9 +54,8 @@ const Sidebar = ({ isOpen, onClose, isMobile }) => {
         { icon: Database, label: 'Question Bank', path: '/admin/questions' },
         { icon: Users, label: 'User Management', path: '/admin/users' },
     ] : [
-        { icon: FileText, label: 'Exam Engine', path: '/dashboard/exam-engine' },
-        { icon: BookMarked, label: 'Study Bricks', path: '/dashboard/study-bricks' },
-        { icon: Trophy, label: 'Leaderboard', path: '/dashboard/leaderboard' },
+        { icon: FileText, label: 'Question Bank', path: '/dashboard/exam-engine' },
+        { icon: BookMarked, label: 'Study Materials', path: '/dashboard/study-bricks' },
         { icon: UserCircle, label: 'My Profile', path: '/dashboard/profile' },
     ];
 
