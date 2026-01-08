@@ -434,8 +434,8 @@ const ExamEngine = () => {
                             return (
                                 <div
                                     key={q.id}
-                                    className={`p-5 rounded-xl border transition-[border-color,background-color] duration-150 ${isSelected
-                                        ? isDark ? 'border-indigo-500 bg-indigo-900/20' : 'border-indigo-200 bg-indigo-50/30'
+                                    className={`p-5 rounded-xl border transition-colors duration-150 ${isSelected
+                                        ? isDark ? 'border-indigo-400 bg-indigo-900/10' : 'border-indigo-300 bg-indigo-50'
                                         : isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}
                                 >
                                     <div className="flex justify-between items-start gap-4">
@@ -478,9 +478,9 @@ const ExamEngine = () => {
                                         <button
                                             onClick={() => !isSelected && handleAddQuestion(q)}
                                             disabled={isSelected}
-                                            className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-150 ${isSelected
-                                                ? 'bg-green-100 text-green-600'
-                                                : 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 hover:scale-102 active:scale-99'
+                                            className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-150 ${isSelected
+                                                ? isDark ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-700' : 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                                                : 'bg-indigo-600 text-white hover:bg-indigo-700'
                                                 }`}
                                         >
                                             {isSelected ? (

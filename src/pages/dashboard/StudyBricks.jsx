@@ -102,8 +102,8 @@ const StudyBricks = () => {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className={`pl-11 pr-4 py-3 rounded-xl text-sm font-medium w-full md:w-72 transition-all duration-150 ${isDark
-                                ? 'bg-[#151b27] border border-white/[0.06] text-white placeholder:text-neutral-500 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20'
-                                : 'bg-white border border-neutral-200 text-neutral-900 placeholder:text-neutral-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10'
+                            ? 'bg-[#151b27] border border-white/[0.06] text-white placeholder:text-neutral-500 focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20'
+                            : 'bg-white border border-neutral-200 text-neutral-900 placeholder:text-neutral-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10'
                             } focus:outline-none`}
                     />
                 </div>
@@ -132,17 +132,17 @@ const StudyBricks = () => {
                         return (
                             <div
                                 key={resource.id}
-                                className={`group relative overflow-hidden rounded-2xl transition-all duration-200 hover:-translate-y-1 ${isDark
-                                        ? 'bg-[#151b27] border border-white/[0.06] hover:border-white/[0.1]'
-                                        : 'bg-white border border-neutral-200/50 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-50'
+                                className={`group relative overflow-hidden rounded-2xl transition-colors duration-150 ${isDark
+                                    ? 'bg-[#151b27] border border-white/[0.06] hover:border-white/[0.1]'
+                                    : 'bg-white border border-neutral-200/50 hover:border-indigo-200 hover:bg-neutral-50/30'
                                     }`}
                             >
-                                {/* Top gradient bar on hover */}
-                                <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${subjectStyle.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-200`} />
+                                {/* Top gradient bar - always visible at subtle opacity */}
+                                <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${subjectStyle.gradient} opacity-50`} />
 
                                 <div className="p-6 flex flex-col h-full">
                                     <div className="flex items-start justify-between mb-4">
-                                        <div className={`p-3 rounded-xl ${subjectStyle.bg} transition-transform duration-200 group-hover:scale-110`}>
+                                        <div className={`p-3 rounded-xl ${subjectStyle.bg}`}>
                                             <FileText className={`w-6 h-6 ${subjectStyle.text}`} />
                                         </div>
                                         <span className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${isDark ? 'text-neutral-400 bg-white/[0.04]' : 'text-neutral-500 bg-neutral-100'
@@ -172,8 +172,8 @@ const StudyBricks = () => {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className={`p-2.5 rounded-xl transition-all duration-150 ${isDark
-                                                        ? 'text-indigo-400 hover:bg-indigo-500/15'
-                                                        : 'text-indigo-600 hover:bg-indigo-50'
+                                                    ? 'text-indigo-400 hover:bg-indigo-500/15'
+                                                    : 'text-indigo-600 hover:bg-indigo-50'
                                                     }`}
                                             >
                                                 <Download className="w-5 h-5" />

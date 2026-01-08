@@ -6,16 +6,12 @@ const StatCard = ({ title, value, subtitle, icon: Icon, color, gradient }) => {
     const { isDark } = useTheme();
 
     return (
-        <div className={`group relative overflow-hidden rounded-2xl p-6 transition-all duration-200 hover:-translate-y-1 ${isDark
-                ? 'bg-[#151b27] border border-white/[0.06] hover:border-white/[0.1]'
-                : 'bg-white border border-neutral-200/50 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50'
+        <div className={`group relative overflow-hidden rounded-2xl p-6 transition-colors duration-150 ${isDark
+            ? 'bg-[#151b27] border border-white/[0.06] hover:border-white/[0.1]'
+            : 'bg-white border border-neutral-200/50 hover:border-indigo-200 hover:bg-neutral-50/30'
             }`}>
-            {/* Accent top bar */}
-            <div className={`absolute top-0 left-0 right-0 h-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${gradient}`} />
-
-            {/* Background gradient on hover */}
-            <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isDark ? 'bg-gradient-to-br from-white/[0.02] to-transparent' : 'bg-gradient-to-br from-indigo-50/50 to-transparent'
-                }`} />
+            {/* Accent top bar - always visible */}
+            <div className={`absolute top-0 left-0 right-0 h-[2px] opacity-60 ${gradient}`} />
 
             <div className="relative flex justify-between items-start">
                 <div className="space-y-1">
@@ -27,8 +23,8 @@ const StatCard = ({ title, value, subtitle, icon: Icon, color, gradient }) => {
                     </h3>
                 </div>
 
-                {/* Premium Icon Container */}
-                <div className={`p-3 rounded-xl ${gradient} shadow-lg transition-transform duration-200 group-hover:scale-110`}>
+                {/* Icon Container */}
+                <div className={`p-3 rounded-xl ${gradient}`}>
                     <Icon className="w-6 h-6 text-white" />
                 </div>
             </div>
@@ -50,8 +46,8 @@ const ActivityRow = ({ title, subject, date, status }) => {
 
     return (
         <tr className={`group transition-colors duration-150 ${isDark
-                ? 'hover:bg-white/[0.02] border-b border-white/[0.04] last:border-0'
-                : 'hover:bg-neutral-50/50 border-b border-neutral-100 last:border-0'
+            ? 'hover:bg-white/[0.02] border-b border-white/[0.04] last:border-0'
+            : 'hover:bg-neutral-50/50 border-b border-neutral-100 last:border-0'
             }`}>
             <td className="py-4 px-6">
                 <div className={`font-medium ${isDark ? 'text-white' : 'text-neutral-900'}`}>{title}</div>
@@ -61,8 +57,8 @@ const ActivityRow = ({ title, subject, date, status }) => {
             </td>
             <td className="py-4 px-6">
                 <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold ${isDark
-                        ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/20'
-                        : 'bg-indigo-50 text-indigo-700 border border-indigo-100'
+                    ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/20'
+                    : 'bg-indigo-50 text-indigo-700 border border-indigo-100'
                     }`}>
                     {subject}
                 </span>
@@ -75,12 +71,12 @@ const ActivityRow = ({ title, subject, date, status }) => {
             </td>
             <td className="py-4 px-6">
                 <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold ${status === 'Published'
-                        ? isDark
-                            ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/20'
-                            : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
-                        : isDark
-                            ? 'bg-amber-500/15 text-amber-300 border border-amber-500/20'
-                            : 'bg-amber-50 text-amber-700 border border-amber-100'
+                    ? isDark
+                        ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/20'
+                        : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                    : isDark
+                        ? 'bg-amber-500/15 text-amber-300 border border-amber-500/20'
+                        : 'bg-amber-50 text-amber-700 border border-amber-100'
                     }`}>
                     <span className={`w-1.5 h-1.5 rounded-full ${status === 'Published' ? 'bg-emerald-500' : 'bg-amber-500'
                         }`} />
@@ -89,8 +85,8 @@ const ActivityRow = ({ title, subject, date, status }) => {
             </td>
             <td className="py-4 px-6 text-right">
                 <button className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150 ${isDark
-                        ? 'text-indigo-400 hover:bg-indigo-500/15'
-                        : 'text-indigo-600 hover:bg-indigo-50'
+                    ? 'text-indigo-400 hover:bg-indigo-500/15'
+                    : 'text-indigo-600 hover:bg-indigo-50'
                     }`}>
                     Edit
                 </button>
@@ -156,8 +152,8 @@ const Overview = () => {
 
             {/* Recent Activity Table */}
             <div className={`rounded-2xl overflow-hidden ${isDark
-                    ? 'bg-[#151b27] border border-white/[0.06]'
-                    : 'bg-white border border-neutral-200/50 shadow-sm'
+                ? 'bg-[#151b27] border border-white/[0.06]'
+                : 'bg-white border border-neutral-200/50 shadow-sm'
                 }`}>
                 {/* Table Header */}
                 <div className={`p-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 ${isDark ? 'bg-white/[0.02] border-b border-white/[0.06]' : 'bg-neutral-50/50 border-b border-neutral-100'
@@ -171,8 +167,8 @@ const Overview = () => {
                         </p>
                     </div>
                     <button className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 ${isDark
-                            ? 'text-indigo-400 hover:bg-indigo-500/15'
-                            : 'text-indigo-600 hover:bg-indigo-50'
+                        ? 'text-indigo-400 hover:bg-indigo-500/15'
+                        : 'text-indigo-600 hover:bg-indigo-50'
                         }`}>
                         View All
                         <ArrowRight className="w-4 h-4" />

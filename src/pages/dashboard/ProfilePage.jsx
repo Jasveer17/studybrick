@@ -6,17 +6,17 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { toast } from 'sonner';
 
-// Premium Info Card Component
+// Apple-style Info Card Component - no hover translate
 const InfoCard = ({ icon: Icon, label, value, iconColor, iconBg }) => {
     const { isDark } = useTheme();
 
     return (
-        <div className={`group relative overflow-hidden rounded-2xl p-5 transition-all duration-200 hover:-translate-y-1 ${isDark
+        <div className={`group relative overflow-hidden rounded-2xl p-5 transition-colors duration-150 ${isDark
             ? 'bg-[#151b27] border border-white/[0.06] hover:border-white/[0.1]'
-            : 'bg-white border border-neutral-200/50 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-50'
+            : 'bg-white border border-neutral-200/50 hover:border-indigo-200 hover:bg-neutral-50/30'
             }`}>
             <div className="flex items-start gap-4">
-                <div className={`p-3 rounded-xl ${iconBg} transition-transform duration-200 group-hover:scale-110`}>
+                <div className={`p-3 rounded-xl ${iconBg}`}>
                     <Icon className={`w-5 h-5 ${iconColor}`} />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -35,29 +35,11 @@ const InfoCard = ({ icon: Icon, label, value, iconColor, iconBg }) => {
 const ProfilePage = () => {
     const { user, refreshUser } = useAuth();
     const { isDark } = useTheme();
-    const [animatedStreak, setAnimatedStreak] = useState(0);
     const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
     const fileInputRef = useRef(null);
 
-    // Real streak from Firestore (defaults to 0)
+    // Real streak from Firestore (defaults to 0) - displayed instantly, no animation
     const streak = user?.streak || 0;
-    useEffect(() => {
-        let count = 0;
-        const target = Math.min(streak, 30);
-        if (target === 0) {
-            setAnimatedStreak(0);
-            return;
-        }
-        const interval = setInterval(() => {
-            if (count < target) {
-                count++;
-                setAnimatedStreak(count);
-            } else {
-                clearInterval(interval);
-            }
-        }, 80);
-        return () => clearInterval(interval);
-    }, [streak]);
 
     // Handle profile picture upload
     const handleAvatarClick = () => {
@@ -179,7 +161,7 @@ const ProfilePage = () => {
                             <button
                                 onClick={handleAvatarClick}
                                 disabled={isUploadingAvatar}
-                                className={`relative w-24 h-24 rounded-2xl overflow-hidden bg-gradient-to-br ${getRoleGradient()} flex items-center justify-center text-white text-3xl font-bold shadow-xl cursor-pointer transition-transform duration-200 hover:scale-105`}
+                                className={`relative w-24 h-24 rounded-2xl overflow-hidden bg-gradient-to-br ${getRoleGradient()} flex items-center justify-center text-white text-3xl font-bold shadow-xl cursor-pointer transition-opacity duration-150 hover:opacity-90`}
                             >
                                 {isUploadingAvatar ? (
                                     <Loader2 className="w-8 h-8 animate-spin" />
@@ -194,7 +176,7 @@ const ProfilePage = () => {
                                 )}
 
                                 {/* Hover overlay with camera icon */}
-                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150">
                                     <Camera className="w-6 h-6 text-white" />
                                 </div>
                             </button>
@@ -255,7 +237,7 @@ const ProfilePage = () => {
                                 <div className="flex items-center justify-center gap-2">
                                     <Flame className={`w-8 h-8 ${isDark ? 'text-orange-400' : 'text-orange-500'}`} />
                                     <span className={`text-4xl font-bold ${isDark ? 'text-orange-400' : 'text-orange-600'}`}>
-                                        {animatedStreak}
+                                        {streak}
                                     </span>
                                 </div>
                                 <p className={`text-sm font-semibold mt-1 ${isDark ? 'text-orange-300' : 'text-orange-600'}`}>
@@ -295,14 +277,14 @@ const ProfilePage = () => {
                 />
 
                 {/* Days Remaining - with expiry styling */}
-                <div className={`group relative overflow-hidden rounded-2xl p-5 transition-all duration-200 hover:-translate-y-1 ${isExpired
+                <div className={`group relative overflow-hidden rounded-2xl p-5 transition-colors duration-150 ${isExpired
                     ? isDark ? 'bg-red-500/10 border border-red-500/30' : 'bg-red-50 border border-red-200'
                     : isExpiringSoon
                         ? isDark ? 'bg-amber-500/10 border border-amber-500/30' : 'bg-amber-50 border border-amber-200'
-                        : isDark ? 'bg-[#151b27] border border-white/[0.06] hover:border-white/[0.1]' : 'bg-white border border-neutral-200/50 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-50'
+                        : isDark ? 'bg-[#151b27] border border-white/[0.06] hover:border-white/[0.1]' : 'bg-white border border-neutral-200/50 hover:border-indigo-200 hover:bg-neutral-50/30'
                     }`}>
                     <div className="flex items-start gap-4">
-                        <div className={`p-3 rounded-xl transition-transform duration-200 group-hover:scale-110 ${isExpired
+                        <div className={`p-3 rounded-xl transition-transform duration-200 ${isExpired
                             ? isDark ? 'bg-red-500/20' : 'bg-red-100'
                             : isExpiringSoon
                                 ? isDark ? 'bg-amber-500/20' : 'bg-amber-100'
