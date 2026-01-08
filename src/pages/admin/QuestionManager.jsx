@@ -212,28 +212,28 @@ const QuestionManager = () => {
                             initial={{ scale: 0.95, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.95, opacity: 0 }}
-                            className="bg-white rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                            className={`rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto ${isDark ? 'bg-slate-900 border border-slate-700' : 'bg-white'}`}
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-xl font-bold text-slate-900">
+                                <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
                                     {editingId ? 'Edit Question' : 'Add New Question'}
                                 </h2>
-                                <button onClick={resetForm} className="p-2 hover:bg-slate-100 rounded-lg">
+                                <button onClick={resetForm} className={`p-2 rounded-lg ${isDark ? 'hover:bg-slate-800 text-slate-400' : 'hover:bg-slate-100'}`}>
                                     <X className="w-5 h-5" />
                                 </button>
                             </div>
 
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 {/* Assign to User - Important! */}
-                                <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-                                    <label className="text-sm font-medium text-indigo-700 flex items-center gap-2">
+                                <div className={`p-4 rounded-lg border ${isDark ? 'bg-indigo-900/30 border-indigo-800' : 'bg-indigo-50 border-indigo-200'}`}>
+                                    <label className={`text-sm font-medium flex items-center gap-2 ${isDark ? 'text-indigo-400' : 'text-indigo-700'}`}>
                                         <Users className="w-4 h-4" /> Assign to User
                                     </label>
                                     <select
                                         value={formData.assignedTo}
                                         onChange={(e) => setFormData({ ...formData, assignedTo: e.target.value })}
-                                        className="mt-2 w-full p-2.5 border border-indigo-200 rounded-lg bg-white"
+                                        className={`mt-2 w-full p-2.5 border rounded-lg ${isDark ? 'bg-slate-800 border-indigo-700 text-white' : 'bg-white border-indigo-200 text-slate-900'}`}
                                     >
                                         <option value="">All Users (Global)</option>
                                         {users.map(u => (
@@ -242,7 +242,7 @@ const QuestionManager = () => {
                                             </option>
                                         ))}
                                     </select>
-                                    <p className="text-xs text-indigo-600 mt-1">
+                                    <p className={`text-xs mt-1 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}>
                                         Leave as "All Users" for global questions, or select a specific user/institute
                                     </p>
                                 </div>

@@ -505,7 +505,7 @@ const UserManager = () => {
                                 <div className="flex gap-3 pt-4 border-t">
                                     <button
                                         onClick={() => { setShowAssignModal(false); setSelectedQIds([]); }}
-                                        className="flex-1 py-2.5 border border-slate-200 text-slate-600 font-medium rounded-lg hover:bg-slate-50"
+                                        className={`flex-1 py-2.5 border font-medium rounded-lg ${isDark ? 'border-slate-600 text-slate-300 hover:bg-slate-800' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
                                     >
                                         Cancel
                                     </button>
@@ -530,8 +530,8 @@ const UserManager = () => {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">User Management</h1>
-                    <p className="text-slate-500">Create users with login credentials and manage permissions</p>
+                    <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>User Management</h1>
+                    <p className={isDark ? 'text-slate-400' : 'text-slate-500'}>Create users with login credentials and manage permissions</p>
                 </div>
                 <button
                     onClick={openAddModal}
@@ -943,28 +943,28 @@ const UserManager = () => {
                                             <div className="flex justify-end gap-1">
                                                 <button
                                                     onClick={() => setSelectedUser(user)}
-                                                    className="p-2 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-indigo-600"
+                                                    className={`p-2 rounded-lg ${isDark ? 'hover:bg-slate-700 text-slate-400 hover:text-indigo-400' : 'hover:bg-slate-100 text-slate-500 hover:text-indigo-600'}`}
                                                     title="View Details"
                                                 >
                                                     <Eye className="w-4 h-4" />
                                                 </button>
                                                 <button
                                                     onClick={() => copyCredentials(user)}
-                                                    className="p-2 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-emerald-600"
+                                                    className={`p-2 rounded-lg ${isDark ? 'hover:bg-slate-700 text-slate-400 hover:text-emerald-400' : 'hover:bg-slate-100 text-slate-500 hover:text-emerald-600'}`}
                                                     title="Copy Credentials"
                                                 >
                                                     <Copy className="w-4 h-4" />
                                                 </button>
                                                 <button
                                                     onClick={() => handleEdit(user)}
-                                                    className="p-2 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-indigo-600"
+                                                    className={`p-2 rounded-lg ${isDark ? 'hover:bg-slate-700 text-slate-400 hover:text-indigo-400' : 'hover:bg-slate-100 text-slate-500 hover:text-indigo-600'}`}
                                                     title="Edit"
                                                 >
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(user.id)}
-                                                    className="p-2 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-red-600"
+                                                    className={`p-2 rounded-lg ${isDark ? 'hover:bg-slate-700 text-slate-400 hover:text-red-400' : 'hover:bg-slate-100 text-slate-500 hover:text-red-600'}`}
                                                     title="Delete"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
@@ -979,7 +979,7 @@ const UserManager = () => {
                 )}
             </Card>
 
-            <p className="text-sm text-slate-500 text-center">
+            <p className={`text-sm text-center ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                 Total: {users.length} users
             </p>
         </div>
