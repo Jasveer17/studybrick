@@ -121,9 +121,9 @@ const Login = () => {
             <div className="absolute inset-0 bg-[#0a0d12]">
                 {/* Gradient Mesh Effect */}
                 <div className="absolute inset-0">
-                    <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-indigo-600/20 rounded-full blur-[128px]" />
-                    <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[128px]" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-violet-600/10 rounded-full blur-[100px]" />
+                    <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-indigo-600/15 rounded-full blur-[80px]" />
+                    <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-purple-600/15 rounded-full blur-[80px]" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-violet-600/10 rounded-full blur-[60px]" />
                 </div>
 
                 {/* Subtle Grid */}
@@ -172,7 +172,7 @@ const Login = () => {
                             type="button"
                             onClick={handleGoogleSignIn}
                             disabled={isGoogleLoading || isLoading}
-                            className="w-full mb-6 bg-white hover:bg-neutral-50 text-neutral-800 font-semibold py-3.5 rounded-xl flex items-center justify-center gap-3 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-black/10 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]"
+                            className="w-full mb-6 bg-white hover:bg-neutral-50 text-neutral-800 font-semibold py-3.5 rounded-xl flex items-center justify-center gap-3 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-black/10"
                         >
                             {isGoogleLoading ? (
                                 <Loader2 className="w-5 h-5 animate-spin" />
