@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import {
     Search, Filter, Plus, Check, Trash2,
     FileText, Download, GripVertical, AlertCircle, X, Loader2
@@ -7,9 +8,9 @@ import {
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Toaster, toast } from 'sonner';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
+import { toast } from 'sonner';
 
 import { collection, query, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
@@ -235,25 +236,18 @@ const ExamEngine = () => {
     const handleAddQuestion = (question) => {
         // Enforce question limit
         if (selectedQuestions.length >= MAX_QUESTIONS_PER_PAPER) {
-            toast.error(`Maximum ${MAX_QUESTIONS_PER_PAPER} questions allowed per paper`, {
-                position: 'bottom-right',
-                duration: 3000
-            });
+            toast.error(`Maximum ${MAX_QUESTIONS_PER_PAPER} questions allowed per paper`);
             return;
         }
         if (!selectedQuestions.find(q => q.id === question.id)) {
             setSelectedQuestions([...selectedQuestions, question]);
-            toast.success('Question added to paper', {
-                position: 'bottom-right',
-                duration: 2000,
-                className: 'bg-indigo-600 text-white border-none'
-            });
+            toast.success('Question added to paper');
         }
     };
 
     const handleRemoveQuestion = (id) => {
         setSelectedQuestions(selectedQuestions.filter(q => q.id !== id));
-        toast.info('Question removed', { position: 'bottom-right' });
+        toast.info('Question removed');
     };
 
     const handleDragEnd = (event) => {
@@ -287,20 +281,13 @@ const ExamEngine = () => {
 
         try {
             if (printRef.current) {
-                // Temporarily make the print element visible for rendering
-                printRef.current.style.opacity = '1';
-                printRef.current.style.left = '0';
-
-                // Use html-to-image which supports modern CSS better
+                // Portal is always rendered off-screen at left:-9999px via #pdf-portal in index.html
+                // No visibility toggling needed - html-to-image captures it directly
                 const dataUrl = await toPng(printRef.current, {
                     backgroundColor: '#ffffff',
                     pixelRatio: 2,
                     width: 794,
                 });
-
-                // Hide it again immediately
-                printRef.current.style.opacity = '0';
-                printRef.current.style.left = '-9999px';
 
                 const pdf = new jsPDF('p', 'mm', 'a4');
                 const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -335,7 +322,6 @@ const ExamEngine = () => {
 
     return (
         <div className={`flex h-[calc(100vh-4rem)] -m-4 -mb-4 overflow-hidden ${isDark ? 'bg-[#0B0B0B]' : 'bg-[#f5f5f7]'}`}>
-            <Toaster />
 
             {/*
         LEFT PANEL: Question Bank
@@ -622,83 +608,77 @@ const ExamEngine = () => {
                 </div>
             </div>
 
-            {/*
-                HIDDEN PRINT TEMPLATE
-                Moved off-screen and made invisible. Uses opacity:0 and left:-9999 to ensure
-                browser paints it for html-to-image but user never sees it.
-            */}
-            <div
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: '-9999px',
-                    width: '794px', // A4 pixel width
-                    minHeight: '1123px',
-                    opacity: 0,
-                    backgroundColor: '#ffffff',
-                    color: '#000000',
-                    fontFamily: '"Times New Roman", "Cambria Math", "STIX Two Math", serif',
-                    padding: '40px',
-                    pointerEvents: 'none'
-                }}
-                ref={printRef}
-            >
-                {/* Exam Header */}
-                <div style={{ borderBottom: '2px solid #000', marginBottom: '30px', paddingBottom: '20px', textAlign: 'center' }}>
-                    <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '10px', textTransform: 'uppercase' }}>
-                        {pdfSettings.instituteName}
-                    </h1>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: '500' }}>
-                        <span><strong>Exam:</strong> {pdfSettings.examTitle}</span>
-                        <span><strong>Subject:</strong> {selectedSubjects.join(', ').toUpperCase()}</span>
+            {/* PDF PORTAL - Rendered completely outside React root via createPortal */}
+            {ReactDOM.createPortal(
+                <div
+                    ref={printRef}
+                    style={{
+                        width: '794px', // A4 pixel width
+                        minHeight: '1123px',
+                        backgroundColor: '#ffffff',
+                        color: '#000000',
+                        fontFamily: '"Times New Roman", "Cambria Math", "STIX Two Math", serif',
+                        padding: '40px',
+                    }}
+                >
+                    {/* Exam Header */}
+                    <div style={{ borderBottom: '2px solid #000', marginBottom: '30px', paddingBottom: '20px', textAlign: 'center' }}>
+                        <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '10px', textTransform: 'uppercase' }}>
+                            {pdfSettings.instituteName}
+                        </h1>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: '500' }}>
+                            <span><strong>Exam:</strong> {pdfSettings.examTitle}</span>
+                            <span><strong>Subject:</strong> {selectedSubjects.join(', ').toUpperCase()}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: '500', marginTop: '5px' }}>
+                            <span><strong>Time:</strong> {selectedQuestions.length * 3} Mins</span>
+                            <span><strong>Max Marks:</strong> {selectedQuestions.length * 4}</span>
+                        </div>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: '500', marginTop: '5px' }}>
-                        <span><strong>Time:</strong> {selectedQuestions.length * 3} Mins</span>
-                        <span><strong>Max Marks:</strong> {selectedQuestions.length * 4}</span>
+
+                    {/* Instructions */}
+                    <div style={{ marginBottom: '30px', fontSize: '12px', fontStyle: 'italic', border: '1px solid #ccc', padding: '10px' }}>
+                        <strong>Instructions:</strong>
+                        <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginTop: '5px' }}>
+                            <li>All questions are compulsory.</li>
+                            <li>Each question carries 4 marks.</li>
+                            <li>There is no negative marking for this mock test.</li>
+                        </ul>
                     </div>
-                </div>
 
-                {/* Instructions */}
-                <div style={{ marginBottom: '30px', fontSize: '12px', fontStyle: 'italic', border: '1px solid #ccc', padding: '10px' }}>
-                    <strong>Instructions:</strong>
-                    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginTop: '5px' }}>
-                        <li>All questions are compulsory.</li>
-                        <li>Each question carries 4 marks.</li>
-                        <li>There is no negative marking for this mock test.</li>
-                    </ul>
-                </div>
-
-                {/* Questions List */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-                    {selectedQuestions.map((q, idx) => (
-                        <div key={q.id} style={{ breakInside: 'avoid' }}>
-                            <div style={{ display: 'flex', gap: '15px' }}>
-                                <span style={{ fontWeight: 'bold', minWidth: '25px' }}>{idx + 1}.</span>
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ marginBottom: '15px', lineHeight: '1.6' }}>
-                                        <MathRenderer>{q.content}</MathRenderer>
-                                    </div>
-
-                                    {q.options && (
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                                            {q.options.map((opt, i) => (
-                                                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                    <span style={{ fontWeight: 'bold' }}>({String.fromCharCode(97 + i)})</span>
-                                                    <MathRenderer>{opt}</MathRenderer>
-                                                </div>
-                                            ))}
+                    {/* Questions List */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                        {selectedQuestions.map((q, idx) => (
+                            <div key={q.id} style={{ breakInside: 'avoid' }}>
+                                <div style={{ display: 'flex', gap: '15px' }}>
+                                    <span style={{ fontWeight: 'bold', minWidth: '25px' }}>{idx + 1}.</span>
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ marginBottom: '15px', lineHeight: '1.6' }}>
+                                            <MathRenderer>{q.content}</MathRenderer>
                                         </div>
-                                    )}
+
+                                        {q.options && (
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                                {q.options.map((opt, i) => (
+                                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                        <span style={{ fontWeight: 'bold' }}>({String.fromCharCode(97 + i)})</span>
+                                                        <MathRenderer>{opt}</MathRenderer>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
-                <div style={{ marginTop: '50px', textAlign: 'center', fontSize: '12px', color: '#666', borderTop: '1px solid #eee', paddingTop: '10px' }}>
-                    Generated by StudyBrick Exam Engine
-                </div>
-            </div>
+                    <div style={{ marginTop: '50px', textAlign: 'center', fontSize: '12px', color: '#666', borderTop: '1px solid #eee', paddingTop: '10px' }}>
+                        Generated by StudyBrick Exam Engine
+                    </div>
+                </div>,
+                document.getElementById('pdf-portal')
+            )}
         </div >
     );
 };

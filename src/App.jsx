@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { Toaster } from 'sonner';
 
 // Lazy load all pages for code splitting
 const DashboardLayout = lazy(() => import('./components/layout/DashboardLayout'));
@@ -107,6 +108,20 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
+          {/* Global Toaster - position: fixed, outside all panels */}
+          <Toaster
+            position="bottom-center"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: '#1c1c1e',
+                color: '#F5F5F7',
+                border: '1px solid #2A2A2A',
+                borderRadius: '8px',
+                fontSize: '13px',
+              }
+            }}
+          />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               {/* Public Routes */}
