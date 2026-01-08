@@ -880,8 +880,8 @@ const UserManager = () => {
                     </div>
                 ) : users.length === 0 ? (
                     <div className="p-12 text-center">
-                        <Users className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                        <p className="text-slate-500">No users found. Add your first user!</p>
+                        <Users className={`w-12 h-12 mx-auto mb-3 ${isDark ? 'text-slate-600' : 'text-slate-300'}`} />
+                        <p className={isDark ? 'text-slate-400' : 'text-slate-500'}>No users found. Add your first user!</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
