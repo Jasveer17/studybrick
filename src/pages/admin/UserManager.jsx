@@ -315,45 +315,45 @@ const UserManager = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <Card className="p-4">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-indigo-100 rounded-lg">
-                                <Key className="w-5 h-5 text-indigo-600" />
+                            <div className={`p-2 rounded-lg ${isDark ? 'bg-indigo-500/20' : 'bg-indigo-100'}`}>
+                                <Key className={`w-5 h-5 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`} />
                             </div>
                             <div>
-                                <p className="text-xs text-slate-500">Login ID</p>
-                                <p className="font-mono font-bold text-slate-900">{selectedUser.loginId || 'N/A'}</p>
+                                <p className={`text-xs ${isDark ? 'text-[#8e8e93]' : 'text-slate-500'}`}>Login ID</p>
+                                <p className={`font-mono font-bold ${isDark ? 'text-[#F5F5F7]' : 'text-slate-900'}`}>{selectedUser.loginId || 'N/A'}</p>
                             </div>
                         </div>
                     </Card>
                     <Card className="p-4">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-emerald-100 rounded-lg">
-                                <Building2 className="w-5 h-5 text-emerald-600" />
+                            <div className={`p-2 rounded-lg ${isDark ? 'bg-emerald-500/20' : 'bg-emerald-100'}`}>
+                                <Building2 className={`w-5 h-5 ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`} />
                             </div>
                             <div>
-                                <p className="text-xs text-slate-500">Institute</p>
-                                <p className="font-bold text-slate-900">{selectedUser.institute || 'N/A'}</p>
+                                <p className={`text-xs ${isDark ? 'text-[#8e8e93]' : 'text-slate-500'}`}>Institute</p>
+                                <p className={`font-bold ${isDark ? 'text-[#F5F5F7]' : 'text-slate-900'}`}>{selectedUser.institute || 'N/A'}</p>
                             </div>
                         </div>
                     </Card>
                     <Card className="p-4">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-amber-100 rounded-lg">
-                                <Shield className="w-5 h-5 text-amber-600" />
+                            <div className={`p-2 rounded-lg ${isDark ? 'bg-amber-500/20' : 'bg-amber-100'}`}>
+                                <Shield className={`w-5 h-5 ${isDark ? 'text-amber-400' : 'text-amber-600'}`} />
                             </div>
                             <div>
-                                <p className="text-xs text-slate-500">Plan</p>
-                                <p className="font-bold text-slate-900 capitalize">{selectedUser.plan || 'Free'}</p>
+                                <p className={`text-xs ${isDark ? 'text-[#8e8e93]' : 'text-slate-500'}`}>Plan</p>
+                                <p className={`font-bold capitalize ${isDark ? 'text-[#F5F5F7]' : 'text-slate-900'}`}>{selectedUser.plan || 'Free'}</p>
                             </div>
                         </div>
                     </Card>
                     <Card className="p-4">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-violet-100 rounded-lg">
-                                <Calendar className="w-5 h-5 text-violet-600" />
+                            <div className={`p-2 rounded-lg ${isDark ? 'bg-violet-500/20' : 'bg-violet-100'}`}>
+                                <Calendar className={`w-5 h-5 ${isDark ? 'text-violet-400' : 'text-violet-600'}`} />
                             </div>
                             <div>
-                                <p className="text-xs text-slate-500">Expiry</p>
-                                <p className="font-bold text-slate-900">
+                                <p className={`text-xs ${isDark ? 'text-[#8e8e93]' : 'text-slate-500'}`}>Expiry</p>
+                                <p className={`font-bold ${isDark ? 'text-[#F5F5F7]' : 'text-slate-900'}`}>
                                     {selectedUser.planExpiry
                                         ? new Date(selectedUser.planExpiry.seconds * 1000).toLocaleDateString()
                                         : 'N/A'}
@@ -365,22 +365,26 @@ const UserManager = () => {
 
                 {/* Allowed Subjects */}
                 <Card className="p-4">
-                    <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                    <h3 className={`font-semibold mb-3 flex items-center gap-2 ${isDark ? 'text-[#F5F5F7]' : 'text-slate-900'}`}>
                         <BookOpen className="w-4 h-4" /> Allowed Subjects
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                        {(selectedUser.allowedSubjects || []).map(sub => (
-                            <span key={sub} className="px-4 py-2 bg-indigo-100 text-indigo-600 rounded-lg capitalize font-medium">
-                                {sub}
-                            </span>
-                        ))}
+                        {(selectedUser.allowedSubjects || []).length > 0 ? (
+                            (selectedUser.allowedSubjects || []).map(sub => (
+                                <span key={sub} className={`px-4 py-2 rounded-lg capitalize font-medium ${isDark ? 'bg-indigo-500/20 text-indigo-400' : 'bg-indigo-100 text-indigo-600'}`}>
+                                    {sub}
+                                </span>
+                            ))
+                        ) : (
+                            <span className={`text-sm ${isDark ? 'text-[#8e8e93]' : 'text-slate-500'}`}>No subjects assigned</span>
+                        )}
                     </div>
                 </Card>
 
                 {/* User's Assigned Questions */}
                 <Card className="p-4">
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                        <h3 className={`font-semibold flex items-center gap-2 ${isDark ? 'text-[#F5F5F7]' : 'text-slate-900'}`}>
                             <Database className="w-4 h-4" /> Assigned Questions ({userQuestions.length})
                         </h3>
                         <button
@@ -396,19 +400,19 @@ const UserManager = () => {
                             <Loader2 className="w-6 h-6 animate-spin text-indigo-600" />
                         </div>
                     ) : userQuestions.length === 0 ? (
-                        <p className="text-slate-500 text-center py-8">
+                        <p className={`text-center py-8 ${isDark ? 'text-[#8e8e93]' : 'text-slate-500'}`}>
                             No questions specifically assigned to this user.<br />
                             They can access all questions in their allowed subjects.
                         </p>
                     ) : (
                         <div className="space-y-2 max-h-64 overflow-y-auto">
                             {userQuestions.map(q => (
-                                <div key={q.id} className="p-3 bg-slate-50 rounded-lg flex justify-between items-center gap-2">
-                                    <span className="text-sm flex-1">{q.content?.substring(0, 80)}...</span>
-                                    <span className="px-2 py-0.5 bg-slate-200 rounded text-xs capitalize">{q.subject}</span>
+                                <div key={q.id} className={`p-3 rounded-lg flex justify-between items-center gap-2 ${isDark ? 'bg-[#1c1c1e]' : 'bg-slate-50'}`}>
+                                    <span className={`text-sm flex-1 ${isDark ? 'text-[#e8e8ed]' : 'text-slate-700'}`}>{q.content?.substring(0, 80)}...</span>
+                                    <span className={`px-2 py-0.5 rounded text-xs capitalize ${isDark ? 'bg-[#2c2c2e] text-[#A1A1A6]' : 'bg-slate-200 text-slate-600'}`}>{q.subject}</span>
                                     <button
                                         onClick={() => handleRemoveQuestion(q.id)}
-                                        className="p-1 text-red-500 hover:bg-red-100 rounded"
+                                        className={`p-1 rounded transition-colors ${isDark ? 'text-red-400 hover:bg-red-500/10' : 'text-red-500 hover:bg-red-100'}`}
                                         title="Remove from user"
                                     >
                                         <X className="w-4 h-4" />

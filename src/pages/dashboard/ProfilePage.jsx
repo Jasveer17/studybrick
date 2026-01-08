@@ -1,10 +1,12 @@
-import React, { useState, useRef } from 'react';
-import { User, Building2, CreditCard, Calendar, Mail, Shield, Camera, Loader2 } from 'lucide-react';
+import React, { useState, useRef, useCallback } from 'react';
+import { User, Building2, CreditCard, Calendar, Mail, Shield, Camera, Loader2, X, ZoomIn, ZoomOut } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { toast } from 'sonner';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 // Simple Info Card - Apple style
 const InfoCard = ({ icon: Icon, label, value }) => {
@@ -36,12 +38,20 @@ const ProfilePage = () => {
     const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
     const fileInputRef = useRef(null);
 
-    // Handle profile picture upload
+    // Crop state
+    const [showCropModal, setShowCropModal] = useState(false);
+    const [imageSrc, setImageSrc] = useState(null);
+    const [crop, setCrop] = useState({ unit: '%', width: 80, aspect: 1 });
+    const [completedCrop, setCompletedCrop] = useState(null);
+    const [scale, setScale] = useState(1);
+    const imgRef = useRef(null);
+
+    // Handle profile picture upload - Open crop modal first
     const handleAvatarClick = () => {
         fileInputRef.current?.click();
     };
 
-    const handleAvatarChange = async (e) => {
+    const handleAvatarChange = (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -51,35 +61,90 @@ const ProfilePage = () => {
             return;
         }
 
-        // Validate file size (max 2MB)
-        if (file.size > 2 * 1024 * 1024) {
-            toast.error('Image size should be less than 2MB');
+        // Validate file size (max 5MB for cropping, will be compressed)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Image size should be less than 5MB');
+            return;
+        }
+
+        // Read file and open crop modal
+        const reader = new FileReader();
+        reader.onload = () => {
+            setImageSrc(reader.result);
+            setShowCropModal(true);
+            setScale(1);
+            setCrop({ unit: '%', width: 80, aspect: 1 });
+        };
+        reader.readAsDataURL(file);
+
+        // Reset input so same file can be selected again
+        e.target.value = '';
+    };
+
+    // Get cropped image as base64
+    const getCroppedImg = useCallback(() => {
+        if (!completedCrop || !imgRef.current) return null;
+
+        const image = imgRef.current;
+        const canvas = document.createElement('canvas');
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+
+        // Output size (200x200 for profile)
+        const outputSize = 200;
+        canvas.width = outputSize;
+        canvas.height = outputSize;
+
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingQuality = 'high';
+
+        ctx.drawImage(
+            image,
+            completedCrop.x * scaleX,
+            completedCrop.y * scaleY,
+            completedCrop.width * scaleX,
+            completedCrop.height * scaleY,
+            0,
+            0,
+            outputSize,
+            outputSize
+        );
+
+        return canvas.toDataURL('image/jpeg', 0.85);
+    }, [completedCrop]);
+
+    // Save cropped image
+    const handleSaveCroppedImage = async () => {
+        const croppedImage = getCroppedImg();
+        if (!croppedImage) {
+            toast.error('Please select a crop area');
             return;
         }
 
         setIsUploadingAvatar(true);
         try {
-            // Convert to base64 for simple storage
-            const reader = new FileReader();
-            reader.onloadend = async () => {
-                const base64String = reader.result;
+            const userRef = doc(db, 'users', user.firestoreId);
+            await updateDoc(userRef, {
+                profilePicture: croppedImage
+            });
 
-                // Update Firestore
-                const userRef = doc(db, 'users', user.firestoreId);
-                await updateDoc(userRef, {
-                    profilePicture: base64String
-                });
-
-                toast.success('Profile picture updated!');
-                if (refreshUser) refreshUser();
-            };
-            reader.readAsDataURL(file);
+            toast.success('Profile picture updated!');
+            setShowCropModal(false);
+            setImageSrc(null);
+            if (refreshUser) refreshUser();
         } catch (error) {
             console.error('Error uploading avatar:', error);
             toast.error('Failed to update profile picture');
         } finally {
             setIsUploadingAvatar(false);
         }
+    };
+
+    // Cancel crop
+    const handleCancelCrop = () => {
+        setShowCropModal(false);
+        setImageSrc(null);
+        setScale(1);
     };
 
     // Calculate days remaining
@@ -253,6 +318,98 @@ const ProfilePage = () => {
                     Account ID: {user?.uid || 'N/A'} • Member since: {formatDate(user?.createdAt)}
                 </p>
             </div>
+
+            {/* Image Crop Modal */}
+            {showCropModal && imageSrc && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    {/* Backdrop */}
+                    <div
+                        className="absolute inset-0 bg-black/70"
+                        onClick={handleCancelCrop}
+                    />
+
+                    {/* Modal */}
+                    <div className={`relative w-full max-w-md rounded-xl overflow-hidden ${isDark ? 'bg-[#1c1c1e]' : 'bg-white'}`}>
+                        {/* Header */}
+                        <div className={`flex items-center justify-between px-4 py-3 border-b ${isDark ? 'border-[#3a3a3c]' : 'border-[#e8e8ed]'}`}>
+                            <h3 className={`text-[15px] font-semibold ${isDark ? 'text-[#F5F5F7]' : 'text-[#1c1c1e]'}`}>
+                                Crop Photo
+                            </h3>
+                            <button
+                                onClick={handleCancelCrop}
+                                className={`p-1.5 rounded-md transition-colors duration-100 ${isDark ? 'hover:bg-[#2c2c2e] text-[#8e8e93]' : 'hover:bg-[#f5f5f7] text-[#636366]'}`}
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        {/* Crop Area */}
+                        <div className="p-4">
+                            <div className={`rounded-lg overflow-hidden ${isDark ? 'bg-[#0B0B0B]' : 'bg-[#f5f5f7]'}`}>
+                                <ReactCrop
+                                    crop={crop}
+                                    onChange={(c) => setCrop(c)}
+                                    onComplete={(c) => setCompletedCrop(c)}
+                                    aspect={1}
+                                    circularCrop
+                                >
+                                    <img
+                                        ref={imgRef}
+                                        src={imageSrc}
+                                        alt="Crop preview"
+                                        style={{
+                                            maxHeight: '300px',
+                                            width: '100%',
+                                            objectFit: 'contain',
+                                            transform: `scale(${scale})`
+                                        }}
+                                    />
+                                </ReactCrop>
+                            </div>
+
+                            {/* Zoom Controls */}
+                            <div className="flex items-center justify-center gap-4 mt-4">
+                                <button
+                                    onClick={() => setScale(Math.max(0.5, scale - 0.1))}
+                                    className={`p-2 rounded-lg transition-colors duration-100 ${isDark ? 'bg-[#2c2c2e] hover:bg-[#3a3a3c] text-[#F5F5F7]' : 'bg-[#f5f5f7] hover:bg-[#e8e8ed] text-[#1c1c1e]'}`}
+                                >
+                                    <ZoomOut className="w-4 h-4" />
+                                </button>
+                                <span className={`text-[12px] font-medium min-w-[50px] text-center ${isDark ? 'text-[#A1A1A6]' : 'text-[#636366]'}`}>
+                                    {Math.round(scale * 100)}%
+                                </span>
+                                <button
+                                    onClick={() => setScale(Math.min(3, scale + 0.1))}
+                                    className={`p-2 rounded-lg transition-colors duration-100 ${isDark ? 'bg-[#2c2c2e] hover:bg-[#3a3a3c] text-[#F5F5F7]' : 'bg-[#f5f5f7] hover:bg-[#e8e8ed] text-[#1c1c1e]'}`}
+                                >
+                                    <ZoomIn className="w-4 h-4" />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className={`flex gap-3 px-4 py-3 border-t ${isDark ? 'border-[#3a3a3c]' : 'border-[#e8e8ed]'}`}>
+                            <button
+                                onClick={handleCancelCrop}
+                                className={`flex-1 py-2.5 rounded-lg text-[13px] font-medium transition-colors duration-100 ${isDark ? 'bg-[#2c2c2e] text-[#F5F5F7] hover:bg-[#3a3a3c]' : 'bg-[#f5f5f7] text-[#1c1c1e] hover:bg-[#e8e8ed]'}`}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleSaveCroppedImage}
+                                disabled={isUploadingAvatar}
+                                className="flex-1 py-2.5 bg-[#5B6EAE] hover:bg-[#4a5a94] text-white rounded-lg text-[13px] font-medium transition-colors duration-100 disabled:opacity-50 flex items-center justify-center gap-2"
+                            >
+                                {isUploadingAvatar ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                    'Save'
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
