@@ -327,24 +327,24 @@ const ExamEngine = () => {
     }
 
     return (
-        <div className={`flex h-[calc(100vh-4rem)] -m-4 -mb-4 overflow-hidden ${isDark ? 'bg-[#0a0f1a]' : 'bg-slate-50'}`}>
+        <div className={`flex h-[calc(100vh-4rem)] -m-4 -mb-4 overflow-hidden ${isDark ? 'bg-[#0B0B0B]' : 'bg-[#f5f5f7]'}`}>
             <Toaster />
 
             {/*
         LEFT PANEL: Question Bank
       */}
-            <div className={`w-full md:w-[70%] flex flex-col border-r ${isDark ? 'bg-[#0a0f1a] border-slate-700/50' : 'bg-slate-50 border-slate-200'}`}>
+            <div className={`w-full md:w-[70%] flex flex-col border-r ${isDark ? 'bg-[#0B0B0B] border-[#2A2A2A]' : 'bg-[#f5f5f7] border-[#e8e8ed]'}`}>
 
                 {/* Header */}
-                <div className={`border-b px-6 py-4 sticky top-0 z-10 ${isDark ? 'bg-[#0f1420] border-slate-700/50' : 'bg-white border-slate-200 shadow-sm'}`}>
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className={`text-xl font-bold flex items-center gap-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                            <Search className="w-5 h-5 text-indigo-500" />
+                <div className={`border-b px-5 py-4 sticky top-0 z-10 ${isDark ? 'bg-[#0B0B0B] border-[#2A2A2A]' : 'bg-white border-[#e8e8ed]'}`}>
+                    <div className="flex justify-between items-center mb-3">
+                        <h2 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-[#F5F5F7]' : 'text-[#1c1c1e]'}`}>
+                            <Search className="w-4 h-4 text-[#5B6EAE]" />
                             Question Bank
                         </h2>
                         <div className="flex gap-2">
-                            <button className={`px-3 py-1.5 text-sm font-medium rounded-md flex items-center gap-1 transition-colors ${isDark ? 'text-slate-300 bg-slate-700 hover:bg-slate-600' : 'text-slate-600 bg-slate-100 hover:bg-slate-200'}`}>
-                                <Filter className="w-4 h-4" /> Filters
+                            <button className={`px-2.5 py-1.5 text-[12px] font-medium rounded-md flex items-center gap-1 transition-colors duration-100 ${isDark ? 'text-[#A1A1A6] bg-[#2A2A2A] hover:bg-[#3a3a3c]' : 'text-[#636366] bg-[#f5f5f7] hover:bg-[#e8e8ed]'}`}>
+                                <Filter className="w-3.5 h-3.5" /> Filters
                             </button>
                         </div>
                     </div>
@@ -454,39 +454,42 @@ const ExamEngine = () => {
                             return (
                                 <div
                                     key={q.id}
-                                    className={`p-5 rounded-xl border transition-colors duration-150 ${isSelected
-                                        ? isDark ? 'border-indigo-400 bg-indigo-900/10' : 'border-indigo-300 bg-indigo-50'
-                                        : isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}
+                                    className={`p-4 rounded-lg border transition-colors duration-120 ${isSelected
+                                        ? isDark ? 'border-[#5B6EAE] bg-[#5B6EAE]/5' : 'border-[#5B6EAE] bg-[#5B6EAE]/5'
+                                        : isDark ? 'bg-[#1c1c1e] border-[#3a3a3c]' : 'bg-white border-[#e8e8ed]'}`}
                                 >
                                     <div className="flex justify-between items-start gap-4">
                                         <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-3">
-                                                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${q.difficulty === 'Easy'
-                                                    ? isDark ? 'bg-green-900/50 text-green-400' : 'bg-green-100 text-green-700'
+                                            {/* Quiet metadata row */}
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className={`text-[11px] font-medium uppercase ${q.difficulty === 'Easy'
+                                                    ? 'text-[#22c55e]'
                                                     : q.difficulty === 'Medium'
-                                                        ? isDark ? 'bg-amber-900/50 text-amber-400' : 'bg-amber-100 text-amber-700'
-                                                        : isDark ? 'bg-rose-900/50 text-rose-400' : 'bg-rose-100 text-rose-700'
+                                                        ? 'text-[#eab308]'
+                                                        : 'text-[#ef4444]'
                                                     }`}>
                                                     {q.difficulty}
                                                 </span>
-                                                <span className={`px-2.5 py-1 rounded-full text-[10px] font-semibold ${isDark ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600'}`}>
+                                                <span className={`text-[11px] ${isDark ? 'text-[#8e8e93]' : 'text-[#8e8e93]'}`}>·</span>
+                                                <span className={`text-[11px] ${isDark ? 'text-[#8e8e93]' : 'text-[#636366]'}`}>
                                                     {q.type}
                                                 </span>
-                                                <span className={`text-xs font-medium ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                                                <span className={`text-[11px] ${isDark ? 'text-[#8e8e93]' : 'text-[#8e8e93]'}`}>·</span>
+                                                <span className={`text-[11px] ${isDark ? 'text-[#636366]' : 'text-[#8e8e93]'}`}>
                                                     {q.chapter}
                                                 </span>
                                             </div>
 
-                                            <div className={`text-base leading-relaxed font-serif ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
-                                                {/* Render Main Content */}
+                                            {/* Question content - highest priority */}
+                                            <div className={`text-[15px] leading-relaxed ${isDark ? 'text-[#e8e8ed]' : 'text-[#1c1c1e]'}`}>
                                                 <MathRenderer>{q.content}</MathRenderer>
 
-                                                {/* Render Options if MCQ */}
+                                                {/* Options if MCQ */}
                                                 {q.options && (
-                                                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                                    <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-1.5">
                                                         {q.options.map((opt, i) => (
-                                                            <div key={i} className={`flex items-center gap-2 text-sm p-2 rounded border ${isDark ? 'bg-slate-700/50 border-slate-600 text-slate-300' : 'bg-slate-50 border-slate-100 text-slate-600'}`}>
-                                                                <span className={`font-bold w-4 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{String.fromCharCode(65 + i)}.</span>
+                                                            <div key={i} className={`flex items-center gap-2 text-[13px] p-2 rounded-md ${isDark ? 'bg-[#2c2c2e] text-[#aeaeb2]' : 'bg-[#f5f5f7] text-[#636366]'}`}>
+                                                                <span className="font-medium text-[#8e8e93] w-4">{String.fromCharCode(65 + i)}.</span>
                                                                 <MathRenderer>{opt}</MathRenderer>
                                                             </div>
                                                         ))}
@@ -495,18 +498,19 @@ const ExamEngine = () => {
                                             </div>
                                         </div>
 
+                                        {/* Subtle add button */}
                                         <button
                                             onClick={() => !isSelected && handleAddQuestion(q)}
                                             disabled={isSelected}
-                                            className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-150 ${isSelected
-                                                ? isDark ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-700' : 'bg-emerald-50 text-emerald-600 border border-emerald-200'
-                                                : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                                            className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-120 ${isSelected
+                                                ? isDark ? 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30' : 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30'
+                                                : isDark ? 'border border-[#3a3a3c] text-[#8e8e93] hover:bg-[#2c2c2e] hover:text-white' : 'border border-[#d2d2d7] text-[#8e8e93] hover:bg-[#f5f5f7] hover:text-[#1c1c1e]'
                                                 }`}
                                         >
                                             {isSelected ? (
-                                                <Check className="w-6 h-6" />
+                                                <Check className="w-4 h-4" />
                                             ) : (
-                                                <Plus className="w-6 h-6" />
+                                                <Plus className="w-4 h-4" />
                                             )}
                                         </button>
                                     </div>
@@ -523,24 +527,25 @@ const ExamEngine = () => {
             <div className={`hidden md:flex w-[30%] flex-col border-l shadow-lg z-20 ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}>
                 {/* Header */}
                 <div className={`p-5 border-b ${isDark ? 'border-slate-700' : 'border-slate-100'}`}>
+                    {/* Paper Builder Header - Simplified */}
                     <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2.5 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl shadow-lg shadow-indigo-500/20">
-                            <FileText className="w-5 h-5 text-white" />
+                        <div className="p-2 bg-[#5B6EAE] rounded-lg">
+                            <FileText className="w-4 h-4 text-white" />
                         </div>
                         <div>
-                            <h3 className={`font-bold text-lg ${isDark ? 'text-white' : 'text-slate-900'}`}>Paper Builder</h3>
-                            <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Drag to reorder questions</p>
+                            <h3 className={`font-semibold text-[15px] ${isDark ? 'text-[#F5F5F7]' : 'text-[#1c1c1e]'}`}>Paper Builder</h3>
+                            <p className={`text-[11px] ${isDark ? 'text-[#6E6E73]' : 'text-[#8e8e93]'}`}>Drag to reorder</p>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
-                        <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-slate-700/50 border-slate-600' : 'bg-slate-50 border-slate-100'}`}>
-                            <span className={`text-xs uppercase tracking-wide font-medium block mb-1 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Questions</span>
-                            <span className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{selectedQuestions.length}</span>
+                    <div className="grid grid-cols-2 gap-2">
+                        <div className={`p-3 rounded-lg border text-center ${isDark ? 'bg-[#1C1C1E] border-[#2A2A2A]' : 'bg-white border-[#e8e8ed]'}`}>
+                            <span className={`text-[10px] uppercase tracking-wide font-medium block mb-0.5 ${isDark ? 'text-[#6E6E73]' : 'text-[#8e8e93]'}`}>Questions</span>
+                            <span className={`text-xl font-semibold ${isDark ? 'text-[#F5F5F7]' : 'text-[#1c1c1e]'}`}>{selectedQuestions.length}</span>
                         </div>
-                        <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-slate-700/50 border-slate-600' : 'bg-slate-50 border-slate-100'}`}>
-                            <span className={`text-xs uppercase tracking-wide font-medium block mb-1 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Est. Time</span>
-                            <span className="text-2xl font-bold text-indigo-500">{selectedQuestions.length * 3}<span className="text-sm ml-1">min</span></span>
+                        <div className={`p-3 rounded-lg border text-center ${isDark ? 'bg-[#1C1C1E] border-[#2A2A2A]' : 'bg-white border-[#e8e8ed]'}`}>
+                            <span className={`text-[10px] uppercase tracking-wide font-medium block mb-0.5 ${isDark ? 'text-[#6E6E73]' : 'text-[#8e8e93]'}`}>Est. Time</span>
+                            <span className="text-xl font-semibold text-[#5B6EAE]">{selectedQuestions.length * 3}<span className="text-[11px] ml-0.5">min</span></span>
                         </div>
                     </div>
                 </div>
@@ -575,25 +580,25 @@ const ExamEngine = () => {
                 </div>
 
                 {/* Footer with PDF Settings */}
-                <div className={`p-5 border-t space-y-4 ${isDark ? 'border-slate-700 bg-slate-800' : 'border-slate-100 bg-white'}`}>
-                    <div className="space-y-3">
+                <div className={`p-4 border-t space-y-3 ${isDark ? 'border-[#2A2A2A] bg-[#161616]' : 'border-[#e8e8ed] bg-white'}`}>
+                    <div className="space-y-2">
                         <div>
-                            <label className={`text-xs font-medium mb-1 block ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Institute Name</label>
+                            <label className={`text-[10px] uppercase tracking-wide font-medium mb-1 block ${isDark ? 'text-[#6E6E73]' : 'text-[#8e8e93]'}`}>Institute Name</label>
                             <input
                                 type="text"
                                 value={pdfSettings.instituteName}
                                 onChange={(e) => setPdfSettings({ ...pdfSettings, instituteName: e.target.value })}
-                                className={`w-full border rounded-lg px-3 py-2 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all ${isDark ? 'bg-slate-700 border-slate-600 text-white placeholder:text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-700'}`}
+                                className={`w-full border rounded-lg px-3 py-2 text-[13px] focus:border-[#5B6EAE] focus:outline-none transition-colors duration-100 ${isDark ? 'bg-[#1C1C1E] border-[#2A2A2A] text-[#F5F5F7] placeholder:text-[#6E6E73]' : 'bg-[#f5f5f7] border-[#e8e8ed] text-[#1c1c1e]'}`}
                                 placeholder="Enter Institute Name"
                             />
                         </div>
                         <div>
-                            <label className={`text-xs font-medium mb-1 block ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Exam Title</label>
+                            <label className={`text-[10px] uppercase tracking-wide font-medium mb-1 block ${isDark ? 'text-[#6E6E73]' : 'text-[#8e8e93]'}`}>Exam Title</label>
                             <input
                                 type="text"
                                 value={pdfSettings.examTitle}
                                 onChange={(e) => setPdfSettings({ ...pdfSettings, examTitle: e.target.value })}
-                                className={`w-full border rounded-lg px-3 py-2 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all ${isDark ? 'bg-slate-700 border-slate-600 text-white placeholder:text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-700'}`}
+                                className={`w-full border rounded-lg px-3 py-2 text-[13px] focus:border-[#5B6EAE] focus:outline-none transition-colors duration-100 ${isDark ? 'bg-[#1C1C1E] border-[#2A2A2A] text-[#F5F5F7] placeholder:text-[#6E6E73]' : 'bg-[#f5f5f7] border-[#e8e8ed] text-[#1c1c1e]'}`}
                                 placeholder="e.g. JEE Mains Mock 1"
                             />
                         </div>
@@ -602,9 +607,9 @@ const ExamEngine = () => {
                     <button
                         onClick={handleExportPDF}
                         disabled={isExporting || selectedQuestions.length === 0}
-                        className="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+                        className="w-full py-2.5 px-4 bg-[#5B6EAE] hover:bg-[#4a5a94] text-white font-medium text-[13px] rounded-lg flex items-center justify-center gap-2 transition-colors duration-100 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {isExporting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
+                        {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                         {isExporting ? 'Generating...' : 'Export Paper PDF'}
                     </button>
                 </div>

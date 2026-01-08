@@ -3,12 +3,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { auth } from '../../lib/firebase';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { User, Lock, Loader2, ArrowRight, AlertCircle, Mail, X, CheckCircle, Sparkles } from 'lucide-react';
+import { User, Lock, Loader2, AlertCircle, Mail, X, CheckCircle } from 'lucide-react';
 import { toast, Toaster } from 'sonner';
 
 // Google Icon SVG Component
 const GoogleIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
         <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
@@ -116,169 +116,120 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center relative overflow-hidden p-4">
-            {/* Premium Gradient Background */}
-            <div className="absolute inset-0 bg-[#0a0d12]">
-                {/* Gradient Mesh Effect */}
-                <div className="absolute inset-0">
-                    <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-indigo-600/15 rounded-full blur-[80px]" />
-                    <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-purple-600/15 rounded-full blur-[80px]" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-violet-600/10 rounded-full blur-[60px]" />
-                </div>
+        <div className="min-h-screen flex items-center justify-center bg-[#0B0B0B] p-4">
+            <Toaster position="top-center" />
 
-                {/* Subtle Grid */}
-                <div
-                    className="absolute inset-0 opacity-[0.03]"
-                    style={{
-                        backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
-                        backgroundSize: '64px 64px'
-                    }}
-                />
-
-                {/* Noise Texture */}
-                <div className="absolute inset-0 opacity-[0.012]" style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
-                }} />
-            </div>
-
-            {/* Login Card */}
-            <div className="w-full max-w-md relative z-10">
-                {/* Card Glow */}
-                <div className="absolute -inset-px bg-gradient-to-b from-white/20 via-white/5 to-transparent rounded-3xl" />
-                <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/10 to-purple-500/5 rounded-3xl blur-xl" />
-
-                <div className="relative bg-[#12171f]/90 backdrop-blur-2xl rounded-2xl border border-white/[0.08] shadow-2xl shadow-black/40 overflow-hidden">
-                    {/* Card Header Gradient Line */}
-                    <div className="h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
-
-                    <div className="p-8">
-                        {/* Logo & Header */}
-                        <div className="flex flex-col items-center mb-8">
-                            {/* Premium Logo */}
-                            <div className="mb-5">
-                                <div className="w-20 h-20 flex items-center justify-center">
-                                    <img src="/logo.png" alt="StudyBrick Logo" className="w-full h-full object-contain drop-shadow-2xl" />
-                                </div>
-                            </div>
-
-                            <h1 className="text-2xl font-bold text-white tracking-tight">Welcome Back</h1>
-                            <p className="text-neutral-400 mt-2 text-sm">
-                                Sign in to your StudyBrick account
-                            </p>
+            {/* Login Card - Apple style: clean, centered, minimal */}
+            <div className="w-full max-w-[340px]">
+                {/* Card */}
+                <div className="bg-[#161616] rounded-xl border border-[#2A2A2A] p-6">
+                    {/* Logo + Header */}
+                    <div className="text-center mb-6">
+                        <div className="w-12 h-12 mx-auto mb-3">
+                            <img src="/logo.png" alt="StudyBrick" className="w-full h-full object-contain" />
                         </div>
-
-                        {/* Google Sign-In Button */}
-                        <button
-                            type="button"
-                            onClick={handleGoogleSignIn}
-                            disabled={isGoogleLoading || isLoading}
-                            className="w-full mb-6 bg-white hover:bg-neutral-50 text-neutral-800 font-semibold py-3.5 rounded-xl flex items-center justify-center gap-3 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-black/10"
-                        >
-                            {isGoogleLoading ? (
-                                <Loader2 className="w-5 h-5 animate-spin" />
-                            ) : (
-                                <>
-                                    <GoogleIcon />
-                                    Continue with Google
-                                </>
-                            )}
-                        </button>
-
-                        {/* Divider */}
-                        <div className="relative mb-6">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                            </div>
-                            <div className="relative flex justify-center">
-                                <span className="px-4 bg-[#12171f] text-neutral-500 text-sm font-medium">
-                                    or sign in with ID
-                                </span>
-                            </div>
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            {/* User ID */}
-                            <div className="space-y-2">
-                                <label className="text-sm font-semibold text-neutral-300">User ID</label>
-                                <div className="relative group">
-                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500 transition-colors duration-150 group-focus-within:text-indigo-400" />
-                                    <input
-                                        type="text"
-                                        className="w-full bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.12] rounded-xl py-3.5 pl-12 pr-4 text-white placeholder:text-neutral-500 focus:outline-none focus:border-indigo-500/50 focus:bg-white/[0.06] focus:ring-2 focus:ring-indigo-500/20 transition-all duration-150"
-                                        placeholder="Enter your ID"
-                                        value={formData.id}
-                                        onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Password */}
-                            <div className="space-y-2">
-                                <div className="flex justify-between items-center">
-                                    <label className="text-sm font-semibold text-neutral-300">Password</label>
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowForgotPassword(true)}
-                                        className="text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
-                                    >
-                                        Forgot password?
-                                    </button>
-                                </div>
-                                <div className="relative group">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500 transition-colors duration-150 group-focus-within:text-indigo-400" />
-                                    <input
-                                        type="password"
-                                        className="w-full bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.12] rounded-xl py-3.5 pl-12 pr-4 text-white placeholder:text-neutral-500 focus:outline-none focus:border-indigo-500/50 focus:bg-white/[0.06] focus:ring-2 focus:ring-indigo-500/20 transition-all duration-150"
-                                        placeholder="••••••••"
-                                        value={formData.password}
-                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Error Message */}
-                            {error && (
-                                <div className="flex items-center gap-2 p-3.5 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm animate-fade-in">
-                                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                                    <span className="font-medium">{error}</span>
-                                </div>
-                            )}
-
-                            {/* Submit Button */}
-                            <button
-                                type="submit"
-                                disabled={isLoading || isGoogleLoading}
-                                className="w-full relative group bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
-                            >
-                                {/* Button shine effect */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-
-                                {/* Button glow */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
-
-                                {/* Inner shadow for depth */}
-                                <div className="absolute inset-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]" />
-
-                                <span className="relative flex items-center gap-2">
-                                    {isLoading ? (
-                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                    ) : (
-                                        <>
-                                            Sign In
-                                            <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-                                        </>
-                                    )}
-                                </span>
-                            </button>
-                        </form>
-
-                        <p className="text-center text-neutral-500 text-sm mt-6">
-                            Don't have an account?{' '}
-                            <span className="text-indigo-400 font-medium cursor-pointer hover:text-indigo-300 transition-colors">
-                                Contact admin
-                            </span>
+                        <h1 className="text-[20px] font-semibold text-[#F5F5F7]">Sign in</h1>
+                        <p className="text-[13px] text-[#A1A1A6] mt-1">
+                            Welcome to StudyBrick
                         </p>
                     </div>
+
+                    {/* Google Sign-In */}
+                    <button
+                        type="button"
+                        onClick={handleGoogleSignIn}
+                        disabled={isGoogleLoading || isLoading}
+                        className="w-full bg-white hover:bg-[#F5F5F7] text-[#1c1c1e] font-medium text-[14px] py-2.5 rounded-lg flex items-center justify-center gap-2.5 transition-colors duration-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isGoogleLoading ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                            <>
+                                <GoogleIcon />
+                                Continue with Google
+                            </>
+                        )}
+                    </button>
+
+                    {/* Divider */}
+                    <div className="flex items-center gap-3 my-5">
+                        <div className="flex-1 h-px bg-[#2A2A2A]" />
+                        <span className="text-[12px] text-[#6E6E73]">or</span>
+                        <div className="flex-1 h-px bg-[#2A2A2A]" />
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        {/* User ID */}
+                        <div>
+                            <label className="block text-[12px] font-medium text-[#A1A1A6] mb-1.5">User ID</label>
+                            <input
+                                type="text"
+                                className="w-full bg-[#1C1C1E] border border-[#2A2A2A] rounded-lg py-2.5 px-3 text-[14px] text-[#F5F5F7] placeholder:text-[#6E6E73] focus:outline-none focus:border-[#5B6EAE] transition-colors duration-100"
+                                placeholder="Enter your ID"
+                                value={formData.id}
+                                onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                            />
+                        </div>
+
+                        {/* Password */}
+                        <div>
+                            <div className="flex justify-between items-center mb-1.5">
+                                <label className="text-[12px] font-medium text-[#A1A1A6]">Password</label>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowForgotPassword(true)}
+                                    className="text-[11px] text-[#5B6EAE] hover:text-[#7d8bc0] transition-colors duration-100"
+                                >
+                                    Forgot?
+                                </button>
+                            </div>
+                            <input
+                                type="password"
+                                className="w-full bg-[#1C1C1E] border border-[#2A2A2A] rounded-lg py-2.5 px-3 text-[14px] text-[#F5F5F7] placeholder:text-[#6E6E73] focus:outline-none focus:border-[#5B6EAE] transition-colors duration-100"
+                                placeholder="••••••••"
+                                value={formData.password}
+                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            />
+                        </div>
+
+                        {/* Error */}
+                        {error && (
+                            <div className="flex items-center gap-2 p-2.5 bg-[#3a1c1c] border border-[#5c2828] rounded-lg text-[#ef4444] text-[12px]">
+                                <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                                <span>{error}</span>
+                            </div>
+                        )}
+
+                        {/* Submit */}
+                        <button
+                            type="submit"
+                            disabled={isLoading || isGoogleLoading}
+                            className="w-full bg-[#5B6EAE] hover:bg-[#4a5a94] text-white font-medium text-[14px] py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors duration-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isLoading ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                'Sign In'
+                            )}
+                        </button>
+                    </form>
+
+                    <p className="text-center text-[12px] text-[#6E6E73] mt-5">
+                        Need an account?{' '}
+                        <span className="text-[#5B6EAE] cursor-pointer hover:text-[#7d8bc0] transition-colors duration-100">
+                            Contact admin
+                        </span>
+                    </p>
+                </div>
+
+                {/* Footer */}
+                <div className="flex justify-center gap-4 mt-6">
+                    <Link to="/privacy-policy" className="text-[11px] text-[#6E6E73] hover:text-[#A1A1A6] transition-colors duration-100">
+                        Privacy
+                    </Link>
+                    <Link to="/terms-of-service" className="text-[11px] text-[#6E6E73] hover:text-[#A1A1A6] transition-colors duration-100">
+                        Terms
+                    </Link>
                 </div>
             </div>
 
@@ -287,50 +238,43 @@ const Login = () => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                     {/* Backdrop */}
                     <div
-                        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+                        className="absolute inset-0 bg-black/60"
                         onClick={closeForgotPassword}
                     />
 
                     {/* Modal */}
-                    <div className="relative bg-[#12171f] border border-white/[0.08] rounded-2xl p-6 w-full max-w-sm shadow-2xl shadow-black/50 animate-scale-in">
-                        {/* Close button */}
+                    <div className="relative bg-[#161616] border border-[#2A2A2A] rounded-xl p-5 w-full max-w-[320px]">
                         <button
                             onClick={closeForgotPassword}
-                            className="absolute top-4 right-4 p-1.5 text-neutral-500 hover:text-white hover:bg-white/[0.06] rounded-lg transition-all"
+                            className="absolute top-3 right-3 p-1.5 text-[#6E6E73] hover:text-[#F5F5F7] hover:bg-[#2A2A2A] rounded-md transition-colors duration-100"
                         >
-                            <X className="w-5 h-5" />
+                            <X className="w-4 h-4" />
                         </button>
 
                         {!resetSent ? (
                             <>
-                                <div className="text-center mb-6">
-                                    <div className="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
-                                        <Mail className="w-6 h-6 text-indigo-400" />
-                                    </div>
-                                    <h3 className="text-xl font-bold text-white">Reset Password</h3>
-                                    <p className="text-sm text-neutral-400 mt-1">
-                                        Enter your email to receive a reset link
+                                <div className="mb-4">
+                                    <h2 className="text-[16px] font-semibold text-[#F5F5F7]">Reset Password</h2>
+                                    <p className="text-[12px] text-[#A1A1A6] mt-1">
+                                        Enter your email to receive a reset link.
                                     </p>
                                 </div>
 
-                                <form onSubmit={handleForgotPassword} className="space-y-4">
-                                    <div className="relative">
-                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
-                                        <input
-                                            type="email"
-                                            placeholder="your@email.com"
-                                            value={forgotEmail}
-                                            onChange={(e) => setForgotEmail(e.target.value)}
-                                            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-neutral-500 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
-                                        />
-                                    </div>
+                                <form onSubmit={handleForgotPassword}>
+                                    <input
+                                        type="email"
+                                        className="w-full bg-[#1C1C1E] border border-[#2A2A2A] rounded-lg py-2.5 px-3 text-[14px] text-[#F5F5F7] placeholder:text-[#6E6E73] focus:outline-none focus:border-[#5B6EAE] transition-colors duration-100 mb-3"
+                                        placeholder="your@email.com"
+                                        value={forgotEmail}
+                                        onChange={(e) => setForgotEmail(e.target.value)}
+                                    />
                                     <button
                                         type="submit"
                                         disabled={isSendingReset}
-                                        className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+                                        className="w-full bg-[#5B6EAE] hover:bg-[#4a5a94] text-white font-medium text-[13px] py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors duration-100 disabled:opacity-50"
                                     >
                                         {isSendingReset ? (
-                                            <Loader2 className="w-5 h-5 animate-spin" />
+                                            <Loader2 className="w-4 h-4 animate-spin" />
                                         ) : (
                                             'Send Reset Link'
                                         )}
@@ -339,55 +283,22 @@ const Login = () => {
                             </>
                         ) : (
                             <div className="text-center py-4">
-                                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <CheckCircle className="w-8 h-8 text-emerald-400" />
-                                </div>
-                                <h3 className="text-xl font-bold text-white">Check Your Email</h3>
-                                <p className="text-sm text-neutral-400 mt-2">
-                                    We've sent a password reset link to <br />
-                                    <span className="font-medium text-neutral-300">{forgotEmail}</span>
+                                <CheckCircle className="w-10 h-10 text-[#22c55e] mx-auto mb-3" />
+                                <h2 className="text-[16px] font-semibold text-[#F5F5F7] mb-1">Email Sent</h2>
+                                <p className="text-[12px] text-[#A1A1A6]">
+                                    Check your inbox for the reset link.
                                 </p>
                                 <button
                                     onClick={closeForgotPassword}
-                                    className="mt-6 w-full bg-white/[0.06] hover:bg-white/[0.1] text-white font-semibold py-3 rounded-xl transition-colors"
+                                    className="mt-4 text-[13px] text-[#5B6EAE] hover:text-[#7d8bc0] transition-colors duration-100"
                                 >
-                                    Back to Login
+                                    Back to Sign In
                                 </button>
                             </div>
                         )}
                     </div>
                 </div>
             )}
-
-            {/* Footer Links */}
-            <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-6 text-sm z-10">
-                <Link to="/privacy-policy" className="text-neutral-500 hover:text-neutral-300 transition-colors">
-                    Privacy Policy
-                </Link>
-                <Link to="/terms-of-service" className="text-neutral-500 hover:text-neutral-300 transition-colors">
-                    Terms of Service
-                </Link>
-            </div>
-
-            <Toaster position="top-center" richColors theme="dark" />
-
-            {/* Animations */}
-            <style>{`
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(8px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                @keyframes scaleIn {
-                    from { opacity: 0; transform: scale(0.96); }
-                    to { opacity: 1; transform: scale(1); }
-                }
-                .animate-fade-in {
-                    animation: fadeIn 0.2s ease-out forwards;
-                }
-                .animate-scale-in {
-                    animation: scaleIn 0.2s ease-out forwards;
-                }
-            `}</style>
         </div>
     );
 };
