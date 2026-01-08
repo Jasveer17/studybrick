@@ -280,12 +280,20 @@ const ExamEngine = () => {
 
         try {
             if (printRef.current) {
+                // Temporarily make the print element visible for rendering
+                printRef.current.style.opacity = '1';
+                printRef.current.style.left = '0';
+
                 // Use html-to-image which supports modern CSS better
                 const dataUrl = await toPng(printRef.current, {
                     backgroundColor: '#ffffff',
                     pixelRatio: 2,
                     width: 794,
                 });
+
+                // Hide it again immediately
+                printRef.current.style.opacity = '0';
+                printRef.current.style.left = '-9999px';
 
                 const pdf = new jsPDF('p', 'mm', 'a4');
                 const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -309,7 +317,7 @@ const ExamEngine = () => {
     // Show loading state immediately to prevent layout shift
     if (loading) {
         return (
-            <div className="flex h-[calc(100vh-4rem)] -m-8 items-center justify-center">
+            <div className={`flex h-[calc(100vh-4rem)] -m-4 items-center justify-center ${isDark ? 'bg-[#0a0f1a]' : 'bg-slate-50'}`}>
                 <div className="flex flex-col items-center gap-3">
                     <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
                     <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Loading questions...</p>
@@ -319,16 +327,16 @@ const ExamEngine = () => {
     }
 
     return (
-        <div className="flex h-[calc(100vh-4rem)] -m-8 overflow-hidden">
+        <div className={`flex h-[calc(100vh-4rem)] -m-4 -mb-4 overflow-hidden ${isDark ? 'bg-[#0a0f1a]' : 'bg-slate-50'}`}>
             <Toaster />
 
             {/*
         LEFT PANEL: Question Bank
       */}
-            <div className={`w-full md:w-[70%] flex flex-col border-r ${isDark ? 'bg-[#0a0f1a] border-slate-700' : 'bg-white border-slate-200'}`}>
+            <div className={`w-full md:w-[70%] flex flex-col border-r ${isDark ? 'bg-[#0a0f1a] border-slate-700/50' : 'bg-slate-50 border-slate-200'}`}>
 
                 {/* Header */}
-                <div className={`border-b px-6 py-4 sticky top-0 z-10 ${isDark ? 'bg-[#0a0f1a] border-slate-700' : 'bg-white border-slate-200 shadow-sm'}`}>
+                <div className={`border-b px-6 py-4 sticky top-0 z-10 ${isDark ? 'bg-[#0f1420] border-slate-700/50' : 'bg-white border-slate-200 shadow-sm'}`}>
                     <div className="flex justify-between items-center mb-4">
                         <h2 className={`text-xl font-bold flex items-center gap-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
                             <Search className="w-5 h-5 text-indigo-500" />
@@ -604,22 +612,22 @@ const ExamEngine = () => {
 
             {/*
                 HIDDEN PRINT TEMPLATE
-                Positioned FIXED behind the main content to ensure browser paints it.
-                Using z-index -1000 to hide it from user view but keep it strictly rendered.
+                Moved off-screen and made invisible. Uses opacity:0 and left:-9999 to ensure
+                browser paints it for html-to-image but user never sees it.
             */}
             <div
                 style={{
-                    position: 'fixed',
+                    position: 'absolute',
                     top: 0,
-                    left: 0,
+                    left: '-9999px',
                     width: '794px', // A4 pixel width
                     minHeight: '1123px',
-                    zIndex: -1000,
+                    opacity: 0,
                     backgroundColor: '#ffffff',
                     color: '#000000',
                     fontFamily: '"Times New Roman", "Cambria Math", "STIX Two Math", serif',
                     padding: '40px',
-                    pointerEvents: 'none' // Ensure no interaction
+                    pointerEvents: 'none'
                 }}
                 ref={printRef}
             >
