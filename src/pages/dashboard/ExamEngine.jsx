@@ -325,10 +325,10 @@ const ExamEngine = () => {
             {/*
         LEFT PANEL: Question Bank
       */}
-            <div className={`w-full md:w-[70%] flex flex-col border-r ${isDark ? 'bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
+            <div className={`w-full md:w-[70%] flex flex-col border-r ${isDark ? 'bg-[#0a0f1a] border-slate-700' : 'bg-white border-slate-200'}`}>
 
                 {/* Header */}
-                <div className={`backdrop-blur-md border-b px-6 py-4 sticky top-0 z-10 ${isDark ? 'bg-slate-800/80 border-slate-700' : 'bg-white/80 border-slate-200 shadow-sm'}`}>
+                <div className={`border-b px-6 py-4 sticky top-0 z-10 ${isDark ? 'bg-[#0a0f1a] border-slate-700' : 'bg-white border-slate-200 shadow-sm'}`}>
                     <div className="flex justify-between items-center mb-4">
                         <h2 className={`text-xl font-bold flex items-center gap-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
                             <Search className="w-5 h-5 text-indigo-500" />
