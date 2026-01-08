@@ -309,7 +309,7 @@ const ExamEngine = () => {
     // Show loading state immediately to prevent layout shift
     if (loading) {
         return (
-            <div className={`flex h-[calc(100vh-4rem)] -m-8 items-center justify-center ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+            <div className="flex h-[calc(100vh-4rem)] -m-8 items-center justify-center">
                 <div className="flex flex-col items-center gap-3">
                     <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
                     <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Loading questions...</p>
@@ -319,7 +319,7 @@ const ExamEngine = () => {
     }
 
     return (
-        <div className={`flex h-[calc(100vh-4rem)] -m-8 overflow-hidden ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+        <div className="flex h-[calc(100vh-4rem)] -m-8 overflow-hidden">
             <Toaster />
 
             {/*
